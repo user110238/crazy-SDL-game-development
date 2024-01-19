@@ -1,86 +1,32 @@
-#include <SDL2/SDL.h>
-#include <stdio.h>
+#include <SFML/Graphics.hpp>
 #include <iostream>
+#include <string>
 
-const int SCREEN_WIDTH = 1280;
-const int SCREEN_HEIGHT = 1280;
-
-SDL_Window* Window = NULL;
-SDL_Surface* ScreenSurface = NULL;
-SDL_Surface* Background = NULL;
-
-bool init()
+int main()
 {
-    bool check = 1;
+    sf::RenderWindow window(sf::VideoMode(1600, 900), "Baby's First game" );
+    window.setPosition(sf::Vector2i(150, 50));
+    window.setFramerateLimit(60);
 
-    if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
+    sf::Clock clock;
+
+    while (window.isOpen())
     {
-        std::cout << " Error " << SDL_GetError();
-    }
-    else
-    {
-        Window = SDL_CreateWindow( "Schizo Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
-        if( Window == NULL )
+        //std::cout << clock.getElapsedTime().asSeconds();
+
+        sf::Event event;
+
+        while (window.pollEvent(event))
         {
-            std::cout << " Window not created " << SDL_GetError();
-        }
-         else
-        {
-            ScreenSurface = SDL_GetWindowSurface( Window );
+            if (event.type == sf::Event::Closed)
+                window.close();
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                std::cout << "Left Click " << std::endl;
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+                std::cout << "Not Left click " << std::endl;
+
         }
     }
-    return check;
-}
-
-bool LoadBackground()
-{
-
-    bool check = 1;
-
-    Background = SDL_LoadBMP( "Images/idk.bmp" );
-    if( Background == NULL )
-    {
-        printf( "Unable to load image %s! SDL Error: %s\n", "images/idk.bmp", SDL_GetError() );
-        check = false;
-    }
-
-    return check;
-}
-
-void close()
-{
-    //Deallocate surface
-    SDL_FreeSurface( Background );
-    Background = NULL;
-
-    //Destroy window
-    SDL_DestroyWindow( Window );
-    Window = NULL;
-
-    //Quit SDL subsystems
-    SDL_Quit();
-}
-
-
-int main( int argc, char* args[] )
-{
-
-    if ( !init() )
-        std::cout << " Init fail ";
-    if ( !LoadBackground() )
-        std::cout << " Load background fail ";
-
-    SDL_BlitSurface( Background, NULL, ScreenSurface, NULL );
-
-    SDL_UpdateWindowSurface( Window );
-
-    //Hack to get window to stay up
-    SDL_Event e; bool quit = false; while( quit == false ){ while( SDL_PollEvent( &e ) ){ if( e.type == SDL_QUIT ) quit = true; } }
-
-    close();
 
     return 0;
-
-
 }
-
