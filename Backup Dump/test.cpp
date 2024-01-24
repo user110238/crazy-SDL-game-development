@@ -1,9 +1,10 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_timer.h>
+
 #include <stdio.h>
 #include <iostream>
 #include <string>
-    // Init , LoadMedia , close
-#include "game.h"
 
 
 int main( int argc, char* args[] )
@@ -16,12 +17,20 @@ int main( int argc, char* args[] )
     SDL_Window* Window = nullptr;
     SDL_Renderer* Renderer = nullptr;
 
+    SDL_Texture* PlayerTexture = nullptr;
+
+    SDL_Surface* tmpSurface = IMG_Load("assets/idk.png");
+    PlayerTexture = SDL_CreateTextureFromSurface( Renderer , tmpSurface );
+    SDL_FreeSurface( tmpSurface );
+
+    SDL_CreateWindowAndRenderer( 1600 , 900 , 0 , &Window , &Renderer );
+
     SDL_Event Event;
     bool running = 1;
 
     SDL_Rect Rect{ 10 , 10 , 100 , 100 };
 
-    SDL_CreateWindowAndRenderer( 1600 , 900 , 0 , &Window , &Renderer );
+
 
     while ( running )
     {
@@ -57,6 +66,8 @@ int main( int argc, char* args[] )
 
         SDL_SetRenderDrawColor(Renderer, 255 , 0 , 0 , 255 );
         SDL_RenderFillRect(Renderer , &Rect );
+
+        SDL_RenderCopy( Renderer , PlayerTexture , NULL , &Rect );
 
         SDL_RenderPresent(Renderer);
 

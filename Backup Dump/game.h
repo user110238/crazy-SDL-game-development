@@ -10,7 +10,7 @@ bool init( SDL_Window** Window , SDL_Surface** ScreenSurface , SDL_Renderer** Re
 
     bool check = 1;
 
-    *Window = SDL_CreateWindow( "Schizo Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WindowWidth, WindowHeight, SDL_WINDOW_SHOWN );
+    *Window = SDL_CreateWindow( "", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WindowWidth, WindowHeight, SDL_WINDOW_SHOWN );
 
     if( Window == NULL )
     {
@@ -26,19 +26,22 @@ bool init( SDL_Window** Window , SDL_Surface** ScreenSurface , SDL_Renderer** Re
     return check;
 }
 
-bool LoadMedia(SDL_Surface** Surface , std::string path )
+SDL_Texture* LoadTexture( SDL_Renderer** Renderer std::string path )
 {
-    bool check = 1;
+    SDL_Texture* Texture = NULL;
 
-    *Surface = SDL_LoadBMP( path.c_str() );
+    SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
 
-    return check;
+    Texture = SDL_CreateTextureFromSurface( Renderer, loadedSurface );
+
+    SDL_FreeSurface( loadedSurface );
+
+    return Texture;
 }
 
 void close( SDL_Window* Window)
 {
 
-        // Free Window
     SDL_DestroyWindow( Window );
     Window = NULL;
 
