@@ -1,3 +1,4 @@
+
 void initialize( SDL_Window** Window , SDL_Surface** ScreenSurface , SDL_Renderer** Renderer, const int WindowWidth , const int WindowHeight )
 {
     *Window = SDL_CreateWindow( NULL , SDL_WINDOWPOS_UNDEFINED , SDL_WINDOWPOS_UNDEFINED , WindowWidth , WindowHeight , SDL_WINDOW_SHOWN );
@@ -22,10 +23,10 @@ SDL_Texture* loadTexture( SDL_Renderer* Renderer , std::string path )
     return Texture;
 }
 
-void loadMedia( SDL_Texture** Texture , SDL_Renderer* Renderer )
+void loadMedia( SDL_Texture** Texture , SDL_Renderer* Renderer , std::string path )
 {
 
-    *Texture = loadTexture( Renderer , "assets/idk.png" );
+    *Texture = loadTexture( Renderer , path.c_str() );
 
 }
 
@@ -33,7 +34,7 @@ void renderTexture ( SDL_Renderer* Renderer , SDL_Texture* Texture , SDL_Rect Re
 {
     SDL_RenderClear( Renderer );
 
-    SDL_RenderCopy( Renderer, Texture, NULL, &Rect );
+    SDL_RenderCopy( Renderer, Texture, NULL , &Rect );
 
     SDL_RenderPresent( Renderer );
 
@@ -49,3 +50,5 @@ void renderRect ( SDL_Renderer* Renderer , SDL_Rect Rect)
     SDL_RenderPresent(Renderer);
 
 }
+
+
