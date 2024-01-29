@@ -3,6 +3,7 @@ struct Player{
 
     SDL_Rect Rect;
     SDL_Texture* Texture;
+    SDL_Renderer* Renderer;
 
 
 

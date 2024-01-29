@@ -1,5 +1,5 @@
 
-void initialize( SDL_Window** Window , SDL_Surface** ScreenSurface , SDL_Renderer** Renderer, const int WindowWidth , const int WindowHeight )
+void initialize( SDL_Window** Window , SDL_Surface** ScreenSurface , SDL_Renderer** Renderer , const int WindowWidth , const int WindowHeight )
 {
     *Window = SDL_CreateWindow( NULL , SDL_WINDOWPOS_UNDEFINED , SDL_WINDOWPOS_UNDEFINED , WindowWidth , WindowHeight , SDL_WINDOW_SHOWN );
 
@@ -7,8 +7,8 @@ void initialize( SDL_Window** Window , SDL_Surface** ScreenSurface , SDL_Rendere
     SDL_SetRenderDrawColor( *Renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 
     *ScreenSurface = SDL_GetWindowSurface( *Window );
-
 }
+
 
 SDL_Texture* loadTexture( SDL_Renderer* Renderer , std::string path )
 {
@@ -23,32 +23,58 @@ SDL_Texture* loadTexture( SDL_Renderer* Renderer , std::string path )
     return Texture;
 }
 
-void loadMedia( SDL_Texture** Texture , SDL_Renderer* Renderer , std::string path )
+void loadTexture( SDL_Texture** Texture , SDL_Renderer* Renderer , std::string path )
 {
 
     *Texture = loadTexture( Renderer , path.c_str() );
 
 }
 
-void renderTexture ( SDL_Renderer* Renderer , SDL_Texture* Texture , SDL_Rect Rect )
+void rendererAdd( SDL_Renderer* Renderer , SDL_Texture* Texture , SDL_Rect Rect )
 {
-    SDL_RenderClear( Renderer );
-
     SDL_RenderCopy( Renderer, Texture, NULL , &Rect );
-
-    SDL_RenderPresent( Renderer );
-
 }
 
-void renderRect ( SDL_Renderer* Renderer , SDL_Rect Rect)
+bool Collision( SDL_Rect a, SDL_Rect b )
 {
-    SDL_RenderClear( Renderer );
+    int leftA, leftB;
+    int rightA, rightB;
+    int topA, topB;
+    int bottomA, bottomB;
 
-    SDL_SetRenderDrawColor( Renderer, 255 , 0 , 0 , 255 );
-    SDL_RenderFillRect( Renderer, &Rect );
+    leftA = a.x;
+    rightA = a.x + a.w;
+    topA = a.y;
+    bottomA = a.y + a.h;
 
-    SDL_RenderPresent(Renderer);
+    leftB = b.x;
+    rightB = b.x + b.w;
+    topB = b.y;
+    bottomB = b.y + b.h;
 
+    if( bottomA <= topB )
+    {
+        return false;
+    }
+
+    if( topA >= bottomB )
+    {
+        return false;
+    }
+
+    if( rightA <= leftB )
+    {
+        return false;
+    }
+
+    if( leftA >= rightB )
+    {
+        return false;
+    }
+
+    return true;
 }
+
+
 
 

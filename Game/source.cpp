@@ -31,6 +31,11 @@ int main( int argc, char* args[] )
     int Velocityx =             0;
     int Velocityy =             0;
 
+        // Random stuff
+    srand(time(NULL));
+    int Randomx = rand()%( WindowWidth );
+    int Randomy = rand()%( WindowHeight );
+
         // Window and Texture pointers
     SDL_Window* Window =            nullptr;
     SDL_Renderer* Renderer =        nullptr;
@@ -44,9 +49,10 @@ int main( int argc, char* args[] )
         nullptr
     };
 
+
     struct Player Enemy {
         // Player rectangle
-        50 , ( WindowHeight / 2 ) - ( PlayerSizey / 2 ), PlayerSizex , PlayerSizey,
+        Randomx , Randomy , PlayerSizex , PlayerSizey,
             // Texture
         nullptr
 
@@ -54,7 +60,8 @@ int main( int argc, char* args[] )
 
         // Setup functions
     initialize( &Window , &WindowSurface , &Renderer , WindowWidth , WindowHeight );
-    loadMedia( &Player.Texture , Renderer , "assets/triangle.png" );
+    loadTexture( &Player.Texture , Renderer , "assets/triangle.png" );
+    loadTexture( &Enemy.Texture , Renderer , "assets/idk.png" );
 
     SDL_Event Event;
     bool Game_Loop = 1;
@@ -99,16 +106,22 @@ int main( int argc, char* args[] )
 
             }
         }
-
-        movePlayer ( Player.Rect , Velocityx , Velocityy );
-
-        renderTexture( Renderer , Player.Texture , Player.Rect );
-
+            // Clear Previous frame
         SDL_RenderClear( Renderer );
 
+
+            // Move player + Add to the renderer
+        movePlayer ( Player.Rect , Velocityx , Velocityy );
+        rendererAdd( Renderer , Player.Texture , Player.Rect );
+
+        if ( !Collision( Player.Rect , Enemy.Rect ) )
+            rendererAdd( Renderer , Enemy.Texture , Enemy.Rect );
+
+
+            // Draw Frame
+        SDL_RenderPresent( Renderer );
+
         FrameTime = SDL_GetTicks() - FrameStart;
-
-
 
         if ( FrameDelay > FrameTime )
             SDL_Delay( FrameDelay - FrameTime );
