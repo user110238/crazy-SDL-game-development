@@ -23,13 +23,6 @@ SDL_Texture* loadTexture( SDL_Renderer* Renderer , std::string path )
     return Texture;
 }
 
-void loadTexture( SDL_Texture** Texture , SDL_Renderer* Renderer , std::string path )
-{
-
-    *Texture = loadTexture( Renderer , path.c_str() );
-
-}
-
 void rendererAdd( SDL_Renderer* Renderer , SDL_Texture* Texture , SDL_Rect Dest )
 {
     SDL_RenderCopy( Renderer, Texture , NULL , &Dest );

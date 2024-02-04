@@ -5,6 +5,12 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <cmath>
+
+    // Entity constants
+const int ENTITY_SIZE_X =   100;
+const int ENTITY_SIZE_Y =   100;
+const int VELOCITY = 10;
 
 #include "include/main.h"
 #include "include/player.h"
@@ -14,58 +20,59 @@ int main(int argc, char* args[])
         // Enables all SDL subsystems
     SDL_Init(SDL_INIT_EVERYTHING);
 
-        // 60 Framerate
+        // Framerate
     const int FPS = 60;
     const int FrameDelay = 1000 / FPS;
     Uint32 FrameStart;
     int FrameTime;
 
-        // Resolution
+        // Resolution + Level
     int WindowWidth = 1600;
     int WindowHeight = 800;
     int LevelWidth = 3200;
     int LevelHeight = 1900;
 
-        // Entity values
-    const int PlayerSizex = 100;
-    const int PlayerSizey = 100;
-    const int Velocity = 10;
     int Velocityx = 0;
     int Velocityy = 0;
 
         // Random stuff
     srand(time(NULL));
-    int Randomx = rand()%(WindowWidth);
-    int Randomy = rand()%(WindowHeight);
+    int Randomx = rand()%(LevelWidth);
+    int Randomy = rand()%(LevelHeight);
 
         // Window and Texture pointers
     SDL_Window* Window = nullptr;
     SDL_Renderer* Renderer = nullptr;
     SDL_Surface* WindowSurface = nullptr;
 
-
         // Entities
         // Backgrounds and cameras and such
-
     struct Player Player {
-        (WindowWidth / 2) - (PlayerSizex / 2), (WindowHeight / 2) - (PlayerSizey / 2), PlayerSizex, PlayerSizey,
+        (WindowWidth / 2) - (ENTITY_SIZE_X / 2), (WindowHeight / 2) - (ENTITY_SIZE_Y / 2), ENTITY_SIZE_X, ENTITY_SIZE_Y,
         nullptr
     };
 
     struct Player Enemy {
-        Randomx, Randomy, PlayerSizex, PlayerSizey,
+        Randomx, Randomy, ENTITY_SIZE_X, ENTITY_SIZE_Y,
         nullptr
     };
 
+        // Camera rect is the visible window
+        // Background is the whole level
     SDL_Rect camera = {0, 0, WindowWidth, WindowHeight};
     SDL_Rect backgroundRect = {0, 0, LevelWidth, LevelHeight};
     SDL_Texture* Background = nullptr;
 
         // Setup functions
     initialize(&Window, &WindowSurface, &Renderer, WindowWidth, WindowHeight);
-    loadTexture(&Player.Texture, Renderer, "assets/triangle.png");
-    loadTexture(&Enemy.Texture, Renderer, "assets/circle.png");
-    Background = loadTexture(Renderer, "assets/background.png");
+
+    Player.Texture = loadTexture( Renderer, "assets/triangle.png");
+    Enemy.Texture = loadTexture( Renderer, "assets/circle.png");
+    Background = loadTexture( Renderer, "assets/background.png");
+
+    //SDL_FillRect(WindowSurface, NULL, SDL_MapRGB(WindowSurface->format, 255, 127, 80));
+    //Background = SDL_CreateTextureFromSurface( Renderer, WindowSurface);
+    //SDL_FreeSurface(WindowSurface);
 
         // Event variables
         // But are they really variables, hmm
@@ -92,10 +99,10 @@ int main(int argc, char* args[])
                     {
                         switch (Event.key.keysym.sym)
                         {
-                            case SDLK_UP: Velocityy -= Velocity; break;
-                            case SDLK_DOWN: Velocityy += Velocity; break;
-                            case SDLK_LEFT: Velocityx -= Velocity; break;
-                            case SDLK_RIGHT: Velocityx += Velocity; break;
+                            case SDLK_UP: Player.Velocity.y -= VELOCITY; break;
+                            case SDLK_DOWN: Player.Velocity.y += VELOCITY; break;
+                            case SDLK_LEFT: Player.Velocity.x -= VELOCITY; break;
+                            case SDLK_RIGHT: Player.Velocity.x += VELOCITY; break;
                         }
                     }
                     break;
@@ -104,10 +111,10 @@ int main(int argc, char* args[])
                     {
                         switch (Event.key.keysym.sym)
                         {
-                            case SDLK_UP: Velocityy += Velocity; break;
-                            case SDLK_DOWN: Velocityy -= Velocity; break;
-                            case SDLK_LEFT: Velocityx += Velocity; break;
-                            case SDLK_RIGHT: Velocityx -= Velocity; break;
+                            case SDLK_UP: Player.Velocity.y += VELOCITY; break;
+                            case SDLK_DOWN: Player.Velocity.y -= VELOCITY; break;
+                            case SDLK_LEFT: Player.Velocity.x += VELOCITY; break;
+                            case SDLK_RIGHT: Player.Velocity.x -= VELOCITY; break;
                         }
                     }
                     break;
@@ -118,7 +125,8 @@ int main(int argc, char* args[])
         SDL_RenderClear(Renderer);
 
             // Update player position
-        movePlayer(Player.Rect, Velocityx, Velocityy);
+        movePlayer( Player ,  LevelWidth , LevelHeight );
+        moveRectTowards(Enemy.Rect, Player.Rect);
 
         if ( collision (Player.Rect, Enemy.Rect) )
             Game_Loop = false;
