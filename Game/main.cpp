@@ -11,10 +11,12 @@
     // Entity constants
 const int ENTITY_SIZE_X =   100;
 const int ENTITY_SIZE_Y =   100;
-const int VELOCITY = 10;
+const int PLAYER_VELOCITY = 10;
+const int ENEMY_VELOCITY =  5;
 
 #include "include/main.h"
 #include "include/player.h"
+#include "include/enemy.h"
 
 int main(int argc, char* args[])
 {
@@ -48,12 +50,12 @@ int main(int argc, char* args[])
 
         // Entities
         // backgrounds and cameras and such
-    struct Player Player {
+    struct Entity Player {
         (WindowWidth / 2) - (ENTITY_SIZE_X / 2), (WindowHeight / 2) - (ENTITY_SIZE_Y / 2), ENTITY_SIZE_X, ENTITY_SIZE_Y,
         nullptr
     };
 
-    std::vector<struct Player> Enemy;
+    std::vector<struct Entity> Enemy;
 
     for ( int i = 0 ; i < 3 ; i++ )
     {
@@ -103,10 +105,10 @@ int main(int argc, char* args[])
                     {
                         switch (Event.key.keysym.sym)
                         {
-                            case SDLK_UP: Player.Velocity.y -= VELOCITY; break;
-                            case SDLK_DOWN: Player.Velocity.y += VELOCITY; break;
-                            case SDLK_LEFT: Player.Velocity.x -= VELOCITY; break;
-                            case SDLK_RIGHT: Player.Velocity.x += VELOCITY; break;
+                            case SDLK_UP: Player.Velocity.y -= PLAYER_VELOCITY; break;
+                            case SDLK_DOWN: Player.Velocity.y += PLAYER_VELOCITY; break;
+                            case SDLK_LEFT: Player.Velocity.x -= PLAYER_VELOCITY; break;
+                            case SDLK_RIGHT: Player.Velocity.x += PLAYER_VELOCITY; break;
                         }
                     }
                     break;
@@ -115,10 +117,10 @@ int main(int argc, char* args[])
                     {
                         switch (Event.key.keysym.sym)
                         {
-                            case SDLK_UP: Player.Velocity.y += VELOCITY; break;
-                            case SDLK_DOWN: Player.Velocity.y -= VELOCITY; break;
-                            case SDLK_LEFT: Player.Velocity.x += VELOCITY; break;
-                            case SDLK_RIGHT: Player.Velocity.x -= VELOCITY; break;
+                            case SDLK_UP: Player.Velocity.y += PLAYER_VELOCITY; break;
+                            case SDLK_DOWN: Player.Velocity.y -= PLAYER_VELOCITY; break;
+                            case SDLK_LEFT: Player.Velocity.x += PLAYER_VELOCITY; break;
+                            case SDLK_RIGHT: Player.Velocity.x -= PLAYER_VELOCITY; break;
                         }
                     }
                     break;
@@ -136,7 +138,7 @@ int main(int argc, char* args[])
         for ( int i = 0 ; i < Enemy.size() ; i++ )
         {
                 // Move enemy towards player
-            moveRectTowards(Enemy.at(i).Rect, Player.Rect);
+            HandleEnemyMovement( Enemy.at(i) , Player.Rect , 300 );
                 // Check if any enemy is collision-ing
             if ( collision (Player.Rect, Enemy.at(i).Rect ) )
                 Game_Loop = false;
@@ -145,18 +147,7 @@ int main(int argc, char* args[])
 
         // Scrolling
             // Update camera position to center on player
-        camera.x = Player.Rect.x + Player.Rect.w / 2 - WindowWidth / 2;
-        camera.y = Player.Rect.y + Player.Rect.h / 2 - WindowHeight / 2;
-
-            // Keep the camera within the bounds of the level
-        if (camera.x < 0)
-            camera.x = 0;
-        if (camera.y < 0)
-            camera.y = 0;
-        if (camera.x > LevelWidth - camera.w)
-            camera.x = LevelWidth - camera.w;
-        if (camera.y > LevelHeight - camera.h)
-            camera.y = LevelHeight - camera.h;
+        scrolling( camera , Player.Rect , WindowWidth , WindowHeight , LevelWidth , LevelHeight );
 
             // Render background with camera offset
         backgroundRect.x = -camera.x;

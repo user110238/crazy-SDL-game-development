@@ -1,5 +1,5 @@
 
-struct Player
+struct Entity
 {
 
     SDL_Rect Rect;
@@ -11,7 +11,7 @@ struct Player
 };
 
 
-void movePlayer(Player& player, int LevelWidth, int LevelHeight)
+void movePlayer(Entity& player, int LevelWidth, int LevelHeight)
 {
         // lenght of the vector
         // pitagorov zakon po slovensko
@@ -23,8 +23,8 @@ void movePlayer(Player& player, int LevelWidth, int LevelHeight)
     float normY = player.Velocity.y / lenght;
 
         // scale the normalized vector by velocity
-    float scaledX = normX * VELOCITY;
-    float scaledY = normY * VELOCITY;
+    float scaledX = normX * PLAYER_VELOCITY;
+    float scaledY = normY * PLAYER_VELOCITY;
 
         // create the new postion
     int newX = player.Rect.x + static_cast<int>(scaledX);
@@ -39,22 +39,4 @@ void movePlayer(Player& player, int LevelWidth, int LevelHeight)
     {
         player.Rect.y = newY;
     }
-}
-
-void moveRectTowards(SDL_Rect& srcRect, SDL_Rect& destRect)
-{
-        // distance between rectangles
-    int DX = destRect.x - srcRect.x;
-    int DY = destRect.y - srcRect.y;
-
-        // normalize the vector
-        // Pitagorov zakon po slovensko
-    double lenght = std::sqrt(DX * DX + DY * DY);
-    double normDX = DX / lenght;
-    double normDY = DY / lenght;
-
-        // move src rectangle acording to the normalized vector
-    srcRect.x += (int)(normDX * VELOCITY);
-    srcRect.y += (int)(normDY * VELOCITY);
-
 }
