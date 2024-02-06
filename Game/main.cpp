@@ -8,14 +8,12 @@
 #include <cmath>
 #include <vector>
 
-    // Entity constants
-const int ENTITY_SIZE_X =   100;
-const int ENTITY_SIZE_Y =   100;
-const int PLAYER_VELOCITY = 10;
-const int ENEMY_VELOCITY =  5;
-
 #include "include/main.h"
+#include "include/window.h"
+#include "include/constants.h"
+
 #include "include/player.h"
+#include "include/entity.h"
 #include "include/enemy.h"
 
 int main(int argc, char* args[])
@@ -35,34 +33,21 @@ int main(int argc, char* args[])
     int LevelWidth = 3200;
     int LevelHeight = 1900;
 
-    int Velocityx = 0;
-    int Velocityy = 0;
-
         // Random stuff
     srand(time(NULL));
     int Randomx = rand()%(LevelWidth);
     int Randomy = rand()%(LevelHeight);
 
-        // Window and Texture pointers
-    SDL_Window* Window = nullptr;
-    SDL_Renderer* Renderer = nullptr;
-    SDL_Surface* WindowSurface = nullptr;
+    structWindow window( WindowWidth , WindowHeight );
+    window.init();
 
-        // Entities
-        // backgrounds and cameras and such
-    struct Entity Player {
-        (WindowWidth / 2) - (ENTITY_SIZE_X / 2), (WindowHeight / 2) - (ENTITY_SIZE_Y / 2), ENTITY_SIZE_X, ENTITY_SIZE_Y,
-        nullptr
-    };
+        // Create a player struct      x , y
+    Player Player ( (LevelWidth / 2) - (constant::ENTITY_SIZE_X / 2) , (LevelHeight / 2) - (constant::ENTITY_SIZE_Y / 2) ,
+                                    // w , h
+                    constant::ENTITY_SIZE_X , constant::ENTITY_SIZE_Y );
 
     std::vector<struct Entity> Enemy;
-
-    for ( int i = 0 ; i < 3 ; i++ )
-    {
-        Enemy.push_back( { Randomx, Randomy, ENTITY_SIZE_X, ENTITY_SIZE_Y, nullptr } );
-        Randomx = rand()%(LevelWidth);
-        Randomy = rand()%(LevelHeight);
-    }
+    pushRandom( Enemy , 3 , LevelWidth , LevelHeight );
 
         // Camera rect is the visible window
         // Background is the whole level
@@ -70,14 +55,12 @@ int main(int argc, char* args[])
     SDL_Rect backgroundRect = {0, 0, LevelWidth, LevelHeight};
     SDL_Texture* Background = nullptr;
 
-        // Setup functions
-    initialize(&Window, &WindowSurface, &Renderer, WindowWidth, WindowHeight);
         // Textures
-    Player.Texture = loadTexture( Renderer, "assets/triangle.png");
-    Background = loadTexture( Renderer, "assets/background.png");
+    Player.Texture = loadTexture( window.Renderer, "assets/triangle.png");
+    Background = loadTexture( window.Renderer, "assets/background.png");
 
     for ( auto IT = Enemy.begin() ; IT != Enemy.end() ; IT++ )
-        (*IT).Texture = loadTexture( Renderer, "assets/circle.png");
+        (*IT).Texture = loadTexture( window.Renderer, "assets/circle.png");
 
 
         // Event variables
@@ -105,10 +88,10 @@ int main(int argc, char* args[])
                     {
                         switch (Event.key.keysym.sym)
                         {
-                            case SDLK_UP: Player.Velocity.y -= PLAYER_VELOCITY; break;
-                            case SDLK_DOWN: Player.Velocity.y += PLAYER_VELOCITY; break;
-                            case SDLK_LEFT: Player.Velocity.x -= PLAYER_VELOCITY; break;
-                            case SDLK_RIGHT: Player.Velocity.x += PLAYER_VELOCITY; break;
+                            case SDLK_UP: Player.Velocity.y -= constant::PLAYER_VELOCITY; break;
+                            case SDLK_DOWN: Player.Velocity.y += constant::PLAYER_VELOCITY; break;
+                            case SDLK_LEFT: Player.Velocity.x -= constant::PLAYER_VELOCITY; break;
+                            case SDLK_RIGHT: Player.Velocity.x += constant::PLAYER_VELOCITY; break;
                         }
                     }
                     break;
@@ -117,10 +100,10 @@ int main(int argc, char* args[])
                     {
                         switch (Event.key.keysym.sym)
                         {
-                            case SDLK_UP: Player.Velocity.y += PLAYER_VELOCITY; break;
-                            case SDLK_DOWN: Player.Velocity.y -= PLAYER_VELOCITY; break;
-                            case SDLK_LEFT: Player.Velocity.x += PLAYER_VELOCITY; break;
-                            case SDLK_RIGHT: Player.Velocity.x -= PLAYER_VELOCITY; break;
+                            case SDLK_UP: Player.Velocity.y += constant::PLAYER_VELOCITY; break;
+                            case SDLK_DOWN: Player.Velocity.y -= constant::PLAYER_VELOCITY; break;
+                            case SDLK_LEFT: Player.Velocity.x += constant::PLAYER_VELOCITY; break;
+                            case SDLK_RIGHT: Player.Velocity.x -= constant::PLAYER_VELOCITY; break;
                         }
                     }
                     break;
@@ -128,17 +111,17 @@ int main(int argc, char* args[])
         }
 
             // Clear Previous frame
-        SDL_RenderClear(Renderer);
+        SDL_RenderClear( window.Renderer );
 
         // Game logic
             // Update player position
-        movePlayer( Player ,  LevelWidth , LevelHeight );
+        Player.movePlayer(  LevelWidth , LevelHeight );
 
             // Enemy logic loop
         for ( int i = 0 ; i < Enemy.size() ; i++ )
         {
                 // Move enemy towards player
-            HandleEnemyMovement( Enemy.at(i) , Player.Rect , 300 );
+            HandleEnemyMovement( Enemy.at(i) , Player.Rect , 500 );
                 // Check if any enemy is collision-ing
             if ( collision (Player.Rect, Enemy.at(i).Rect ) )
                 Game_Loop = false;
@@ -152,19 +135,19 @@ int main(int argc, char* args[])
             // Render background with camera offset
         backgroundRect.x = -camera.x;
         backgroundRect.y = -camera.y;
-        rendererAdd( Renderer , Background , backgroundRect );
+        rendererAdd( window.Renderer , Background , backgroundRect );
 
         // Rendering
             // Render player with camera offset
         SDL_Rect playerRect = {Player.Rect.x - camera.x, Player.Rect.y - camera.y, Player.Rect.w, Player.Rect.h};
-        rendererAdd(Renderer, Player.Texture, playerRect);
+        rendererAdd( window.Renderer, Player.Texture, playerRect );
 
             // render enemies + camera offset
         for ( int i = 0 ; i < Enemy.size() ; i++ )
-                rendererAdd(Renderer, Enemy.at(i).Texture, {Enemy.at(i).Rect.x - camera.x, Enemy.at(i).Rect.y - camera.y, Enemy.at(i).Rect.w, Enemy.at(i).Rect.h});
+                rendererAdd( window.Renderer, Enemy.at(i).Texture, {Enemy.at(i).Rect.x - camera.x, Enemy.at(i).Rect.y - camera.y, Enemy.at(i).Rect.w, Enemy.at(i).Rect.h} );
 
             // Draw Frame
-        SDL_RenderPresent(Renderer);
+        SDL_RenderPresent( window.Renderer );
 
         // Framing
             // Frame delay / limit

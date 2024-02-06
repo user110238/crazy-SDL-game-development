@@ -1,4 +1,3 @@
-
 void moveRectTowards(SDL_Rect& srcRect, SDL_Rect& destRect , int detection )
 {
         // distance between rectangles
@@ -11,21 +10,19 @@ void moveRectTowards(SDL_Rect& srcRect, SDL_Rect& destRect , int detection )
     double normDX = DX / lenght;
     double normDY = DY / lenght;
 
-    if ( lenght <= detection )
-    {
-
             // move src rectangle acording to the normalized vector
-        srcRect.x += (int)(normDX * ENEMY_VELOCITY);
-        srcRect.y += (int)(normDY * ENEMY_VELOCITY);
+    srcRect.x += (int)(normDX * constant::ENEMY_VELOCITY);
+    srcRect.y += (int)(normDY * constant::ENEMY_VELOCITY);
 
-    }
 
 }
 
 void HandleEnemyMovement( Entity& Enemy , SDL_Rect& player , int detection )
 {
 
-    moveRectTowards( Enemy.Rect , player , detection );
+    double lenght = std::sqrt( (player.x - Enemy.Rect.x) * (player.x - Enemy.Rect.x) + (player.y - Enemy.Rect.y) * (player.y - Enemy.Rect.y) );
 
+    if ( lenght < detection )
+        moveRectTowards( Enemy.Rect , player , detection );
 
 }
