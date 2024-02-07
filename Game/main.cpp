@@ -15,6 +15,8 @@
 #include "include/player.h"
 #include "include/entity.h"
 #include "include/enemy.h"
+#include "include/forest.h"
+
 
 int main(int argc, char* args[])
 {
@@ -30,34 +32,42 @@ int main(int argc, char* args[])
         // Resolution + Level
     int WindowWidth = 1600;
     int WindowHeight = 800;
-    int LevelWidth = 3200;
-    int LevelHeight = 1900;
 
-        // Random stuff
-    srand(time(NULL));
-    int Randomx = rand()%(LevelWidth);
-    int Randomy = rand()%(LevelHeight);
-
+        // Window struct
+        // window + surf + renderer
     structWindow window( WindowWidth , WindowHeight );
     window.init();
+
 
         // Create a player struct      x , y
     Player Player ( (LevelWidth / 2) - (constant::ENTITY_SIZE_X / 2) , (LevelHeight / 2) - (constant::ENTITY_SIZE_Y / 2) ,
                                     // w , h
                     constant::ENTITY_SIZE_X , constant::ENTITY_SIZE_Y );
 
+        // Enemies vector
+        // Multinacionalke
     std::vector<struct Entity> Enemy;
     pushRandom( Enemy , 3 , LevelWidth , LevelHeight );
+
+        // Forest vector
+        // Stores background information
+        // also makes a texture for thee background
+    std::vector<std::vector <bool> > Forest (
+        LevelWidth / constant::PIXEL_SIZE,
+        std::vector<bool> (
+            LevelHeight / constant::PIXEL_SIZE, 0
+        ));
+        fillvector( Forest );
+        SDL_Texture* Background = fillBackground( Forest , window.Renderer );
+
 
         // Camera rect is the visible window
         // Background is the whole level
     SDL_Rect camera = {0, 0, WindowWidth, WindowHeight};
     SDL_Rect backgroundRect = {0, 0, LevelWidth, LevelHeight};
-    SDL_Texture* Background = nullptr;
 
         // Textures
     Player.Texture = loadTexture( window.Renderer, "assets/triangle.png");
-    Background = loadTexture( window.Renderer, "assets/background.png");
 
     for ( auto IT = Enemy.begin() ; IT != Enemy.end() ; IT++ )
         (*IT).Texture = loadTexture( window.Renderer, "assets/circle.png");

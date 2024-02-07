@@ -35,6 +35,10 @@ void scrolling( SDL_Rect& camera , SDL_Rect Player , int WindowWidth , int Windo
 
 }
 
+int getRandomNumber(int min, int max) {
+    return rand() % (max + 1 - min) + min;
+}
+
 
 
 

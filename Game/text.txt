@@ -1,0 +1,14 @@
+ //Me when code dump
+
+
+ if (state[SDL_SCANCODE_ESCAPE]){
+        Game_Loop = false;
+    } else if (state[SDL_SCANCODE_RIGHT]){
+        Player.Velocity.x += constant::PLAYER_VELOCITY;
+    } else if (state[SDL_SCANCODE_LEFT]){
+        Player.Velocity.x -= constant::PLAYER_VELOCITY;
+    } else if (state[SDL_SCANCODE_UP]){
+        Player.Velocity.y -= constant::PLAYER_VELOCITY;
+    } else if (state[SDL_SCANCODE_DOWN]){
+        Player.Velocity.y += constant::PLAYER_VELOCITY;
+    }
