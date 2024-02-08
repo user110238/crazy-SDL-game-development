@@ -12,3 +12,16 @@
     } else if (state[SDL_SCANCODE_DOWN]){
         Player.Velocity.y += constant::PLAYER_VELOCITY;
     }
+
+
+
+        // Forest vector
+        // Stores background information
+        // also makes a texture for thee background
+    std::vector<std::vector <bool> > Forest (
+        LevelWidth / constant::PIXEL_SIZE,
+        std::vector<bool> (
+            LevelHeight / constant::PIXEL_SIZE, 0
+        ));
+        fillvector( Forest );
+        SDL_Texture* Background = fillBackground( Forest , window.Renderer );

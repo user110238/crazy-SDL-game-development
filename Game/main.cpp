@@ -8,6 +8,15 @@
 #include <cmath>
 #include <vector>
 
+enum class Tile
+{
+    Green,
+    Brown,
+    Black,
+
+
+};
+
 #include "include/main.h"
 #include "include/window.h"
 #include "include/constants.h"
@@ -52,10 +61,10 @@ int main(int argc, char* args[])
         // Forest vector
         // Stores background information
         // also makes a texture for thee background
-    std::vector<std::vector <bool> > Forest (
+    std::vector<std::vector <Tile> > Forest (
         LevelWidth / constant::PIXEL_SIZE,
-        std::vector<bool> (
-            LevelHeight / constant::PIXEL_SIZE, 0
+        std::vector<Tile> (
+            LevelHeight / constant::PIXEL_SIZE , Tile::Green
         ));
         fillvector( Forest );
         SDL_Texture* Background = fillBackground( Forest , window.Renderer );
@@ -67,7 +76,7 @@ int main(int argc, char* args[])
     SDL_Rect backgroundRect = {0, 0, LevelWidth, LevelHeight};
 
         // Textures
-    Player.Texture = loadTexture( window.Renderer, "assets/triangle.png");
+    Player.Texture = loadTexture( window.Renderer, "assets/square.png");
 
     for ( auto IT = Enemy.begin() ; IT != Enemy.end() ; IT++ )
         (*IT).Texture = loadTexture( window.Renderer, "assets/circle.png");
@@ -83,9 +92,7 @@ int main(int argc, char* args[])
             // Used to calculate time per instance of loop
         FrameStart = SDL_GetTicks();
 
-            // Temporary event pool for everything
-            // Need to be changed to check keystates for key presses
-            // and only use event pool for mouse, quit, ...
+            // Event poll
         while (SDL_PollEvent(&Event))
         {
             switch (Event.type)
@@ -102,6 +109,7 @@ int main(int argc, char* args[])
                             case SDLK_DOWN: Player.Velocity.y += constant::PLAYER_VELOCITY; break;
                             case SDLK_LEFT: Player.Velocity.x -= constant::PLAYER_VELOCITY; break;
                             case SDLK_RIGHT: Player.Velocity.x += constant::PLAYER_VELOCITY; break;
+                            case SDLK_ESCAPE: Game_Loop = false; break;
                         }
                     }
                     break;
@@ -127,6 +135,8 @@ int main(int argc, char* args[])
             // Update player position
         Player.movePlayer(  LevelWidth , LevelHeight );
 
+        updateForest( Forest , Player.Rect );
+
             // Enemy logic loop
         for ( int i = 0 ; i < Enemy.size() ; i++ )
         {
@@ -148,6 +158,10 @@ int main(int argc, char* args[])
         rendererAdd( window.Renderer , Background , backgroundRect );
 
         // Rendering
+            // Backgroun refresh first
+        SDL_DestroyTexture(Background);
+        Background = fillBackground(Forest, window.Renderer);
+
             // Render player with camera offset
         SDL_Rect playerRect = {Player.Rect.x - camera.x, Player.Rect.y - camera.y, Player.Rect.w, Player.Rect.h};
         rendererAdd( window.Renderer, Player.Texture, playerRect );
