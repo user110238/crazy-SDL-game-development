@@ -1,9 +1,9 @@
-void render ( SDL_Renderer* Renderer , back Background , Player Player , std::vector<struct Entity> Enemy )
+void render ( SDL_Renderer* Renderer , back Background , Player Player , std::vector<struct Entity> Enemy , std::vector<struct Entity> Tree )
 {
             // Clear current frame
         SDL_RenderClear( Renderer );
             // render background ( level )
-        rendererAdd( Renderer , Background.Texture , Background.backgroundRect );
+        rendererAdd( Renderer , Background.Texture ,  Background.backgroundRect );
 
             // Render player with camera offset
         SDL_Rect playerRect = {Player.Rect.x - Background.Camera.x, Player.Rect.y - Background.Camera.y, Player.Rect.w, Player.Rect.h};
@@ -12,6 +12,8 @@ void render ( SDL_Renderer* Renderer , back Background , Player Player , std::ve
             // render enemies + camera offset
         for ( int i = 0 ; i < Enemy.size() ; i++ )
                 rendererAdd( Renderer, Enemy.at(i).Texture, {Enemy.at(i).Rect.x - Background.Camera.x, Enemy.at(i).Rect.y - Background.Camera.y, Enemy.at(i).Rect.w, Enemy.at(i).Rect.h} );
+        for ( int i = 0 ; i < Tree.size() ; i++ )
+                rendererAdd( Renderer, Tree.at(i).Texture, {Tree.at(i).Rect.x - Background.Camera.x, Tree.at(i).Rect.y - Background.Camera.y, Tree.at(i).Rect.w, Tree.at(i).Rect.h} );
 
             // Draw Frame
         SDL_RenderPresent( Renderer );

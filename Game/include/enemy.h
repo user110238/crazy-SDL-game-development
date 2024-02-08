@@ -1,4 +1,4 @@
-void moveRectTowards(SDL_Rect& srcRect, SDL_Rect& destRect , int detection )
+void moveRectTowards(SDL_Rect& srcRect, SDL_Rect& destRect )
 {
         // distance between rectangles
     int DX = destRect.x - srcRect.x;
@@ -17,10 +17,10 @@ void moveRectTowards(SDL_Rect& srcRect, SDL_Rect& destRect , int detection )
 
 }
 
-void HandleEnemyMovement( Entity& Enemy , SDL_Rect& player , int detection )
+void HandleEnemyMovement( Entity& Enemy , SDL_Rect& dest , int detection )
 {
 
-    if ( Enemy.lenghtTo(player) < detection )
-        moveRectTowards( Enemy.Rect , player , detection );
+    if ( Enemy.lenghtTo(dest) < detection )
+        moveRectTowards( Enemy.Rect , dest );
 
 }

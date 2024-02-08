@@ -19,38 +19,34 @@ void fillvector( std::vector <std::vector <Tile>>& vector )
                 vector[x][y] = Tile::Brown;
 }
 
-SDL_Texture* fillBackground( std::vector <std::vector <Tile>>& vector , SDL_Renderer* Renderer )
+SDL_Texture* fillBackground(std::vector<std::vector<Tile>>& vector, SDL_Renderer* Renderer)
 {
         // Temp surface
-    SDL_Surface* Surface = SDL_CreateRGBSurface(0, vector.size() * constant::PIXEL_SIZE, vector[0].size() * constant::PIXEL_SIZE, 32, 0, 0, 0, 0);
-        // Goes throught the vector and gives the proper values
-        // their own proper colour properties
-    for (size_t x = 0; x < vector.size(); ++x) {
-        for (size_t y = 0; y < vector[0].size(); ++y) {
-                if ( vector[x][y] == Tile::Brown )
-                {
-                    SDL_Rect rect = { static_cast<int>(x) * constant::PIXEL_SIZE, static_cast<int>(y) * constant::PIXEL_SIZE, constant::PIXEL_SIZE, constant::PIXEL_SIZE };
-                    SDL_FillRect(Surface, &rect, SDL_MapRGB(Surface->format, 79,58,43 )); // Brown
-                }
-                else if ( vector[x][y] == Tile::Green)
-                {
-                    SDL_Rect rect = { static_cast<int>(x) * constant::PIXEL_SIZE, static_cast<int>(y) * constant::PIXEL_SIZE, constant::PIXEL_SIZE, constant::PIXEL_SIZE };
-                    SDL_FillRect(Surface, &rect, SDL_MapRGB(Surface->format, 53, 94, 59 )); // Green
-                }
-                else if ( vector[x][y] == Tile::Black )
-                {
-                    SDL_Rect rect = { static_cast<int>(x) * constant::PIXEL_SIZE, static_cast<int>(y) * constant::PIXEL_SIZE, constant::PIXEL_SIZE, constant::PIXEL_SIZE };
-                    SDL_FillRect(Surface, &rect, SDL_MapRGB(Surface->format, 0, 0, 0 )); // Black
+    SDL_Surface* Surface = SDL_CreateRGBSurfaceWithFormat(0, vector.size() * constant::PIXEL_SIZE, vector[0].size() * constant::PIXEL_SIZE, 24, SDL_PIXELFORMAT_RGB888);
+        // Size of a tile
+    SDL_Rect rect = {0, 0, constant::PIXEL_SIZE, constant::PIXEL_SIZE};
 
-                }
+    for (int x = 0; x < vector.size(); ++x) {
+        for (int y = 0; y < vector[0].size(); ++y) {
+
+            rect.x = x * constant::PIXEL_SIZE;
+            rect.y = y * constant::PIXEL_SIZE;
+
+            Uint32 color;
+            if (vector[x][y] == Tile::Brown)
+                color = SDL_MapRGB(Surface->format, 79, 58, 43); // Brown
+            else if (vector[x][y] == Tile::Green)
+                color = SDL_MapRGB(Surface->format, 53, 94, 59); // Green
+            else if (vector[x][y] == Tile::Black)
+                color = SDL_MapRGB(Surface->format, 0, 0, 0); // Black
+
+            SDL_FillRect(Surface, &rect, color);
         }
     }
-        // Creates a texture from the temp surface
-    SDL_Texture* Texture = SDL_CreateTextureFromSurface( Renderer , Surface );
-    SDL_FreeSurface( Surface );
-        // Returns the actual texture
-    return Texture;
 
+    SDL_Texture* Texture = SDL_CreateTextureFromSurface(Renderer, Surface);
+    SDL_FreeSurface(Surface);
+    return Texture;
 }
 
 void updateForest( std::vector <std::vector <Tile>>& vector ,SDL_Rect Rect )

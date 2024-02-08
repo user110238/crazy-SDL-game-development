@@ -18,21 +18,31 @@ void rendererAdd( SDL_Renderer* Renderer , SDL_Texture* Texture , SDL_Rect Dest 
 
 }
 
-void scrolling( SDL_Rect& camera , SDL_Rect Player , int WindowWidth , int WindowHeight , int LevelWidth , int LevelHeight )
+void rendererAdd( SDL_Renderer* Renderer , SDL_Texture* Texture , SDL_Rect Src , SDL_Rect Dest )
 {
-        camera.x = Player.x + Player.w / 2 - WindowWidth / 2;
-        camera.y = Player.y + Player.h / 2 - WindowHeight / 2;
 
-            // Keep the camera within the bounds of the level
-        if (camera.x < 0)
-            camera.x = 0;
-        if (camera.y < 0)
-            camera.y = 0;
-        if (camera.x > LevelWidth - camera.w)
-            camera.x = LevelWidth - camera.w;
-        if (camera.y > LevelHeight - camera.h)
-            camera.y = LevelHeight - camera.h;
+    SDL_RenderCopy( Renderer, Texture , &Src , &Dest );
 
+}
+
+void scrolling(SDL_Rect& camera, const SDL_Rect& Player, int WindowWidth, int WindowHeight, int LevelWidth, int LevelHeight) {
+    // Calculate the desired center of the camera based on the player's position
+    int centerX = Player.x + Player.w / 2;
+    int centerY = Player.y + Player.h / 2;
+
+    // Adjust camera position to keep the player centered within the window
+    camera.x = centerX - WindowWidth / 2;
+    camera.y = centerY - WindowHeight / 2;
+
+    // Keep the camera within the bounds of the level
+    if (camera.x < 0)
+        camera.x = 0;
+    if (camera.y < 0)
+        camera.y = 0;
+    if (camera.x > LevelWidth - camera.w)
+        camera.x = LevelWidth - camera.w;
+    if (camera.y > LevelHeight - camera.h)
+        camera.y = LevelHeight - camera.h;
 }
 
 int getRandomNumber(int min, int max) {

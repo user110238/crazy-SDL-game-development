@@ -19,7 +19,6 @@
 #include "include/background.h"
 #include "include/render.h"
 
-
 int main(int argc, char* args[])
 {
         // Enables all SDL subsystems
@@ -30,12 +29,14 @@ int main(int argc, char* args[])
     const int FrameDelay = 1000 / FPS;
     Uint32 FrameStart;
     int FrameTime;
+    int frameCounter = 0;
+    srand(time(NULL));
 
         // Resolution + Level
     int WindowWidth = 1600;
     int WindowHeight = 800;
-    int LevelWidth = 3200;
-    int LevelHeight = 1900;
+    int LevelWidth = WindowWidth * 2;
+    int LevelHeight = WindowHeight * 2;
 
         // Window struct
         // window + surf + renderer
@@ -51,7 +52,11 @@ int main(int argc, char* args[])
         // Enemies vector
         // Multinacionalke
     std::vector<struct Entity> Enemy;
+    auto enemyIt = Enemy.begin();
     pushRandom( Enemy , 3 , LevelWidth , LevelHeight );
+    std::vector<struct Entity> Tree;
+    auto treeIt = Tree.begin();
+    pushRandom( Tree , 3 , LevelWidth , LevelHeight );
 
         // Forest vector
         // Stores background information
@@ -70,7 +75,8 @@ int main(int argc, char* args[])
     Player.Texture = loadTexture( window.Renderer, "assets/square.png");
     for ( auto IT = Enemy.begin() ; IT != Enemy.end() ; IT++ )
         (*IT).Texture = loadTexture( window.Renderer, "assets/circle.png");
-
+    for ( auto IT = Tree.begin() ; IT != Tree.end() ; IT++ )
+        (*IT).Texture = loadTexture( window.Renderer, "assets/triangle.png");
 
         // Event variables
         // But are they really variables, hmm
@@ -81,6 +87,7 @@ int main(int argc, char* args[])
     {
             // Used to calculate time per instance of loop
         FrameStart = SDL_GetTicks();
+        frameCounter++;
 
             // Event poll
         while (SDL_PollEvent(&Event))
@@ -99,6 +106,7 @@ int main(int argc, char* args[])
                             case SDLK_DOWN: Player.Velocity.y += constant::PLAYER_VELOCITY; break;
                             case SDLK_LEFT: Player.Velocity.x -= constant::PLAYER_VELOCITY; break;
                             case SDLK_RIGHT: Player.Velocity.x += constant::PLAYER_VELOCITY; break;
+
                             case SDLK_ESCAPE: Game_Loop = false; break;
                         }
                     }
@@ -118,23 +126,25 @@ int main(int argc, char* args[])
             }
         }
 
-            // Clear Previous frame
-        SDL_RenderClear( window.Renderer );
-
         // Game logic
             // Update player position
         Player.movePlayer(  LevelWidth , LevelHeight );
 
         updateForest( Forest , Player.Rect );
 
-            // Enemy logic loop
+            // Entity logic loop
         for ( int i = 0 ; i < Enemy.size() ; i++ )
         {
                 // Move enemy towards player
             HandleEnemyMovement( Enemy.at(i) , Player.Rect , 500 );
                 // Check if any enemy is collision-ing
-            if ( collision (Player.Rect, Enemy.at(i).Rect ) )
+            if ( collision ( Player.Rect, Enemy[i].Rect ) )
                 Game_Loop = false;
+            if ( collision ( Player.Rect, Tree[i].Rect ) )
+            {
+
+            }
+
             updateForest( Forest , Enemy[i].Rect );
 
         }
@@ -147,14 +157,15 @@ int main(int argc, char* args[])
             // remake the background texture
         Background.offset();
         SDL_DestroyTexture(Background.Texture);
-        Background.Texture = fillBackground(Forest, window.Renderer);
+        Background.Texture = fillBackground(Forest, window.Renderer  );
 
         // Rendering
-        render( window.Renderer , Background , Player , Enemy );
+        render( window.Renderer , Background , Player , Enemy , Tree );
 
         // Framing
             // Frame delay / limit
         FrameTime = SDL_GetTicks() - FrameStart;
+        std::cout<<FrameTime << std::endl;
         if (FrameDelay > FrameTime)
             SDL_Delay(FrameDelay - FrameTime);
     }

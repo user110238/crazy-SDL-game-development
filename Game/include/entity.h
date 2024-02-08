@@ -25,7 +25,6 @@ int Entity::lenghtTo( SDL_Rect destRect )
 
 void pushRandom( std::vector<struct Entity> &Enemy , int x , int LevelWidth , int WindowHeight )
 {
-    srand(time(NULL));
 
     for ( int i = 0 ; i < x ; i++ )
     {

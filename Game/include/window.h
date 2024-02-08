@@ -24,9 +24,9 @@ structWindow::structWindow( int Width , int Height )
 
 void structWindow::init()
 {
-    Window = SDL_CreateWindow( NULL , SDL_WINDOWPOS_UNDEFINED , SDL_WINDOWPOS_UNDEFINED , WindowWidth , WindowHeight , SDL_WINDOW_SHOWN );
+    Window = SDL_CreateWindow( NULL , SDL_WINDOWPOS_UNDEFINED , SDL_WINDOWPOS_UNDEFINED , WindowWidth , WindowHeight , SDL_WINDOW_RESIZABLE  );
 
-    Renderer = SDL_CreateRenderer( Window , -1 , SDL_RENDERER_ACCELERATED );
+    Renderer = SDL_CreateRenderer( Window , -1 , SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
     SDL_SetRenderDrawColor( Renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 
     WindowSurface = SDL_GetWindowSurface( Window );
