@@ -20,9 +20,7 @@ void moveRectTowards(SDL_Rect& srcRect, SDL_Rect& destRect , int detection )
 void HandleEnemyMovement( Entity& Enemy , SDL_Rect& player , int detection )
 {
 
-    double lenght = std::sqrt( (player.x - Enemy.Rect.x) * (player.x - Enemy.Rect.x) + (player.y - Enemy.Rect.y) * (player.y - Enemy.Rect.y) );
-
-    if ( lenght < detection )
+    if ( Enemy.lenghtTo(player) < detection )
         moveRectTowards( Enemy.Rect , player , detection );
 
 }

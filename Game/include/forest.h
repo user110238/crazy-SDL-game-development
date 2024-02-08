@@ -1,59 +1,70 @@
+    // Types of tiles
+enum class Tile
+{
+    Green,
+    Brown,
+    Black,
+};
+
 void fillvector( std::vector <std::vector <Tile>>& vector )
 {
-
-    for ( int x = 0 ; x < LevelWidth / constant::PIXEL_SIZE ; ++x )
-        for (int y = 0; y < LevelHeight / constant::PIXEL_SIZE; ++y)
+        // Goes throught the vector and gives it *random* values
+    for ( int x = 0 ; x < vector.size() ; ++x )
+        for (int y = 0; y < vector[0].size(); ++y)
             if ( getRandomNumber( 0 , 10 ) )
-                vector.at(x).at(y) = Tile::Green;
+                vector[x][y] = Tile::Green;
             else if ( getRandomNumber( 0 , 10 ) )
-                vector.at(x).at(y) = Tile::Black;
+                vector[x][y] = Tile::Black;
             else
-                vector.at(x).at(y) = Tile::Brown;
+                vector[x][y] = Tile::Brown;
 }
 
 SDL_Texture* fillBackground( std::vector <std::vector <Tile>>& vector , SDL_Renderer* Renderer )
 {
-
+        // Temp surface
     SDL_Surface* Surface = SDL_CreateRGBSurface(0, vector.size() * constant::PIXEL_SIZE, vector[0].size() * constant::PIXEL_SIZE, 32, 0, 0, 0, 0);
-
+        // Goes throught the vector and gives the proper values
+        // their own proper colour properties
     for (size_t x = 0; x < vector.size(); ++x) {
         for (size_t y = 0; y < vector[0].size(); ++y) {
-                if ( vector.at(x).at(y) == Tile::Brown )
+                if ( vector[x][y] == Tile::Brown )
                 {
                     SDL_Rect rect = { static_cast<int>(x) * constant::PIXEL_SIZE, static_cast<int>(y) * constant::PIXEL_SIZE, constant::PIXEL_SIZE, constant::PIXEL_SIZE };
-                    SDL_FillRect(Surface, &rect, SDL_MapRGB(Surface->format, 79,58,43 ));
+                    SDL_FillRect(Surface, &rect, SDL_MapRGB(Surface->format, 79,58,43 )); // Brown
                 }
-                else if ( vector.at(x).at(y) == Tile::Green)
+                else if ( vector[x][y] == Tile::Green)
                 {
                     SDL_Rect rect = { static_cast<int>(x) * constant::PIXEL_SIZE, static_cast<int>(y) * constant::PIXEL_SIZE, constant::PIXEL_SIZE, constant::PIXEL_SIZE };
-                    SDL_FillRect(Surface, &rect, SDL_MapRGB(Surface->format, 53, 94, 59 ));
+                    SDL_FillRect(Surface, &rect, SDL_MapRGB(Surface->format, 53, 94, 59 )); // Green
                 }
-                else if ( vector.at(x).at(y) == Tile::Black )
+                else if ( vector[x][y] == Tile::Black )
                 {
                     SDL_Rect rect = { static_cast<int>(x) * constant::PIXEL_SIZE, static_cast<int>(y) * constant::PIXEL_SIZE, constant::PIXEL_SIZE, constant::PIXEL_SIZE };
-                    SDL_FillRect(Surface, &rect, SDL_MapRGB(Surface->format, 0, 0, 0 ));
+                    SDL_FillRect(Surface, &rect, SDL_MapRGB(Surface->format, 0, 0, 0 )); // Black
 
                 }
         }
     }
-
+        // Creates a texture from the temp surface
     SDL_Texture* Texture = SDL_CreateTextureFromSurface( Renderer , Surface );
     SDL_FreeSurface( Surface );
-
+        // Returns the actual texture
     return Texture;
 
 }
 
 void updateForest( std::vector <std::vector <Tile>>& vector ,SDL_Rect Rect )
 {
-    int playerGridXStart = Rect.x / constant::PIXEL_SIZE;
-    int playerGridXEnd = (Rect.x + Rect.w) / constant::PIXEL_SIZE;
-    int playerGridYStart = Rect.y / constant::PIXEL_SIZE;
-    int playerGridYEnd = (Rect.y + Rect.h) / constant::PIXEL_SIZE;
+        // Segment the player into grid of smaller
+        // points that are 10x10 pixels
+    int GridXStart = Rect.x / constant::PIXEL_SIZE;
+    int GridXEnd = (Rect.x + Rect.w) / constant::PIXEL_SIZE;
+    int GridYStart = Rect.y / constant::PIXEL_SIZE;
+    int GridYEnd = (Rect.y + Rect.h) / constant::PIXEL_SIZE;
 
-    for (int gridX = playerGridXStart; gridX <= playerGridXEnd; ++gridX)
+    for (int gridX = GridXStart; gridX <= GridXEnd; ++gridX)
     {
-        for (int gridY = playerGridYStart; gridY <= playerGridYEnd; ++gridY)
+        for (int gridY = GridYStart; gridY <= GridYEnd; ++gridY)
         {
             if (gridX >= 0 && gridX < vector.size() && gridY >= 0 && gridY < vector[0].size())
             {
@@ -62,9 +73,5 @@ void updateForest( std::vector <std::vector <Tile>>& vector ,SDL_Rect Rect )
             }
         }
     }
-
-
-
-
 }
 

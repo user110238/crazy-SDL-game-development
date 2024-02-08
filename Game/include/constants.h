@@ -1,5 +1,3 @@
-    int LevelWidth = 3200;
-    int LevelHeight = 1900;
 
 namespace constant
 {

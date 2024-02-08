@@ -4,7 +4,24 @@ struct Entity
     SDL_Rect Rect;
     SDL_Texture* Texture;
 
+    int lenghtTo( SDL_Rect );
+
 };
+
+int Entity::lenghtTo( SDL_Rect destRect )
+{
+        // distance between rectangles
+    int DX = destRect.x - Rect.x;
+    int DY = destRect.y - Rect.y;
+
+        // normalize the vector
+        // Pitagorov zakon po slovensko
+    double lenght = std::sqrt(DX * DX + DY * DY);
+
+    return lenght;
+
+
+}
 
 void pushRandom( std::vector<struct Entity> &Enemy , int x , int LevelWidth , int WindowHeight )
 {

@@ -8,15 +8,6 @@
 #include <cmath>
 #include <vector>
 
-enum class Tile
-{
-    Green,
-    Brown,
-    Black,
-
-
-};
-
 #include "include/main.h"
 #include "include/window.h"
 #include "include/constants.h"
@@ -25,6 +16,8 @@ enum class Tile
 #include "include/entity.h"
 #include "include/enemy.h"
 #include "include/forest.h"
+#include "include/background.h"
+#include "include/render.h"
 
 
 int main(int argc, char* args[])
@@ -41,6 +34,8 @@ int main(int argc, char* args[])
         // Resolution + Level
     int WindowWidth = 1600;
     int WindowHeight = 800;
+    int LevelWidth = 3200;
+    int LevelHeight = 1900;
 
         // Window struct
         // window + surf + renderer
@@ -66,18 +61,13 @@ int main(int argc, char* args[])
         std::vector<Tile> (
             LevelHeight / constant::PIXEL_SIZE , Tile::Green
         ));
-        fillvector( Forest );
-        SDL_Texture* Background = fillBackground( Forest , window.Renderer );
+    fillvector( Forest );
 
-
-        // Camera rect is the visible window
-        // Background is the whole level
-    SDL_Rect camera = {0, 0, WindowWidth, WindowHeight};
-    SDL_Rect backgroundRect = {0, 0, LevelWidth, LevelHeight};
+    struct back Background ( WindowWidth , WindowHeight , LevelWidth , LevelHeight );
+    Background.Texture = fillBackground( Forest , window.Renderer );
 
         // Textures
     Player.Texture = loadTexture( window.Renderer, "assets/square.png");
-
     for ( auto IT = Enemy.begin() ; IT != Enemy.end() ; IT++ )
         (*IT).Texture = loadTexture( window.Renderer, "assets/circle.png");
 
@@ -145,33 +135,22 @@ int main(int argc, char* args[])
                 // Check if any enemy is collision-ing
             if ( collision (Player.Rect, Enemy.at(i).Rect ) )
                 Game_Loop = false;
+            updateForest( Forest , Enemy[i].Rect );
 
         }
 
         // Scrolling
             // Update camera position to center on player
-        scrolling( camera , Player.Rect , WindowWidth , WindowHeight , LevelWidth , LevelHeight );
+        scrolling( Background.Camera , Player.Rect , WindowWidth , WindowHeight , LevelWidth , LevelHeight );
 
-            // Render background with camera offset
-        backgroundRect.x = -camera.x;
-        backgroundRect.y = -camera.y;
-        rendererAdd( window.Renderer , Background , backgroundRect );
+            // Offset everything with camera
+            // remake the background texture
+        Background.offset();
+        SDL_DestroyTexture(Background.Texture);
+        Background.Texture = fillBackground(Forest, window.Renderer);
 
         // Rendering
-            // Backgroun refresh first
-        SDL_DestroyTexture(Background);
-        Background = fillBackground(Forest, window.Renderer);
-
-            // Render player with camera offset
-        SDL_Rect playerRect = {Player.Rect.x - camera.x, Player.Rect.y - camera.y, Player.Rect.w, Player.Rect.h};
-        rendererAdd( window.Renderer, Player.Texture, playerRect );
-
-            // render enemies + camera offset
-        for ( int i = 0 ; i < Enemy.size() ; i++ )
-                rendererAdd( window.Renderer, Enemy.at(i).Texture, {Enemy.at(i).Rect.x - camera.x, Enemy.at(i).Rect.y - camera.y, Enemy.at(i).Rect.w, Enemy.at(i).Rect.h} );
-
-            // Draw Frame
-        SDL_RenderPresent( window.Renderer );
+        render( window.Renderer , Background , Player , Enemy );
 
         // Framing
             // Frame delay / limit
