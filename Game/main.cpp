@@ -35,8 +35,8 @@ int main(int argc, char* args[])
         // Resolution + Level
     int WindowWidth = 1600;
     int WindowHeight = 800;
-    int LevelWidth = WindowWidth * 2;
-    int LevelHeight = WindowHeight * 2;
+    int LevelWidth = WindowWidth * 3;
+    int LevelHeight = WindowHeight * 3;
 
         // Window struct
         // window + surf + renderer
@@ -52,10 +52,10 @@ int main(int argc, char* args[])
         // Enemies vector
         // Multinacionalke
     std::vector<struct Entity> Enemy;
-    auto enemyIt = Enemy.begin();
+    std::vector<struct Entity>::iterator enemyIt = Enemy.begin();
     pushRandom( Enemy , 3 , LevelWidth , LevelHeight );
     std::vector<struct Entity> Tree;
-    auto treeIt = Tree.begin();
+    std::vector<struct Entity>::iterator treeIt = Tree.begin();
     pushRandom( Tree , 3 , LevelWidth , LevelHeight );
 
         // Forest vector
@@ -73,9 +73,9 @@ int main(int argc, char* args[])
 
         // Textures
     Player.Texture = loadTexture( window.Renderer, "assets/square.png");
-    for ( auto IT = Enemy.begin() ; IT != Enemy.end() ; IT++ )
+    for ( std::vector<Entity>::iterator IT = Enemy.begin() ; IT != Enemy.end() ; IT++ )
         (*IT).Texture = loadTexture( window.Renderer, "assets/circle.png");
-    for ( auto IT = Tree.begin() ; IT != Tree.end() ; IT++ )
+    for ( std::vector<Entity>::iterator IT = Tree.begin() ; IT != Tree.end() ; IT++ )
         (*IT).Texture = loadTexture( window.Renderer, "assets/triangle.png");
 
         // Event variables
@@ -157,7 +157,7 @@ int main(int argc, char* args[])
             // remake the background texture
         Background.offset();
         SDL_DestroyTexture(Background.Texture);
-        Background.Texture = fillBackground(Forest, window.Renderer  );
+        Background.Texture = fillBackground(Forest, window.Renderer );
 
         // Rendering
         render( window.Renderer , Background , Player , Enemy , Tree );
