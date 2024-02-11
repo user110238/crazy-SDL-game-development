@@ -15,13 +15,25 @@
 
 
 
-        // Forest vector
-        // Stores background information
-        // also makes a texture for thee background
-    std::vector<std::vector <bool> > Forest (
-        LevelWidth / constant::PIXEL_SIZE,
-        std::vector<bool> (
-            LevelHeight / constant::PIXEL_SIZE, 0
-        ));
-        fillvector( Forest );
-        SDL_Texture* Background = fillBackground( Forest , window.Renderer );
+
+void updateForest( std::vector <std::vector <Tile>>& vector , SDL_Rect Rect , Tile tile )
+{
+        // Segment the player into grid of smaller
+        // points that are 10x10 pixels
+    int GridXStart = Rect.x / constant::PIXEL_SIZE;
+    int GridXEnd = (Rect.x + Rect.w) / constant::PIXEL_SIZE;
+    int GridYStart = Rect.y / constant::PIXEL_SIZE;
+    int GridYEnd = (Rect.y + Rect.h) / constant::PIXEL_SIZE;
+
+    for (int gridX = GridXStart; gridX <= GridXEnd; ++gridX)
+    {
+        for (int gridY = GridYStart; gridY <= GridYEnd; ++gridY)
+        {
+            if (gridX >= 0 && gridX < vector.size() && gridY >= 0 && gridY < vector[0].size())
+            {
+                if ( vector[gridX][gridY] != tile  )
+                    vector[gridX][gridY] = tile;
+            }
+        }
+    }
+}

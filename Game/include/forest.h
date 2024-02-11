@@ -31,13 +31,16 @@ SDL_Texture* fillBackground(std::vector<std::vector<Tile>>& vector, SDL_Renderer
         // PIXEL_SIZE is 10, probably
     SDL_Rect rect = {0, 0, constant::PIXEL_SIZE, constant::PIXEL_SIZE};
 
-    for (size_t x = 0; x < vector.size(); ++x) {
-        for (size_t y = 0; y < vector[0].size(); ++y) {
+    for (size_t x = 0; x < vector.size(); ++x)
+    {
+        for (size_t y = 0; y < vector[0].size(); ++y)
+        {
             rect.x = x * constant::PIXEL_SIZE;
             rect.y = y * constant::PIXEL_SIZE;
 
             Uint8 r, g, b;
-            switch (vector[x][y]) {
+            switch (vector[x][y])
+            {
                 case Tile::Brown:
                     r = 79; g = 58; b = 43; // Brown
                     break;
@@ -48,34 +51,79 @@ SDL_Texture* fillBackground(std::vector<std::vector<Tile>>& vector, SDL_Renderer
                     r = 0; g = 0; b = 0; // Black
                     break;
             }
+
             SDL_SetRenderDrawColor(Renderer, r, g, b, 255);
             SDL_RenderFillRect(Renderer, &rect);
         }
     }
     SDL_SetRenderTarget(Renderer, nullptr);
-
     return Texture;
 }
 
-void updateForest( std::vector <std::vector <Tile>>& vector ,SDL_Rect Rect )
-{
-        // Segment the player into grid of smaller
-        // points that are 10x10 pixels
-    int GridXStart = Rect.x / constant::PIXEL_SIZE;
-    int GridXEnd = (Rect.x + Rect.w) / constant::PIXEL_SIZE;
-    int GridYStart = Rect.y / constant::PIXEL_SIZE;
-    int GridYEnd = (Rect.y + Rect.h) / constant::PIXEL_SIZE;
+void updateBackgroundTexture(std::vector<std::vector<Tile>>& vector, SDL_Texture* texture, SDL_Renderer* renderer) {
+        // Set renderer to texture
+    SDL_SetRenderTarget(renderer, texture);
 
-    for (int gridX = GridXStart; gridX <= GridXEnd; ++gridX)
+        // Size of "pixel" or a tile
+        // PIXEL_SIZE is 10, probably
+    SDL_Rect rect = {0, 0, constant::PIXEL_SIZE, constant::PIXEL_SIZE};
+
+    for (int x = 0; x < vector.size(); ++x)
     {
-        for (int gridY = GridYStart; gridY <= GridYEnd; ++gridY)
+        for (int y = 0; y < vector[0].size(); ++y)
         {
-            if (gridX >= 0 && gridX < vector.size() && gridY >= 0 && gridY < vector[0].size())
+            rect.x = x * constant::PIXEL_SIZE;
+            rect.y = y * constant::PIXEL_SIZE;
+
+            Uint8 r, g, b;
+            switch (vector[x][y])
             {
-                if ( vector[gridX][gridY] == Tile::Brown || vector[gridX][gridY] == Tile::Black )
-                    vector[gridX][gridY] = Tile::Green;
+                case Tile::Brown:
+                    r = 79; g = 58; b = 43; // Brown
+                    break;
+                case Tile::Green:
+                    r = 53; g = 94; b = 59; // Green
+                    break;
+                case Tile::Black:
+                    r = 0; g = 0; b = 0; // Black
+                    break;
+                default:
+                    r = 255; g = 255; b = 255; // Default to white
+                    break;
+            }
+
+            SDL_SetRenderDrawColor(renderer, r, g, b, 255);
+            SDL_RenderFillRect(renderer, &rect);
+        }
+    }
+    SDL_SetRenderTarget(renderer, nullptr);
+}
+
+void updateForest(std::vector<std::vector<Tile>>& vector, SDL_Rect Rect, Tile tile)
+{
+        // Center of the rectangle
+    int centerX = Rect.x + Rect.w / 2;
+    int centerY = Rect.y + Rect.h / 2;
+        // Radius == smaller side
+    int radius = std::min(Rect.w, Rect.h) / 2 - constant::HITBOX_REDUCTION;
+
+    for (int x = Rect.x; x < Rect.x + Rect.w; ++x)
+    {
+        for (int y = Rect.y; y < Rect.y + Rect.h; ++y)
+        {
+                // Pitagorov
+            int distanceX = x - centerX;
+            int distanceY = y - centerY;
+            double distance = std::sqrt(std::pow(distanceX, 2) + std::pow(distanceY, 2));
+                // If current point is within the circle radius
+            if (distance <= radius)
+            {
+                if (vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] != tile)
+                    vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] = tile;
+
             }
         }
     }
 }
+
 

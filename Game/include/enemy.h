@@ -17,10 +17,42 @@ void moveRectTowards(SDL_Rect& srcRect, SDL_Rect& destRect )
 
 }
 
-void HandleEnemyMovement( Entity& Enemy , SDL_Rect& dest , int detection )
+Entity* findNearestTree(Entity enemy, std::vector<Entity>& trees)
 {
+        // An entity struct to store which tree is closest
+    Entity* nearestTree = nullptr;
+        // Maximum possible distance
+    float minDistance = std::numeric_limits<float>::max();
 
-    if ( Enemy.lenghtTo(dest) < detection )
-        moveRectTowards( Enemy.Rect , dest );
+    for (auto& tree : trees)
+    {
+        float dist = distance(enemy.Rect.x, enemy.Rect.y, tree.Rect.x, tree.Rect.y);
+        if (dist < minDistance)
+        {
+            minDistance = dist;
+            nearestTree = &tree;
+        }
+    }
 
+    return nearestTree;
+}
+
+void HandleEnemyMovement(Entity& enemy, SDL_Rect playerRect, std::vector<Entity>& trees, int detectionRange)
+{
+    Entity* nearestTree = findNearestTree(enemy, trees);
+    SDL_Rect targetRect;
+
+        // Calculates the distance to the nearest tree
+        // Priority is tree over player
+    if (nearestTree != nullptr && distance(enemy.Rect.x, enemy.Rect.y, nearestTree->Rect.x, nearestTree->Rect.y) <= detectionRange) {
+        targetRect = nearestTree->Rect;
+        // Calculates if player is in range, if theere are no trees
+    } else if (distance(enemy.Rect.x, enemy.Rect.y, playerRect.x, playerRect.y) <= detectionRange) {
+        targetRect = playerRect;
+        // Nothing in range
+    } else {
+        return;
+    }
+
+    moveRectTowards( enemy.Rect , targetRect );
 }

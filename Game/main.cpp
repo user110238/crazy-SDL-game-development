@@ -38,6 +38,7 @@ int main(int argc, char* args[])
     int LevelWidth = WindowWidth * 3;
     int LevelHeight = WindowHeight * 3;
 
+
         // Window struct
         // window + surf + renderer
     structWindow window( WindowWidth , WindowHeight );
@@ -130,22 +131,28 @@ int main(int argc, char* args[])
             // Update player position
         Player.movePlayer(  LevelWidth , LevelHeight );
 
-        updateForest( Forest , Player.Rect );
+        updateForest( Forest , Player.Rect , Tile::Green );
 
             // Entity logic loop
         for ( int i = 0 ; i < Enemy.size() ; i++ )
         {
-                // Move enemy towards player
-            HandleEnemyMovement( Enemy.at(i) , Player.Rect , 500 );
+            HandleEnemyMovement(Enemy[i], Player.Rect, Tree , 500 );
                 // Check if any enemy is collision-ing
             if ( collision ( Player.Rect, Enemy[i].Rect ) )
-                Game_Loop = false;
-            if ( collision ( Player.Rect, Tree[i].Rect ) )
             {
-
+                Game_Loop = false;
             }
 
-            updateForest( Forest , Enemy[i].Rect );
+            for (int j = 0; j < Tree.size(); j++)
+            {
+                if (collision(Enemy[i].Rect, Tree[j].Rect))
+                {
+                    Tree.erase(Tree.begin() + j);
+                    --j;
+                }
+            }
+
+            updateForest( Forest , Enemy[i].Rect , Tile::Brown);
 
         }
 
@@ -156,8 +163,7 @@ int main(int argc, char* args[])
             // Offset everything with camera
             // remake the background texture
         Background.offset();
-        SDL_DestroyTexture(Background.Texture);
-        Background.Texture = fillBackground(Forest, window.Renderer );
+        updateBackgroundTexture(Forest, Background.Texture, window.Renderer);
 
         // Rendering
         render( window.Renderer , Background , Player , Enemy , Tree );
