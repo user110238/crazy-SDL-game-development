@@ -35,8 +35,8 @@ int main(int argc, char* args[])
         // Resolution + Level
     int WindowWidth = 1600;
     int WindowHeight = 800;
-    int LevelWidth = WindowWidth * 3;
-    int LevelHeight = WindowHeight * 3;
+    int LevelWidth = WindowWidth * 6;
+    int LevelHeight = WindowHeight * 6;
 
 
         // Window struct
@@ -88,7 +88,6 @@ int main(int argc, char* args[])
     {
             // Used to calculate time per instance of loop
         FrameStart = SDL_GetTicks();
-        frameCounter++;
 
             // Event poll
         while (SDL_PollEvent(&Event))
@@ -163,7 +162,7 @@ int main(int argc, char* args[])
             // Offset everything with camera
             // remake the background texture
         Background.offset();
-        updateBackgroundTexture(Forest, Background.Texture, window.Renderer);
+        updateBackgroundTexture(Forest, Background.Texture, window.Renderer, Background.Camera );
 
         // Rendering
         render( window.Renderer , Background , Player , Enemy , Tree );
@@ -171,7 +170,7 @@ int main(int argc, char* args[])
         // Framing
             // Frame delay / limit
         FrameTime = SDL_GetTicks() - FrameStart;
-        std::cout<<FrameTime << std::endl;
+        std::cout << FrameTime << std::endl;
         if (FrameDelay > FrameTime)
             SDL_Delay(FrameDelay - FrameTime);
     }

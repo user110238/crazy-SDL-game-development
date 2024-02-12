@@ -60,7 +60,7 @@ SDL_Texture* fillBackground(std::vector<std::vector<Tile>>& vector, SDL_Renderer
     return Texture;
 }
 
-void updateBackgroundTexture(std::vector<std::vector<Tile>>& vector, SDL_Texture* texture, SDL_Renderer* renderer) {
+void updateBackgroundTexture(std::vector<std::vector<Tile>> vector, SDL_Texture* texture, SDL_Renderer* renderer, SDL_Rect camera) {
         // Set renderer to texture
     SDL_SetRenderTarget(renderer, texture);
 
@@ -68,9 +68,9 @@ void updateBackgroundTexture(std::vector<std::vector<Tile>>& vector, SDL_Texture
         // PIXEL_SIZE is 10, probably
     SDL_Rect rect = {0, 0, constant::PIXEL_SIZE, constant::PIXEL_SIZE};
 
-    for (int x = 0; x < vector.size(); ++x)
+    for (int x = camera.x/constant::PIXEL_SIZE; x < (camera.x + camera.w)/constant::PIXEL_SIZE; ++x)
     {
-        for (int y = 0; y < vector[0].size(); ++y)
+        for (int y = camera.y/constant::PIXEL_SIZE; y < (camera.y + camera.h)/constant::PIXEL_SIZE; ++y)
         {
             rect.x = x * constant::PIXEL_SIZE;
             rect.y = y * constant::PIXEL_SIZE;

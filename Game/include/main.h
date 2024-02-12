@@ -26,11 +26,9 @@ void rendererAdd( SDL_Renderer* Renderer , SDL_Texture* Texture , SDL_Rect Src ,
 }
 
 void scrolling(SDL_Rect& camera, const SDL_Rect& Player, int WindowWidth, int WindowHeight, int LevelWidth, int LevelHeight) {
-    // Calculate the desired center of the camera based on the player's position
     int centerX = Player.x + Player.w / 2;
     int centerY = Player.y + Player.h / 2;
 
-    // Adjust camera position to keep the player centered within the window
     camera.x = centerX - WindowWidth / 2;
     camera.y = centerY - WindowHeight / 2;
 
