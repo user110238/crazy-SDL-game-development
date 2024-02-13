@@ -44,11 +44,11 @@ void HandleEnemyMovement(Entity& enemy, SDL_Rect playerRect, std::vector<Entity>
 
         // Calculates the distance to the nearest tree
         // Priority is tree over player
-    if (nearestTree != nullptr && distance(enemy.Rect.x, enemy.Rect.y, nearestTree->Rect.x, nearestTree->Rect.y) <= detectionRange) {
-        targetRect = nearestTree->Rect;
-        // Calculates if player is in range, if theere are no trees
-    } else if (distance(enemy.Rect.x, enemy.Rect.y, playerRect.x, playerRect.y) <= detectionRange) {
+    if (distance(enemy.Rect.x, enemy.Rect.y, playerRect.x, playerRect.y) <= detectionRange) {
         targetRect = playerRect;
+        // Calculates if player is in range, if theere are no trees
+    } else if (nearestTree != nullptr && distance(enemy.Rect.x, enemy.Rect.y, nearestTree->Rect.x, nearestTree->Rect.y) <= detectionRange) {
+        targetRect = nearestTree->Rect;
         // Nothing in range
     } else {
         return;

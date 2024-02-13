@@ -3,7 +3,7 @@
 #include <SDL2/SDL_timer.h>
 
 #include <stdio.h>
-#include <iostream>
+#include <ctime>
 #include <string>
 #include <cmath>
 #include <vector>
@@ -15,6 +15,7 @@
 #include "include/player.h"
 #include "include/entity.h"
 #include "include/enemy.h"
+#include "include/events.h"
 #include "include/forest.h"
 #include "include/background.h"
 #include "include/render.h"
@@ -35,9 +36,8 @@ int main(int argc, char* args[])
         // Resolution + Level
     int WindowWidth = 1600;
     int WindowHeight = 800;
-    int LevelWidth = WindowWidth * 6;
-    int LevelHeight = WindowHeight * 6;
-
+    int LevelWidth = WindowWidth * 3;
+    int LevelHeight = WindowHeight * 3;
 
         // Window struct
         // window + surf + renderer
@@ -79,52 +79,15 @@ int main(int argc, char* args[])
     for ( std::vector<Entity>::iterator IT = Tree.begin() ; IT != Tree.end() ; IT++ )
         (*IT).Texture = loadTexture( window.Renderer, "assets/triangle.png");
 
-        // Event variables
-        // But are they really variables, hmm
-    SDL_Event Event;
-    bool Game_Loop = true;
+    bool state = true;
 
-    while (Game_Loop)
+    while (state)
     {
             // Used to calculate time per instance of loop
         FrameStart = SDL_GetTicks();
 
             // Event poll
-        while (SDL_PollEvent(&Event))
-        {
-            switch (Event.type)
-            {
-                case SDL_QUIT:
-                    Game_Loop = false;
-                    break;
-                case SDL_KEYDOWN:
-                    if (Event.key.repeat == 0)
-                    {
-                        switch (Event.key.keysym.sym)
-                        {
-                            case SDLK_UP: Player.Velocity.y -= constant::PLAYER_VELOCITY; break;
-                            case SDLK_DOWN: Player.Velocity.y += constant::PLAYER_VELOCITY; break;
-                            case SDLK_LEFT: Player.Velocity.x -= constant::PLAYER_VELOCITY; break;
-                            case SDLK_RIGHT: Player.Velocity.x += constant::PLAYER_VELOCITY; break;
-
-                            case SDLK_ESCAPE: Game_Loop = false; break;
-                        }
-                    }
-                    break;
-                case SDL_KEYUP:
-                    if (Event.key.repeat == 0)
-                    {
-                        switch (Event.key.keysym.sym)
-                        {
-                            case SDLK_UP: Player.Velocity.y += constant::PLAYER_VELOCITY; break;
-                            case SDLK_DOWN: Player.Velocity.y -= constant::PLAYER_VELOCITY; break;
-                            case SDLK_LEFT: Player.Velocity.x += constant::PLAYER_VELOCITY; break;
-                            case SDLK_RIGHT: Player.Velocity.x -= constant::PLAYER_VELOCITY; break;
-                        }
-                    }
-                    break;
-            }
-        }
+        eventHandler( state , Player );
 
         // Game logic
             // Update player position
@@ -139,7 +102,7 @@ int main(int argc, char* args[])
                 // Check if any enemy is collision-ing
             if ( collision ( Player.Rect, Enemy[i].Rect ) )
             {
-                Game_Loop = false;
+                state = false;
             }
 
             for (int j = 0; j < Tree.size(); j++)
@@ -170,7 +133,6 @@ int main(int argc, char* args[])
         // Framing
             // Frame delay / limit
         FrameTime = SDL_GetTicks() - FrameStart;
-        std::cout << FrameTime << std::endl;
         if (FrameDelay > FrameTime)
             SDL_Delay(FrameDelay - FrameTime);
     }

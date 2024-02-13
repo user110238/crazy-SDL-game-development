@@ -1,4 +1,3 @@
-
 namespace constant
 {
     // Entity constants
