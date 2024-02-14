@@ -19,18 +19,16 @@ void moveRectTowards(SDL_Rect& srcRect, SDL_Rect& destRect )
 
 Entity* findNearestTree(Entity enemy, std::vector<Entity>& trees)
 {
-        // An entity struct to store which tree is closest
     Entity* nearestTree = nullptr;
-        // Maximum possible distance
     float minDistance = std::numeric_limits<float>::max();
 
-    for (auto& tree : trees)
+    for (std::vector<Entity>::iterator it = trees.begin(); it != trees.end(); ++it)
     {
-        float dist = distance(enemy.Rect.x, enemy.Rect.y, tree.Rect.x, tree.Rect.y);
+        float dist = distance(enemy.Rect.x, enemy.Rect.y, it->Rect.x, it->Rect.y);
         if (dist < minDistance)
         {
             minDistance = dist;
-            nearestTree = &tree;
+            nearestTree = &(*it);
         }
     }
 

@@ -81,16 +81,15 @@ int main(int argc, char* args[])
 
     bool state = true;
 
-    while (state)
+    while ( endGame() )
+
     {
             // Used to calculate time per instance of loop
         FrameStart = SDL_GetTicks();
 
-            // Event poll
-        eventHandler( state , Player );
-
         // Game logic
             // Update player position
+        Player.Velocity = eventHandlerPlayer( Player.Velocity );
         Player.movePlayer(  LevelWidth , LevelHeight );
 
         updateForest( Forest , Player.Rect , Tile::Green );
