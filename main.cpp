@@ -7,6 +7,7 @@
 #include <string>
 #include <cmath>
 #include <vector>
+#include <iostream>
 
 #include "include/main.h"
 #include "include/window.h"
@@ -52,8 +53,8 @@ int main(int argc, char* args[])
 
         // Enemies vector
         // Multinacionalke
-    std::vector<struct Entity> Enemy;
-    std::vector<struct Entity>::iterator enemyIt = Enemy.begin();
+    std::vector<struct Enemy> Enemy;
+    std::vector<struct Enemy>::iterator enemyIt = Enemy.begin();
     pushRandom( Enemy , 3 , LevelWidth , LevelHeight );
     std::vector<struct Entity> Tree;
     std::vector<struct Entity>::iterator treeIt = Tree.begin();
@@ -74,15 +75,17 @@ int main(int argc, char* args[])
 
         // Textures
     Player.Texture = loadTexture( window.Renderer, "assets/square.png");
-    for ( std::vector<Entity>::iterator IT = Enemy.begin() ; IT != Enemy.end() ; IT++ )
+    for ( std::vector<struct Enemy>::iterator IT = Enemy.begin() ; IT != Enemy.end() ; IT++ )
         (*IT).Texture = loadTexture( window.Renderer, "assets/circle.png");
-    for ( std::vector<Entity>::iterator IT = Tree.begin() ; IT != Tree.end() ; IT++ )
+    for ( std::vector<struct Entity>::iterator IT = Tree.begin() ; IT != Tree.end() ; IT++ )
         (*IT).Texture = loadTexture( window.Renderer, "assets/triangle.png");
 
     bool state = true;
+  
+    std::cout << Enemy[0].Rect.x << " " << Enemy[0].Rect.y << std::endl;
+    std::cout << Enemy[0].randomPoint.x << " " << Enemy[0].randomPoint.y << std::endl;
 
     while ( endGame() )
-
     {
             // Used to calculate time per instance of loop
         FrameStart = SDL_GetTicks();

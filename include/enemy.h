@@ -1,4 +1,4 @@
-void moveRectTowards(SDL_Rect& srcRect, SDL_Rect& destRect )
+void moveTowards(SDL_Rect& srcRect, SDL_Rect& destRect )
 {
         // distance between rectangles
     int DX = destRect.x - srcRect.x;
@@ -14,6 +14,23 @@ void moveRectTowards(SDL_Rect& srcRect, SDL_Rect& destRect )
     srcRect.x += (int)(normDX * constant::ENEMY_VELOCITY);
     srcRect.y += (int)(normDY * constant::ENEMY_VELOCITY);
 
+}
+
+void moveTowards(SDL_Rect& srcRect, SDL_Point& destPoint )
+{
+        // distance between rectangles
+    int DX = destPoint.x - srcRect.x;
+    int DY = destPoint.y - srcRect.y;
+
+        // normalize the vector
+        // Pitagorov zakon po slovensko
+    double lenght = std::sqrt(DX * DX + DY * DY);
+    double normDX = DX / lenght;
+    double normDY = DY / lenght;
+
+            // move src rectangle acording to the normalized vector
+    srcRect.x += (int)(normDX * constant::ENEMY_VELOCITY);
+    srcRect.y += (int)(normDY * constant::ENEMY_VELOCITY);
 
 }
 
@@ -52,5 +69,5 @@ void HandleEnemyMovement(Entity& enemy, SDL_Rect playerRect, std::vector<Entity>
         return;
     }
 
-    moveRectTowards( enemy.Rect , targetRect );
+    moveTowards( enemy.Rect , targetRect );
 }

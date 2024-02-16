@@ -1,4 +1,4 @@
-void render ( SDL_Renderer* Renderer , back Background , Player Player , std::vector<struct Entity> Enemy , std::vector<struct Entity> Tree )
+void render ( SDL_Renderer* Renderer , back Background , Player Player , std::vector<struct Enemy> Enemy , std::vector<struct Entity> Tree )
 {
             // Clear current frame
         SDL_RenderClear( Renderer );
