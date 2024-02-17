@@ -1,10 +1,12 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
+#include <SDL2/SDL_ttf.h>
 
 #include <stdio.h>
 #include <ctime>
 #include <string>
+#include <iostream>
 #include <cmath>
 #include <vector>
 #include <iostream>
@@ -19,12 +21,14 @@
 #include "include/events.h"
 #include "include/forest.h"
 #include "include/background.h"
+#include "include/text.h"
 #include "include/render.h"
 
 int main(int argc, char* args[])
 {
         // Enables all SDL subsystems
     SDL_Init(SDL_INIT_EVERYTHING);
+    TTF_Init();
 
         // Framerate
     const int FPS = 60;
@@ -45,7 +49,6 @@ int main(int argc, char* args[])
     structWindow window( WindowWidth , WindowHeight );
     window.init();
 
-
         // Create a player struct      x , y
     Player Player ( (LevelWidth / 2) - (constant::ENTITY_SIZE_X / 2) , (LevelHeight / 2) - (constant::ENTITY_SIZE_Y / 2) ,
                                     // w , h
@@ -53,12 +56,12 @@ int main(int argc, char* args[])
 
         // Enemies vector
         // Multinacionalke
-    std::vector<struct Enemy> Enemy;
-    std::vector<struct Enemy>::iterator enemyIt = Enemy.begin();
-    pushRandom( Enemy , 3 , LevelWidth , LevelHeight );
+    std::vector<struct Entity> Enemy;
+    std::vector<struct Entity>::iterator enemyIt = Enemy.begin();
+    pushRandom( Enemy , 6 , LevelWidth , LevelHeight );
     std::vector<struct Entity> Tree;
     std::vector<struct Entity>::iterator treeIt = Tree.begin();
-    pushRandom( Tree , 3 , LevelWidth , LevelHeight );
+    pushRandom( Tree , 20 , LevelWidth , LevelHeight );
 
         // Forest vector
         // Stores background information
@@ -75,15 +78,14 @@ int main(int argc, char* args[])
 
         // Textures
     Player.Texture = loadTexture( window.Renderer, "assets/square.png");
-    for ( std::vector<struct Enemy>::iterator IT = Enemy.begin() ; IT != Enemy.end() ; IT++ )
+    for ( std::vector<struct Entity>::iterator IT = Enemy.begin() ; IT != Enemy.end() ; IT++ )
         (*IT).Texture = loadTexture( window.Renderer, "assets/circle.png");
     for ( std::vector<struct Entity>::iterator IT = Tree.begin() ; IT != Tree.end() ; IT++ )
         (*IT).Texture = loadTexture( window.Renderer, "assets/triangle.png");
 
-    bool state = true;
-  
-    std::cout << Enemy[0].Rect.x << " " << Enemy[0].Rect.y << std::endl;
-    std::cout << Enemy[0].randomPoint.x << " " << Enemy[0].randomPoint.y << std::endl;
+            // Fonts
+        // Path to font + score text
+    text Text( window.Renderer , "assets/ARCADECLASSIC.ttf" , "Score" , Tree.size() );
 
     while ( endGame() )
     {
@@ -95,28 +97,27 @@ int main(int argc, char* args[])
         Player.Velocity = eventHandlerPlayer( Player.Velocity );
         Player.movePlayer(  LevelWidth , LevelHeight );
 
-        updateForest( Forest , Player.Rect , Tile::Green );
-
             // Entity logic loop
-        for ( int i = 0 ; i < Enemy.size() ; i++ )
+        for ( int i = 0 ; i < Enemy.size() ; ++i )
         {
-            HandleEnemyMovement(Enemy[i], Player.Rect, Tree , 500 );
+            HandleEnemyMovement(Enemy[i].Rect, Tree );
                 // Check if any enemy is collision-ing
             if ( collision ( Player.Rect, Enemy[i].Rect ) )
             {
-                state = false;
+                Enemy.erase(Enemy.begin() + i);
             }
 
             for (int j = 0; j < Tree.size(); j++)
             {
                 if (collision(Enemy[i].Rect, Tree[j].Rect))
                 {
+                    updateForest( Forest , Tree[j].Rect , Tile::Brown , 300 );
                     Tree.erase(Tree.begin() + j);
                     --j;
                 }
             }
 
-            updateForest( Forest , Enemy[i].Rect , Tile::Brown);
+            updateForest( Forest , Enemy[i].Rect , Tile::Brown , 0 );
 
         }
 
@@ -129,8 +130,12 @@ int main(int argc, char* args[])
         Background.offset();
         updateBackgroundTexture(Forest, Background.Texture, window.Renderer, Background.Camera );
 
+            // Calculate displayed text
+        Text.treeCount = loadTextureFromText( window.Renderer , std::to_string(calculatePercentage( Forest , Tile::Green )).c_str() , Text.Font );
+
+
         // Rendering
-        render( window.Renderer , Background , Player , Enemy , Tree );
+        render( window.Renderer , Background , Player , Enemy , Tree , Text );
 
         // Framing
             // Frame delay / limit

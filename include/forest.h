@@ -11,7 +11,7 @@ void fillvector( std::vector <std::vector <Tile>>& vector )
 {
         // Goes throught the vector and gives it *random* values
     for ( int x = 0 ; x < vector.size() ; ++x )
-        for (int y = 0; y < vector[0].size(); ++y)
+        for (int y = 0; y < vector.at(0).size(); ++y)
             if ( getRandomNumber( 0 , 10 ) ) // 90 will be green
                 vector[x][y] = Tile::Green;
             else if ( getRandomNumber( 0 , 1 ) )
@@ -99,31 +99,54 @@ void updateBackgroundTexture(std::vector<std::vector<Tile>> vector, SDL_Texture*
     SDL_SetRenderTarget(renderer, nullptr);
 }
 
-void updateForest(std::vector<std::vector<Tile>>& vector, SDL_Rect Rect, Tile tile)
+void updateForest(std::vector<std::vector<Tile>>& vector, SDL_Rect Rect, Tile tile, int clearRadius)
 {
-        // Center of the rectangle
+    // Center of the rectangle
     int centerX = Rect.x + Rect.w / 2;
     int centerY = Rect.y + Rect.h / 2;
-        // Radius == smaller side
-    int radius = std::min(Rect.w, Rect.h) / 2 - constant::HITBOX_REDUCTION;
+    int extend = clearRadius;
 
-    for (int x = Rect.x; x < Rect.x + Rect.w; ++x)
+    // Radius == smaller side
+    clearRadius += std::min(Rect.w, Rect.h) / 2 - constant::HITBOX_REDUCTION;
+
+    for (int x = std::max(0, Rect.x - extend); x < std::min(static_cast<int>(vector.size() * constant::PIXEL_SIZE), Rect.x + Rect.w + extend); ++x)
     {
-        for (int y = Rect.y; y < Rect.y + Rect.h; ++y)
+        for (int y = std::max(0, Rect.y - extend); y < std::min(static_cast<int>(vector[0].size() * constant::PIXEL_SIZE), Rect.y + Rect.h + extend); ++y)
         {
-                // Pitagorov
+            // Pitagorov
             int distanceX = x - centerX;
             int distanceY = y - centerY;
             double distance = std::sqrt(std::pow(distanceX, 2) + std::pow(distanceY, 2));
-                // If current point is within the circle radius
-            if (distance <= radius)
+            // If current point is within the circle radius
+            if (distance <= clearRadius)
             {
-                if (vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] != tile)
-                    vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] = tile;
-
+                if (x / constant::PIXEL_SIZE < vector.size() && y / constant::PIXEL_SIZE < vector[0].size())
+                {
+                    if (vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] != tile)
+                        vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] = tile;
+                }
             }
         }
     }
+}
+
+int calculatePercentage(const std::vector<std::vector<Tile>>& vector , Tile tile )
+{
+    int totalTiles = 0;
+    int brownTiles = 0;
+
+    for (int i = 0; i < vector.size(); ++i)
+    {
+        for (int j = 0; j < vector[i].size(); ++j)
+        {
+            ++totalTiles;
+            if ( vector[i][j] == tile )
+                ++brownTiles;
+        }
+    }
+
+    return static_cast<int>((static_cast<double>(brownTiles) / totalTiles) * 100.0);
+
 }
 
 

@@ -6,12 +6,12 @@ struct Entity
 
 };
 
-struct Enemy : public Entity
+/*struct Enemy : public Entity
 {
-     
+
   SDL_Point randomPoint;
 
-};
+};*/
 
 
 void pushRandom( std::vector<struct Entity> &Entity , int x , int LevelWidth , int WindowHeight )
@@ -27,7 +27,7 @@ void pushRandom( std::vector<struct Entity> &Entity , int x , int LevelWidth , i
     }
 }
 
-void pushRandom( std::vector<struct Enemy> &Enemy , int x , int LevelWidth , int WindowHeight )
+/*void pushRandom( std::vector<struct Enemy> &Enemy , int x , int LevelWidth , int WindowHeight )
 {
 
     for ( int i = 0 ; i < x ; i++ )
@@ -42,7 +42,7 @@ void pushRandom( std::vector<struct Enemy> &Enemy , int x , int LevelWidth , int
         Enemy.push_back( { Randomx, Randomy, constant::ENTITY_SIZE_X, constant::ENTITY_SIZE_Y, nullptr, { RRandomx , RRandomy } } );
 
     }
-}
+}*/
 
 bool collision( SDL_Rect a, SDL_Rect b )
 {

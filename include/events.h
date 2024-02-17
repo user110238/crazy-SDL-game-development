@@ -19,9 +19,13 @@ SDL_Point eventHandlerPlayer ( SDL_Point Velocity )
                     {
                         switch (Event.key.keysym.sym)
                         {
+                            case SDLK_w:
                             case SDLK_UP: Velocity.y -= constant::PLAYER_VELOCITY; break;
+                            case SDLK_s:
                             case SDLK_DOWN: Velocity.y += constant::PLAYER_VELOCITY; break;
+                            case SDLK_a:
                             case SDLK_LEFT: Velocity.x -= constant::PLAYER_VELOCITY; break;
+                            case SDLK_d:
                             case SDLK_RIGHT: Velocity.x += constant::PLAYER_VELOCITY; break;
                         }
                     }
@@ -31,9 +35,13 @@ SDL_Point eventHandlerPlayer ( SDL_Point Velocity )
                     {
                         switch (Event.key.keysym.sym)
                         {
+                            case SDLK_w:
                             case SDLK_UP: Velocity.y += constant::PLAYER_VELOCITY; break;
+                            case SDLK_s:
                             case SDLK_DOWN: Velocity.y -= constant::PLAYER_VELOCITY; break;
+                            case SDLK_a:
                             case SDLK_LEFT: Velocity.x += constant::PLAYER_VELOCITY; break;
+                            case SDLK_d:
                             case SDLK_RIGHT: Velocity.x -= constant::PLAYER_VELOCITY; break;
                         }
                     }
