@@ -29,14 +29,7 @@ void fillvector(std::vector<std::vector<Tile>>& vector , int campCount )
         {
             if (vector[x][y] != Tile::Black)
             {
-                if (getRandomNumber(0, 9))
-                {
                     vector[x][y] = Tile::Green;
-                }
-                else
-                {
-                    vector[x][y] = Tile::Brown;
-                }
             }
         }
     }
@@ -89,7 +82,7 @@ SDL_Texture* fillBackground(std::vector<std::vector<Tile>>& vector, SDL_Renderer
                     r = 79; g = 58; b = 43; // Brown
                     break;
                 case Tile::Green:
-                    r = 53; g = 94; b = 59; // Green
+                    r = 53; g = 94; b = 60; // Green
                     break;
                 case Tile::Black:
                     r = 0; g = 0; b = 0; // Black
@@ -126,13 +119,10 @@ void updateBackgroundTexture(std::vector<std::vector<Tile>> vector, SDL_Texture*
                     r = 79; g = 58; b = 43; // Brown
                     break;
                 case Tile::Green:
-                    r = 53; g = 94; b = 59; // Green
+                    r = 53; g = 94; b = 60; // Green
                     break;
                 case Tile::Black:
                     r = 0; g = 0; b = 0; // Black
-                    break;
-                default:
-                    r = 255; g = 255; b = 255; // Default to white
                     break;
             }
 

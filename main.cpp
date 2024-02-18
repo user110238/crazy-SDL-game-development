@@ -24,6 +24,22 @@
 #include "include/text.h"
 #include "include/render.h"
 
+void HandleAllyMovement( SDL_Rect& allyRect, std::vector<Entity>& Enemy, int detection )
+{
+    Entity* nearestEntity = findNearestTree( allyRect, Enemy );
+    SDL_Rect targetRect;
+
+    if ( nearestEntity!=nullptr && distance( allyRect.x , allyRect.y , nearestEntity->Rect.x , nearestEntity->Rect.y ) <= detection ) {
+        targetRect = nearestEntity->Rect;
+    } else {
+        targetRect.x = allyRect.x;
+        targetRect.y = allyRect.y;
+    }
+
+    moveTowards( allyRect , targetRect );
+
+}
+
 int main(int argc, char* args[])
 {
         // Enables all SDL subsystems
@@ -54,15 +70,6 @@ int main(int argc, char* args[])
                                     // w , h
                     constant::ENTITY_SIZE_X , constant::ENTITY_SIZE_Y );
 
-        // Enemies vector
-        // Multinacionalke
-    std::vector<struct Entity> Enemy;
-    std::vector<struct Entity>::iterator enemyIt = Enemy.begin();
-    pushRandom( Enemy , 6 , LevelWidth , LevelHeight );
-    std::vector<struct Entity> Tree;
-    std::vector<struct Entity>::iterator treeIt = Tree.begin();
-    pushRandom( Tree , 20 , LevelWidth , LevelHeight );
-
         // Forest vector
         // Stores background information
         // also makes a texture for thee background
@@ -71,9 +78,22 @@ int main(int argc, char* args[])
         std::vector<Tile> (
             LevelHeight / constant::PIXEL_SIZE , Tile::Green
         ));
-
     fillvector( Forest , 3 );
+
+            // Entity vectors
+        // Multinacionalke
+    std::vector<struct Entity> Enemy;
+    std::vector<struct Entity>::iterator enemyIt = Enemy.begin();
+    pushRandom( Enemy , 6 , LevelWidth , LevelHeight );
+        // Trees
+    std::vector<struct Entity> Tree;
+    std::vector<struct Entity>::iterator treeIt = Tree.begin();
+    pushRandom( Tree , 255 , LevelWidth , LevelHeight );
+        // Staroselci
+    std::vector<struct Entity> Allies;
+    std::vector<struct Entity>::iterator allyIt = Allies.begin();
     std::vector<std::pair< int , int >> CampCoordinates = findCamps( Forest );
+    pushToCoords( Allies , 3 , CampCoordinates );
 
     for( std::vector<std::pair< int , int >>::iterator IT = CampCoordinates.begin() ; IT != CampCoordinates.end() ; IT++ )
     {
@@ -89,6 +109,8 @@ int main(int argc, char* args[])
         (*IT).Texture = loadTexture( window.Renderer, "assets/circle.png");
     for ( std::vector<struct Entity>::iterator IT = Tree.begin() ; IT != Tree.end() ; IT++ )
         (*IT).Texture = loadTexture( window.Renderer, "assets/triangle.png");
+    for ( std::vector<struct Entity>::iterator IT = Allies.begin() ; IT != Allies.end() ; IT++ )
+        (*IT).Texture = loadTexture( window.Renderer, "assets/star.png");
 
             // Fonts
         // Path to font + score text
@@ -105,6 +127,8 @@ int main(int argc, char* args[])
         Player.movePlayer(  LevelWidth , LevelHeight );
 
             // Entity logic loop
+        if ( Enemy.size() == 0 )
+            break;
         for ( int i = 0 ; i < Enemy.size() ; ++i )
         {
             HandleEnemyMovement(Enemy[i].Rect, Tree );
@@ -127,6 +151,19 @@ int main(int argc, char* args[])
             updateForest( Forest , Enemy[i].Rect , Tile::Brown , 0 );
 
         }
+        for ( int i = 0 ; i < Allies.size() ; ++i )
+        {
+            HandleAllyMovement( Allies[i].Rect , Enemy , 500 );
+
+            for (int j = 0; j < Enemy.size(); j++)
+            {
+                if (collision(Allies[i].Rect, Enemy[j].Rect))
+                {
+                    Enemy.erase(Enemy.begin() + j);
+                    --j;
+                }
+            }
+        }
 
         // Scrolling
             // Update camera position to center on player
@@ -142,7 +179,7 @@ int main(int argc, char* args[])
 
 
         // Rendering
-        render( window.Renderer , Background , Player , Enemy , Tree , Text );
+        render( window.Renderer , Background , Player , Enemy , Tree , Allies , Text );
 
         // Framing
             // Frame delay / limit

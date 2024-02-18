@@ -6,14 +6,6 @@ struct Entity
 
 };
 
-/*struct Enemy : public Entity
-{
-
-  SDL_Point randomPoint;
-
-};*/
-
-
 void pushRandom( std::vector<struct Entity> &Entity , int x , int LevelWidth , int WindowHeight )
 {
 
@@ -27,22 +19,15 @@ void pushRandom( std::vector<struct Entity> &Entity , int x , int LevelWidth , i
     }
 }
 
-/*void pushRandom( std::vector<struct Enemy> &Enemy , int x , int LevelWidth , int WindowHeight )
+void pushToCoords( std::vector<struct Entity>& Entity , int x , std::vector<std::pair< int , int >> Coords )
 {
-
     for ( int i = 0 ; i < x ; i++ )
     {
-        int Randomx = rand()%(LevelWidth);
-        int Randomy = rand()%(WindowHeight);
-        
-        int RRandomx = rand()%((Randomx + constant::WANDER_DISTANCE) - (Randomx - constant::WANDER_DISTANCE) ) + Randomx - constant::WANDER_DISTANCE;
-        int RRandomy = rand()%((Randomy + constant::WANDER_DISTANCE) - (Randomy - constant::WANDER_DISTANCE) ) + Randomy - constant::WANDER_DISTANCE;
 
-
-        Enemy.push_back( { Randomx, Randomy, constant::ENTITY_SIZE_X, constant::ENTITY_SIZE_Y, nullptr, { RRandomx , RRandomy } } );
+        Entity.push_back( { Coords[i].first*constant::PIXEL_SIZE, Coords[i].second*constant::PIXEL_SIZE, constant::ENTITY_SIZE_X, constant::ENTITY_SIZE_Y, nullptr } );
 
     }
-}*/
+}
 
 bool collision( SDL_Rect a, SDL_Rect b )
 {
