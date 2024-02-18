@@ -7,17 +7,61 @@ enum class Tile
     Black,  // idk
 };
 
-void fillvector( std::vector <std::vector <Tile>>& vector )
+void fillvector(std::vector<std::vector<Tile>>& vector , int campCount )
 {
-        // Goes throught the vector and gives it *random* values
-    for ( int x = 0 ; x < vector.size() ; ++x )
-        for (int y = 0; y < vector.at(0).size(); ++y)
-            if ( getRandomNumber( 0 , 10 ) ) // 90 will be green
-                vector[x][y] = Tile::Green;
-            else if ( getRandomNumber( 0 , 1 ) )
-                vector[x][y] = Tile::Brown;
-            else
+    for (int i = 0; i < campCount; ++i)
+    {
+        int startX = getRandomNumber(0, vector.size());
+        int startY = getRandomNumber(0, vector.at(0).size());
+
+        for (int x = startX; x < startX + 5; ++x)
+        {
+            for (int y = startY; y < startY + 5; ++y)
+            {
                 vector[x][y] = Tile::Black;
+            }
+        }
+    }
+
+    for (int x = 0; x < vector.size(); ++x)
+    {
+        for (int y = 0; y < vector[0].size(); ++y)
+        {
+            if (vector[x][y] != Tile::Black)
+            {
+                if (getRandomNumber(0, 9))
+                {
+                    vector[x][y] = Tile::Green;
+                }
+                else
+                {
+                    vector[x][y] = Tile::Brown;
+                }
+            }
+        }
+    }
+}
+
+std::vector<std::pair<int, int>> findCamps(const std::vector<std::vector<Tile>>& vector)
+{
+    std::vector<std::pair<int, int>> campCoords;
+
+    for (int x = 0; x < vector.size(); ++x)
+    {
+        for (int y = 0; y < vector.at(0).size(); ++y)
+        {
+            if (vector[x][y] == Tile::Black)
+            {
+                // checks if current value is top left
+                if (x > 0 && y > 0 && vector[x - 1][y] != Tile::Black && vector[x][y - 1] != Tile::Black)
+                {
+                    campCoords.push_back(std::make_pair(x, y));
+                }
+            }
+        }
+    }
+
+    return campCoords;
 }
 
 SDL_Texture* fillBackground(std::vector<std::vector<Tile>>& vector, SDL_Renderer* Renderer) {

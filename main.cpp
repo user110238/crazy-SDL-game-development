@@ -71,7 +71,14 @@ int main(int argc, char* args[])
         std::vector<Tile> (
             LevelHeight / constant::PIXEL_SIZE , Tile::Green
         ));
-    fillvector( Forest );
+
+    fillvector( Forest , 3 );
+    std::vector<std::pair< int , int >> CampCoordinates = findCamps( Forest );
+
+    for( std::vector<std::pair< int , int >>::iterator IT = CampCoordinates.begin() ; IT != CampCoordinates.end() ; IT++ )
+    {
+        std::cout << IT->first << " " << IT->second << std::endl;
+    }
 
     struct back Background ( WindowWidth , WindowHeight , LevelWidth , LevelHeight );
     Background.Texture = fillBackground( Forest , window.Renderer );
@@ -111,7 +118,7 @@ int main(int argc, char* args[])
             {
                 if (collision(Enemy[i].Rect, Tree[j].Rect))
                 {
-                    updateForest( Forest , Tree[j].Rect , Tile::Brown , 300 );
+                    updateForest( Forest , Tree[j].Rect , Tile::Brown , 100 );
                     Tree.erase(Tree.begin() + j);
                     --j;
                 }
