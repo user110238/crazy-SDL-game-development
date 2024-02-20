@@ -7,28 +7,13 @@ struct structWindow
     int WindowWidth;
     int WindowHeight;
 
-    structWindow( int , int );
-    void init();
+    int LevelWidth;
+    int LevelHeight;
 };
 
-structWindow::structWindow( int Width , int Height )
+void initWindow( structWindow& Window , int WWidth , int WHeight , int LWidht , int LHeight )
 {
-    SDL_Window* Window = nullptr;
-    SDL_Renderer* Renderer = nullptr;
-    SDL_Surface* WindowSurface = nullptr;
-
-    WindowWidth = Width;
-    WindowHeight = Height;
-
-}
-
-void structWindow::init()
-{
-    Window = SDL_CreateWindow( NULL , SDL_WINDOWPOS_UNDEFINED , SDL_WINDOWPOS_UNDEFINED , WindowWidth , WindowHeight , SDL_WINDOW_RESIZABLE  );
-
-    Renderer = SDL_CreateRenderer( Window , -1 , SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
-    SDL_SetRenderDrawColor( Renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-
-    WindowSurface = SDL_GetWindowSurface( Window );
-
+    Window.Window = SDL_CreateWindow( NULL , SDL_WINDOWPOS_UNDEFINED , SDL_WINDOWPOS_UNDEFINED , WWidth , WHeight , 0  );
+    Window.Renderer = SDL_CreateRenderer( Window.Window , -1 , SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
+    Window.WindowSurface = SDL_GetWindowSurface( Window.Window );
 }

@@ -1,15 +1,13 @@
 bool endGame()
 {
-    const Uint8* currentKeyStates = SDL_GetKeyboardState( NULL );
-    if( currentKeyStates[ SDL_SCANCODE_ESCAPE ] )
-        return 0;
-    return 1;
+    const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+    return !currentKeyStates[SDL_SCANCODE_ESCAPE];
 }
 
-SDL_Point eventHandlerPlayer ( SDL_Point Velocity )
- {
+SDL_Point eventHandlerPlayer(SDL_Point Velocity)
+{
 
-     SDL_Event Event;
+SDL_Event Event;
      while (SDL_PollEvent(&Event))
         {
             switch (Event.type)
@@ -49,6 +47,5 @@ SDL_Point eventHandlerPlayer ( SDL_Point Velocity )
             }
         }
 
-     return Velocity;
-
+    return Velocity;
 }

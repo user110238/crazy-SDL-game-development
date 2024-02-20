@@ -35,28 +35,6 @@ void fillvector(std::vector<std::vector<Tile>>& vector , int campCount )
     }
 }
 
-std::vector<std::pair<int, int>> findCamps(const std::vector<std::vector<Tile>>& vector)
-{
-    std::vector<std::pair<int, int>> campCoords;
-
-    for (int x = 0; x < vector.size(); ++x)
-    {
-        for (int y = 0; y < vector.at(0).size(); ++y)
-        {
-            if (vector[x][y] == Tile::Black)
-            {
-                // checks if current value is top left
-                if (x > 0 && y > 0 && vector[x - 1][y] != Tile::Black && vector[x][y - 1] != Tile::Black)
-                {
-                    campCoords.push_back(std::make_pair(x, y));
-                }
-            }
-        }
-    }
-
-    return campCoords;
-}
-
 SDL_Texture* fillBackground(std::vector<std::vector<Tile>>& vector, SDL_Renderer* Renderer) {
         // Temporary texture to draw
     SDL_Texture* Texture = SDL_CreateTexture(Renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, vector.size() * constant::PIXEL_SIZE, vector[0].size() * constant::PIXEL_SIZE);
