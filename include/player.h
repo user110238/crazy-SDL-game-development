@@ -1,10 +1,10 @@
-struct Player
+struct structPlayer
 {
     SDL_Rect Rect;
     SDL_Point Velocity;
 };
 
-void initPlayer ( Player& player , int x , int y  )
+void initPlayer ( structPlayer& player , int x , int y  )
 {
 
     player.Rect.x = x;
@@ -18,7 +18,7 @@ void initPlayer ( Player& player , int x , int y  )
 
 }
 
-void movePlayer ( Player& player , int LevelWidth , int LevelHeight )
+void movePlayer ( structPlayer& player , int LevelWidth , int LevelHeight )
 {
         // lenght of the vector
         // pitagorov zakon po slovensko
@@ -47,5 +47,11 @@ void movePlayer ( Player& player , int LevelWidth , int LevelHeight )
         player.Rect.y = newY;
     }
 
+}
+
+void playerGameLogic ( structPlayer& player )
+{
+        player.Velocity = eventHandlerPlayer( player.Velocity );
+        movePlayer( player , Resolution::LevelWidth , Resolution::LevelHeight );
 }
 

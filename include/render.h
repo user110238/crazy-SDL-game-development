@@ -1,33 +1,64 @@
-void render ( SDL_Renderer* Renderer , back Background , Player Player , std::vector<struct Entity> Enemy , std::vector<struct Entity> Tree , std::vector<struct Entity> Allies , text Text )
+void render ( Game Game )
 {
             // Clear current frame
-        SDL_RenderClear( Renderer );
+        SDL_RenderClear( Game.Window.Renderer );
             // render background ( level )
-        rendererAdd( Renderer , Background.Texture ,  Background.backgroundRect );
+        rendererAdd( Game.Window.Renderer , Game.Background.Texture ,  Game.Background.backgroundRect );
 
             // Render player with camera offset
-        SDL_Rect playerRect = {Player.Rect.x - Background.Camera.x, Player.Rect.y - Background.Camera.y, Player.Rect.w, Player.Rect.h};
-        rendererAdd( Renderer, Textures::Player, playerRect );
+        SDL_Rect playerRect =
+        { Game.Player.Rect.x - Game.Background.Camera.x,
+          Game.Player.Rect.y - Game.Background.Camera.y,
+          Game.Player.Rect.w,
+          Game.Player.Rect.h };
+
+        rendererAdd( Game.Window.Renderer, Textures::Player, playerRect );
 
             // render enemies with camera offset
-        for ( int i = 0 ; i < Enemy.size() ; i++ )
-            if ( distance( Player.Rect.x , Player.Rect.y , Enemy.at(i).Rect.x ,  Enemy.at(i).Rect.y) <= std::max( Background.Camera.w , Background.Camera.h ) )
-                if ( Enemy[i].Type == EntityType::Enemy )
-                    rendererAdd( Renderer, Textures::Enemy, {Enemy.at(i).Rect.x - Background.Camera.x, Enemy.at(i).Rect.y - Background.Camera.y, Enemy.at(i).Rect.w, Enemy.at(i).Rect.h} );
-        for ( int i = 0 ; i < Allies.size() ; i++ )
-            if ( distance( Player.Rect.x , Player.Rect.y , Allies.at(i).Rect.x ,  Allies.at(i).Rect.y) <= std::max( Background.Camera.w , Background.Camera.h ) )
-                if ( Allies[i].Type == EntityType::Ally )
-                rendererAdd( Renderer, Textures::Ally, {Allies.at(i).Rect.x - Background.Camera.x, Allies.at(i).Rect.y - Background.Camera.y, Allies.at(i).Rect.w, Allies.at(i).Rect.h} );
-        for ( int i = 0 ; i < Tree.size() ; i++ )
-            if ( distance( Player.Rect.x , Player.Rect.y , Tree.at(i).Rect.x ,  Tree.at(i).Rect.y) <= std::max( Background.Camera.w , Background.Camera.h ) )
-                if ( Tree[i].Type == EntityType::Tree )
-                rendererAdd( Renderer, Textures::Tree, {Tree.at(i).Rect.x - Background.Camera.x, Tree.at(i).Rect.y - Background.Camera.y, Tree.at(i).Rect.w, Tree.at(i).Rect.h} );
+        for ( int i = 0 ; i < Game.Entities.Enemy.size() ; i++ )
+
+            if ( distance( Game.Player.Rect.x , Game.Player.Rect.y ,
+                Game.Entities.Enemy.at(i).Rect.x ,  Game.Entities.Enemy.at(i).Rect.y)
+                <= std::max( Game.Background.Camera.w , Game.Background.Camera.h ) )
+
+                if ( Game.Entities.Enemy[i].Type == EntityType::Enemy )
+                    rendererAdd( Game.Window.Renderer, Textures::Enemy, {
+                        Game.Entities.Enemy.at(i).Rect.x - Game.Background.Camera.x,
+                        Game.Entities.Enemy.at(i).Rect.y - Game.Background.Camera.y,
+                        Game.Entities.Enemy.at(i).Rect.w,
+                        Game.Entities.Enemy.at(i).Rect.h} );
+
+        for ( int i = 0 ; i < Game.Entities.Allies.size() ; i++ )
+
+            if ( distance( Game.Player.Rect.x , Game.Player.Rect.y ,
+                Game.Entities.Allies.at(i).Rect.x ,  Game.Entities.Allies.at(i).Rect.y)
+                <= std::max( Game.Background.Camera.w , Game.Background.Camera.h ) )
+
+                if ( Game.Entities.Allies[i].Type == EntityType::Ally )
+                rendererAdd( Game.Window.Renderer, Textures::Ally, {
+                    Game.Entities.Allies.at(i).Rect.x - Game.Background.Camera.x,
+                             Game.Entities.Allies.at(i).Rect.y - Game.Background.Camera.y,
+                             Game.Entities.Allies.at(i).Rect.w,
+                             Game.Entities.Allies.at(i).Rect.h } );
+
+        for ( int i = 0 ; i < Game.Entities.Tree.size() ; i++ )
+
+            if ( distance( Game.Player.Rect.x , Game.Player.Rect.y ,
+                Game.Entities.Tree.at(i).Rect.x ,  Game.Entities.Tree.at(i).Rect.y)
+                <= std::max( Game.Background.Camera.w , Game.Background.Camera.h ) )
+
+                if ( Game.Entities.Tree[i].Type == EntityType::Tree )
+                rendererAdd( Game.Window.Renderer, Textures::Tree, {
+                    Game.Entities.Tree.at(i).Rect.x - Game.Background.Camera.x,
+                             Game.Entities.Tree.at(i).Rect.y - Game.Background.Camera.y,
+                             Game.Entities.Tree.at(i).Rect.w,
+                             Game.Entities.Tree.at(i).Rect.h } );
 
 
-        rendererAdd( Renderer , Text.scoreText , { Background.Camera.w / 2 - 150 / 2 , 0 , 150 , 100 } );
-        rendererAdd( Renderer , Text.treeCount , { Background.Camera.w / 2 - 150 / 2 , 100 , 150 , 100 } );
+        rendererAdd( Game.Window.Renderer , Game.Text.scoreText , { Game.Background.Camera.w / 2 - 150 / 2 , 0 , 150 , 100 } );
+        rendererAdd( Game.Window.Renderer , Game.Text.treeCount , { Game.Background.Camera.w / 2 - 150 / 2 , 100 , 150 , 100 } );
 
             // Draw Frame
-        SDL_RenderPresent( Renderer );
+        SDL_RenderPresent( Game.Window.Renderer );
 
 }

@@ -17,6 +17,8 @@
 #include "include/math.h"
 
 #include "include/texture_loading.h"
+#include "include/events.h"
+#include "include/frame_limiting.h"
 
 #include "include/player.h"
 
@@ -26,14 +28,13 @@
 #include "include/enemy.h"
 #include "include/allies.h"
 
-#include "include/events.h"
-#include "include/frame_limiting.h"
-
 #include "include/background.h"
 #include "include/text.h"
+
+#include "include/game.h"
 #include "include/render.h"
 
-#include "include/Game.h"
+#include "include/game_loop.h"
 #include "include/main.h"
 
 int main(int argc, char* args[])

@@ -3,13 +3,13 @@ struct Game
 
     structWindow Window;
 
-    Player player;
+    structPlayer Player;
     AllEntities Entities;
 
     std::vector<std::vector <Tile> > Forest;
 
-    back Background;
-    text Text;
+    structBackground Background;
+    structText Text;
 
     FrameLimit Frames;
 

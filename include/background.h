@@ -1,4 +1,4 @@
-struct back
+struct structBackground
 {
 
     SDL_Texture* Texture;
@@ -6,7 +6,7 @@ struct back
     SDL_Rect backgroundRect;
 };
 
-void initBackground ( back& Background )
+void initBackground ( structBackground& Background )
 {
     Background.Camera.x = 0;
     Background.Camera.y = 0;
@@ -19,7 +19,7 @@ void initBackground ( back& Background )
     Background.backgroundRect.h = Resolution::LevelHeight;
 }
 
-void offset( back& Background )
+void offset( structBackground& Background )
 {
 
         Background.backgroundRect.x = -Background.Camera.x;

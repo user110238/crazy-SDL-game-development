@@ -19,7 +19,7 @@ void setup ( Game& Game )
     Textures::Tree = loadTexture( Game.Window.Renderer , "assets/triangle.png" );
     Textures::Ally = loadTexture( Game.Window.Renderer , "assets/star.png" );
 
-    initPlayer( Game.player , Resolution::LevelWidth /2 , Resolution::LevelHeight / 2 );
+    initPlayer( Game.Player , Resolution::LevelWidth /2 , Resolution::LevelHeight / 2 );
 
     Game.Forest.resize( Resolution::LevelWidth / constant::PIXEL_SIZE , std::vector<Tile>( Resolution::LevelHeight / constant::PIXEL_SIZE , Tile::Green ) );
     fillvector( Game.Forest , 5 );
@@ -44,53 +44,12 @@ void gameLoop ( Game Game )
         Game.Frames.FrameStart = SDL_GetTicks();
 
         // Game logic
-            // Update player position
-        Game.player.Velocity = eventHandlerPlayer( Game.player.Velocity );
-        movePlayer( Game.player , Resolution::LevelWidth , Resolution::LevelHeight );
-
-
-            // Entity logic loop
-        if ( Game.Entities.Enemy.size() == 0 )
-            pushRandom( Game.Entities.Enemy , 10 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Enemy);
-        for ( int i = 0 ; i < Game.Entities.Enemy.size() ; ++i )
-        {
-            HandleEnemyMovement(Game.Entities.Enemy[i].Rect, Game.Entities.Tree );
-                // Check if any enemy is collision-ing
-            if ( collision ( Game.player.Rect, Game.Entities.Enemy[i].Rect ) )
-            {
-                Game.Entities.Enemy.erase(Game.Entities.Enemy.begin() + i);
-            }
-
-            for (int j = 0; j < Game.Entities.Tree.size(); j++)
-            {
-                if (collision(Game.Entities.Enemy[i].Rect, Game.Entities.Tree[j].Rect))
-                {
-                    updateForest( Game.Forest , Game.Entities.Tree[j].Rect , Tile::Brown , 100 );
-                    Game.Entities.Tree.erase(Game.Entities.Tree.begin() + j);
-                    --j;
-                }
-            }
-
-            updateForest( Game.Forest , Game.Entities.Enemy[i].Rect , Tile::Brown , 0 );
-
-        }
-        for ( int i = 0 ; i < Game.Entities.Allies.size() ; ++i )
-        {
-            HandleAllyMovement( Game.Entities.Allies[i].Rect , Game.Entities.Enemy , 500 );
-
-            for (int j = 0; j < Game.Entities.Enemy.size(); j++)
-            {
-                if (collision(Game.Entities.Allies[i].Rect, Game.Entities.Enemy[j].Rect))
-                {
-                    Game.Entities.Enemy.erase(Game.Entities.Enemy.begin() + j);
-                    --j;
-                }
-            }
-        }
+        playerGameLogic( Game.Player );
+        entityGameLogic( Game.Entities , Game.Forest , Game.Player.Rect );
 
         // Scrolling
             // Update camera position to center on player
-        scrolling( Game.Background.Camera , Game.player.Rect , Resolution::WindowWidth , Resolution::WindowHeight , Resolution::LevelWidth , Resolution::LevelHeight );
+        scrolling( Game.Background.Camera , Game.Player.Rect , Resolution::WindowWidth , Resolution::WindowHeight , Resolution::LevelWidth , Resolution::LevelHeight );
 
             // Offset everything with camera
             // remake the background texture
@@ -100,10 +59,8 @@ void gameLoop ( Game Game )
             // Calculate displayed text
         Game.Text.treeCount = loadTextureFromText( Game.Window.Renderer , std::to_string(calculatePercentage( Game.Forest , Tile::Green )).c_str() , Game.Text.Font );
 
-
-
         // Rendering
-        render( Game.Window.Renderer , Game.Background ,Game.player , Game.Entities.Enemy , Game.Entities.Tree , Game.Entities.Allies , Game.Text );
+        render( Game );
 
         // Framing
             // Frame delay / limit
