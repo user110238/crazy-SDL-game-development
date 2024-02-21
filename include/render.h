@@ -1,12 +1,3 @@
-namespace Textures
-{
-    SDL_Texture* Player;
-
-    SDL_Texture* Enemy;
-    SDL_Texture* Tree;
-    SDL_Texture* Ally;
-};
-
 void render ( SDL_Renderer* Renderer , back Background , Player Player , std::vector<struct Entity> Enemy , std::vector<struct Entity> Tree , std::vector<struct Entity> Allies , text Text )
 {
             // Clear current frame

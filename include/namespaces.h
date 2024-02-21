@@ -14,3 +14,21 @@ namespace constant
 
     const float PI =                3.14;
 }
+
+namespace Resolution
+{
+    int WindowWidth;
+    int WindowHeight;
+
+    int LevelWidth;
+    int LevelHeight;
+}
+
+namespace Textures
+{
+    SDL_Texture* Player;
+
+    SDL_Texture* Enemy;
+    SDL_Texture* Tree;
+    SDL_Texture* Ally;
+};

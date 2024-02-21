@@ -12,194 +12,36 @@
 #include <vector>
 #include <iostream>
 
-#include "include/main.h"
+#include "include/namespaces.h"
 #include "include/window.h"
-#include "include/constants.h"
+#include "include/math.h"
+
+#include "include/texture_loading.h"
 
 #include "include/player.h"
-#include "include/texture_loading.h"
+
 #include "include/forest.h"
+
 #include "include/entity.h"
 #include "include/enemy.h"
 #include "include/allies.h"
+
 #include "include/events.h"
+#include "include/frame_limiting.h"
+
 #include "include/background.h"
 #include "include/text.h"
 #include "include/render.h"
 
-struct FrameLimit
-{
-    int FPS;
-    int FrameDelay;
-    Uint32 FrameStart;
-    int FrameTime;
-};
-
-struct AllEntities
-{
-    std::vector<struct Entity> Enemy;
-    std::vector<struct Entity> Allies;
-    std::vector<struct Entity> Tree;
-
-};
-
-void setFrameLimit ( FrameLimit& Frames , int x )
-{
-    Frames.FPS = x;
-    Frames.FrameDelay = 1000 / Frames.FPS;
-}
-
-struct Game
-{
-
-    structWindow Window;
-    struct Player Player;
-
-    AllEntities Entities;
-
-};
+#include "include/Game.h"
+#include "include/main.h"
 
 int main(int argc, char* args[])
 {
-        // Enables all SDL subsystems
-    SDL_Init(SDL_INIT_EVERYTHING);
-    TTF_Init();
-
-    FrameLimit Frames;
-    setFrameLimit( Frames , 60 );
-    srand(time(NULL));
-
-        // Resolution + Level
-    int WindowWidth = 1600;
-    int WindowHeight = 800;
-    int LevelWidth = WindowWidth * 3;
-    int LevelHeight = WindowHeight * 3;
-
-        // Window struct
-        // window + surf + renderer
-    structWindow window;
-    initWindow ( window , 1600 , 800 , 4800 , 2400 );
-
-        // Create a player struct      x , y
-    Player Player;
-    initPlayer( Player , 1600 /2 , 800 / 2 , constant::ENTITY_SIZE_X , constant::ENTITY_SIZE_Y );
-
-        // Forest vector
-        // Stores background information
-        // also makes a texture for thee background
-    std::vector<std::vector <Tile> > Forest (
-        LevelWidth / constant::PIXEL_SIZE,
-        std::vector<Tile> (
-            LevelHeight / constant::PIXEL_SIZE , Tile::Green
-        ));
-        // Number of camps
-    fillvector( Forest , 5 );
-
-            // Entity vectors
-        // Multinacionalke
-    std::vector<struct Entity> Enemy;
-    std::vector<struct Entity>::iterator enemyIt = Enemy.begin();
-    pushRandom( Enemy , 10 , LevelWidth , LevelHeight , EntityType::Enemy);
-        // Trees
-    std::vector<struct Entity> Tree;
-    std::vector<struct Entity>::iterator treeIt = Tree.begin();
-    pushRandom( Tree , 255 , LevelWidth , LevelHeight , EntityType::Tree);
-        // Staroselci
-    std::vector<struct Entity> Allies;
-    std::vector<struct Entity>::iterator allyIt = Allies.begin();
-    std::vector<std::pair< int , int >> CampCoordinates = findCamps( Forest );
-        // Number of allies + number of allies per camp
-    pushToCoords( Allies , 5 , 1 , CampCoordinates , EntityType::Ally);
-
-    for( std::vector<std::pair< int , int >>::iterator IT = CampCoordinates.begin() ; IT != CampCoordinates.end() ; IT++ )
-    {
-        std::cout << IT->first * constant::PIXEL_SIZE << " " << IT->second * constant::PIXEL_SIZE << std::endl;
-    }
-
-    struct back Background;
-    initBackground( Background , 1600 , 800 , 4800 , 2400 );
-    Background.Texture = fillBackground( Forest , window.Renderer );
-
-    Textures::Player = loadTexture( window.Renderer , "assets/square.png" );
-    Textures::Enemy = loadTexture( window.Renderer , "assets/circle.png" );
-    Textures::Tree = loadTexture( window.Renderer , "assets/triangle.png" );
-    Textures::Ally = loadTexture( window.Renderer , "assets/star.png" );
-
-            // Fonts
-        // Path to font + score text
-    text Text;
-    initText( Text , "assets/ARCADECLASSIC.ttf" );
-
-    while ( endGame() )
-    {
-            // Used to calculate time per instance of loop
-        Frames.FrameStart = SDL_GetTicks();
-
-        // Game logic
-            // Update player position
-        Player.Velocity = eventHandlerPlayer( Player.Velocity );
-        movePlayer( Player , LevelWidth , LevelHeight );
-
-            // Entity logic loop
-        if ( Enemy.size() == 0 )
-            pushRandom( Enemy , 10 , LevelWidth , LevelHeight , EntityType::Enemy);
-        for ( int i = 0 ; i < Enemy.size() ; ++i )
-        {
-            HandleEnemyMovement(Enemy[i].Rect, Tree );
-                // Check if any enemy is collision-ing
-            if ( collision ( Player.Rect, Enemy[i].Rect ) )
-            {
-                Enemy.erase(Enemy.begin() + i);
-            }
-
-            for (int j = 0; j < Tree.size(); j++)
-            {
-                if (collision(Enemy[i].Rect, Tree[j].Rect))
-                {
-                    updateForest( Forest , Tree[j].Rect , Tile::Brown , 100 );
-                    Tree.erase(Tree.begin() + j);
-                    --j;
-                }
-            }
-
-            updateForest( Forest , Enemy[i].Rect , Tile::Brown , 0 );
-
-        }
-        for ( int i = 0 ; i < Allies.size() ; ++i )
-        {
-            HandleAllyMovement( Allies[i].Rect , Enemy , 500 );
-
-            for (int j = 0; j < Enemy.size(); j++)
-            {
-                if (collision(Allies[i].Rect, Enemy[j].Rect))
-                {
-                    Enemy.erase(Enemy.begin() + j);
-                    --j;
-                }
-            }
-        }
-
-        // Scrolling
-            // Update camera position to center on player
-        scrolling( Background.Camera , Player.Rect , WindowWidth , WindowHeight , LevelWidth , LevelHeight );
-
-            // Offset everything with camera
-            // remake the background texture
-        offset( Background );
-        updateBackgroundTexture(Forest, Background.Texture, window.Renderer, Background.Camera );
-
-            // Calculate displayed text
-        Text.treeCount = loadTextureFromText( window.Renderer , std::to_string(calculatePercentage( Forest , Tile::Green )).c_str() , Text.Font );
+    Game Game;
+    setup( Game );
+    gameLoop( Game );
 
 
-        // Rendering
-        render( window.Renderer , Background , Player , Enemy , Tree , Allies , Text );
-
-        // Framing
-            // Frame delay / limit
-        Frames.FrameTime = SDL_GetTicks() - Frames.FrameStart;
-        if ( Frames.FrameDelay > Frames.FrameTime )
-            SDL_Delay( Frames.FrameDelay - Frames.FrameTime );
-        }
     return 0;
 }

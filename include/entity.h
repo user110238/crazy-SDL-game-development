@@ -13,6 +13,18 @@ struct Entity
 
 };
 
+struct AllEntities
+{
+    std::vector<struct Entity> Enemy;
+    std::vector<struct Entity>::iterator enemyIt = Enemy.begin();
+
+    std::vector<struct Entity> Allies;
+    std::vector<struct Entity>::iterator allyIt = Allies.begin();
+
+    std::vector<struct Entity> Tree;
+    std::vector<struct Entity>::iterator treeIt = Allies.begin();
+
+};
 
 void pushRandom( std::vector<struct Entity> &Entity , int x , int LevelWidth , int WindowHeight , EntityType Type )
 {
@@ -27,7 +39,7 @@ void pushRandom( std::vector<struct Entity> &Entity , int x , int LevelWidth , i
     }
 }
 
-void pushToCoords( std::vector<struct Entity>& Entity , int x , int alliesPerCamp ,std::vector<std::pair< int , int >> Coords, EntityType Type )
+void pushToPairCoords( std::vector<struct Entity>& Entity , int x , int alliesPerCamp ,std::vector<std::pair< int , int >> Coords, EntityType Type )
 {
     for ( int i = 0 ; i < x ; i++ )
     {

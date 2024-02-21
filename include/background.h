@@ -4,25 +4,19 @@ struct back
     SDL_Texture* Texture;
     SDL_Rect Camera;
     SDL_Rect backgroundRect;
-
-    //back( int , int , int , int );
-    //void offset();
-
 };
 
-void initBackground ( back& Background , int WWidth , int WHeight , int LWidth , int LHeight )
+void initBackground ( back& Background )
 {
-
     Background.Camera.x = 0;
     Background.Camera.y = 0;
-    Background.Camera.w = WWidth;
-    Background.Camera.h = WHeight;
+    Background.Camera.w = Resolution::WindowWidth;
+    Background.Camera.h = Resolution::WindowHeight;
 
     Background.backgroundRect.x = 0;
     Background.backgroundRect.y = 0;
-    Background.backgroundRect.w = LWidth;
-    Background.backgroundRect.h = LHeight;
-
+    Background.backgroundRect.w = Resolution::LevelWidth;
+    Background.backgroundRect.h = Resolution::LevelHeight;
 }
 
 void offset( back& Background )

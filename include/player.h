@@ -1,18 +1,16 @@
-
 struct Player
 {
-
     SDL_Rect Rect;
     SDL_Point Velocity;
 };
 
-void initPlayer ( Player& player , int x , int y , int w , int h )
+void initPlayer ( Player& player , int x , int y  )
 {
 
     player.Rect.x = x;
     player.Rect.y = y;
-    player.Rect.w = w;
-    player.Rect.h = h;
+    player.Rect.w = constant::ENTITY_SIZE_X;
+    player.Rect.h = constant::ENTITY_SIZE_Y;
 
     player.Velocity.x = 0;
     player.Velocity.y = 0;
