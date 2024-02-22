@@ -13,6 +13,7 @@ namespace constant
     const int HITBOX_REDUCTION =    10;
 
     const float PI =                3.14;
+    const int EXTRA_RENDER =        10;
 }
 
 namespace Resolution

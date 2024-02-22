@@ -7,6 +7,7 @@ struct Game
     AllEntities Entities;
 
     std::vector<std::vector <Tile> > Forest;
+    structFireSpread FireSpread;
 
     structBackground Background;
     structText Text;

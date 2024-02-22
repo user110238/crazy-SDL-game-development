@@ -34,6 +34,9 @@ void setup ( Game& Game )
     Game.Background.Texture = fillBackground( Game.Forest , Game.Window.Renderer );
 
     initText( Game.Text , Game.Window.Renderer , "assets/ARCADECLASSIC.ttf" );
+
+    Game.FireSpread.lastFireSpreadTime = SDL_GetTicks();
+    Game.FireSpread.fireSpreadInterval = 500;
 }
 
 void gameLoop ( Game Game )
@@ -55,6 +58,13 @@ void gameLoop ( Game Game )
             // remake the background texture
         offset( Game.Background );
         updateBackgroundTexture(Game.Forest, Game.Background.Texture, Game.Window.Renderer, Game.Background.Camera );
+
+            // Calculate Fire spread, every (fireSpreadInterval / 1000) seconds
+        if ( Game.Frames.FrameStart - Game.FireSpread.lastFireSpreadTime >= Game.FireSpread.fireSpreadInterval )
+        {
+            spreadFire(Game.Forest);
+            Game.FireSpread.lastFireSpreadTime = Game.Frames.FrameStart;
+        }
 
             // Calculate displayed text
         Game.Text.treeCount = loadTextureFromText( Game.Window.Renderer , std::to_string(calculatePercentage( Game.Forest , Tile::Green )).c_str() , Game.Text.Font );

@@ -34,8 +34,9 @@
 #include "include/game.h"
 #include "include/render.h"
 
-#include "include/game_loop.h"
+#include "include/entity_logic.h"
 #include "include/main.h"
+
 
 int main(int argc, char* args[])
 {

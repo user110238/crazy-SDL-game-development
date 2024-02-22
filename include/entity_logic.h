@@ -1,5 +1,6 @@
  void entityGameLogic( AllEntities& Entities , std::vector< std::vector <Tile> >& Forest , const SDL_Rect& Player )
 {
+
         if ( Entities.Enemy.size() == 0 )
             pushRandom( Entities.Enemy , 10 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Enemy);
 

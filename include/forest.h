@@ -2,9 +2,16 @@
 enum class Tile
 {
     Green,  // Active forest
+    Red,    // Burning
     Brown,  // Burned forest
 
     Black,  // idk
+};
+
+struct structFireSpread
+{
+    Uint32 lastFireSpreadTime;
+    int fireSpreadInterval;
 };
 
 void fillvector(std::vector<std::vector<Tile>>& vector , int campCount )
@@ -27,10 +34,10 @@ void fillvector(std::vector<std::vector<Tile>>& vector , int campCount )
     {
         for (int y = 0; y < vector[0].size(); ++y)
         {
-            if (vector[x][y] != Tile::Black)
-            {
-                    vector[x][y] = Tile::Green;
-            }
+            if ( x == 200 && y == 150 )
+                vector[x][y] = Tile::Red;
+            else if (vector[x][y] != Tile::Black)
+                vector[x][y] = Tile::Green;
         }
     }
 }
@@ -62,6 +69,9 @@ SDL_Texture* fillBackground(std::vector<std::vector<Tile>>& vector, SDL_Renderer
                 case Tile::Green:
                     r = 53; g = 94; b = 60; // Green
                     break;
+                case Tile::Red:
+                    r = 255; g = getRandomNumber( 0 , 50 ); b = 25;
+                    break;
                 case Tile::Black:
                     r = 0; g = 0; b = 0; // Black
                     break;
@@ -76,28 +86,31 @@ SDL_Texture* fillBackground(std::vector<std::vector<Tile>>& vector, SDL_Renderer
 }
 
 void updateBackgroundTexture(std::vector<std::vector<Tile>> vector, SDL_Texture* texture, SDL_Renderer* renderer, SDL_Rect camera) {
-        // Set renderer to texture
+    // Set renderer to texture
     SDL_SetRenderTarget(renderer, texture);
 
-        // Size of "pixel" or a tile
-        // PIXEL_SIZE is 10, probably
+    // Size of "pixel" or a tile
+    // PIXEL_SIZE is 10, probably
     SDL_Rect rect = {0, 0, constant::PIXEL_SIZE, constant::PIXEL_SIZE};
 
-    for (int x = camera.x/constant::PIXEL_SIZE; x < (camera.x + camera.w)/constant::PIXEL_SIZE; ++x)
-    {
-        for (int y = camera.y/constant::PIXEL_SIZE; y < (camera.y + camera.h)/constant::PIXEL_SIZE; ++y)
-        {
+    for (int x = std::max(0, camera.x / constant::PIXEL_SIZE); x < std::min( static_cast<int>( vector.size() ) ,
+        (camera.x + camera.w + constant::EXTRA_RENDER ) / constant::PIXEL_SIZE); ++x) {
+        for (int y = std::max(0, camera.y / constant::PIXEL_SIZE); y < std::min( static_cast<int>( vector[0].size() ) ,
+            (camera.y + camera.h + constant::EXTRA_RENDER ) / constant::PIXEL_SIZE); ++y) {
+
             rect.x = x * constant::PIXEL_SIZE;
             rect.y = y * constant::PIXEL_SIZE;
 
             Uint8 r, g, b;
-            switch (vector[x][y])
-            {
+            switch (vector[x][y]) {
                 case Tile::Brown:
                     r = 79; g = 58; b = 43; // Brown
                     break;
                 case Tile::Green:
                     r = 53; g = 94; b = 60; // Green
+                    break;
+                case Tile::Red:
+                    r = 255; g = getRandomNumber(0, 50); b = 25;
                     break;
                 case Tile::Black:
                     r = 0; g = 0; b = 0; // Black
@@ -110,6 +123,7 @@ void updateBackgroundTexture(std::vector<std::vector<Tile>> vector, SDL_Texture*
     }
     SDL_SetRenderTarget(renderer, nullptr);
 }
+
 
 void updateForest(std::vector<std::vector<Tile>>& vector, SDL_Rect Rect, Tile tile, int clearRadius)
 {
@@ -134,7 +148,7 @@ void updateForest(std::vector<std::vector<Tile>>& vector, SDL_Rect Rect, Tile ti
             {
                 if (x / constant::PIXEL_SIZE < vector.size() && y / constant::PIXEL_SIZE < vector[0].size())
                 {
-                    if (vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] != tile)
+                    if ( vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] == Tile::Green )
                         vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] = tile;
                 }
             }
@@ -161,4 +175,60 @@ int calculatePercentage(const std::vector<std::vector<Tile>>& vector , Tile tile
 
 }
 
+void spreadFire(std::vector<std::vector<Tile>>& Forest)
+{
+    std::vector<std::pair<int, int>> fireSpreadCoords;
+    std::vector<std::pair<int, int>> burnedCoords;
+
+    for (int x = 0; x < Forest.size(); ++x)
+    {
+        for (int y = 0; y < Forest[0].size(); ++y)
+        {
+            if (Forest[x][y] == Tile::Red)
+            {
+                int redCount = 0;
+                if ( x > 0 && ( Forest[x - 1][y] == Tile::Red || Forest[x - 1][y] == Tile::Black || Forest[x - 1][y] == Tile::Brown ) )
+                    redCount++;
+                if ( x < Forest.size() - 1 && ( Forest[x + 1][y] == Tile::Red || Forest[x + 1][y] == Tile::Black || Forest[x + 1][y] == Tile::Brown ) )
+                    redCount++;
+                if ( y > 0 && ( Forest[x][y - 1] == Tile::Red || Forest[x][y - 1] == Tile::Black || Forest[x][y - 1] == Tile::Brown ) )
+                    redCount++;
+                if ( y < Forest[0].size() - 1 && ( Forest[x][y + 1] == Tile::Red || Forest[x][y + 1] == Tile::Black || Forest[x][y + 1] == Tile::Brown ) )
+                    redCount++;
+
+                if ( redCount < 4 )
+                {
+                    if ( x > 0 && Forest[x - 1][y] == Tile::Green )
+                        fireSpreadCoords.emplace_back(x - 1, y);
+                    if ( x < Forest.size() - 1 && Forest[x + 1][y] == Tile::Green )
+                        fireSpreadCoords.emplace_back(x + 1, y);
+                    if ( y > 0 && Forest[x][y - 1] == Tile::Green )
+                        fireSpreadCoords.emplace_back(x, y - 1);
+                    if ( y < Forest[0].size() - 1 && Forest[x][y + 1] == Tile::Green )
+                        fireSpreadCoords.emplace_back(x, y + 1);
+                } else {
+                    burnedCoords.emplace_back( x , y );
+                }
+            }
+        }
+    }
+
+    for ( std::vector< std::pair<int, int> >::iterator IT = fireSpreadCoords.begin() ; IT < fireSpreadCoords.end() ; IT++ )
+    {
+        int x = IT->first;
+        int y = IT->second;
+
+        if ( ( x == 0 || x == Forest.size() - 1 ) || ( y == 0 || y == Forest[0].size() - 1 ) )
+            Forest[x][y] = Tile::Black;
+        else
+            Forest[x][y] = Tile::Red;
+    }
+
+    for ( std::vector< std::pair<int, int> >::iterator IT = burnedCoords.begin() ; IT < burnedCoords.end() ; IT++ )
+    {
+        int x = IT->first;
+        int y = IT->second;
+        Forest[x][y] = Tile::Black;
+    }
+}
 
