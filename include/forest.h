@@ -1,4 +1,5 @@
     // Types of tiles
+#include <cmath>
 enum class Tile
 {
     Green,  // Active forest
@@ -34,9 +35,7 @@ void fillvector(std::vector<std::vector<Tile>>& vector , int campCount )
     {
         for (int y = 0; y < vector[0].size(); ++y)
         {
-            if ( x == 200 && y == 150 )
-                vector[x][y] = Tile::Red;
-            else if (vector[x][y] != Tile::Black)
+            if (vector[x][y] != Tile::Black)
                 vector[x][y] = Tile::Green;
         }
     }
@@ -146,6 +145,88 @@ void updateForest(std::vector<std::vector<Tile>>& vector, SDL_Rect Rect, Tile ti
             // If current point is within the circle radius
             if (distance <= clearRadius)
             {
+                if ( x / constant::PIXEL_SIZE < vector.size() && y / constant::PIXEL_SIZE < vector[0].size() )
+                {
+                    if ( vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] == Tile::Green )
+                        vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] = tile;
+                }
+            }
+        }
+    }
+}
+
+bool isTreeCompromised( const std::vector<std::vector<Tile>>& vector , SDL_Rect Rect , int extend )
+{
+    for (int x = std::max(0, Rect.x - extend); x < std::min(static_cast<int>(vector.size() * constant::PIXEL_SIZE), Rect.x + Rect.w + extend); ++x)
+    {
+        for (int y = std::max(0, Rect.y - extend); y < std::min(static_cast<int>(vector[0].size() * constant::PIXEL_SIZE), Rect.y + Rect.h + extend); ++y)
+        {
+            {
+                if ( x / constant::PIXEL_SIZE < vector.size() && y / constant::PIXEL_SIZE < vector[0].size() )
+                {
+                    if ( vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] != Tile::Green )
+                        return 1;
+                }
+            }
+        }
+    }
+
+    return 0;
+
+}
+
+void updateForest(std::vector<std::vector<Tile>>& vector, SDL_Rect Rect , Tile target , Tile tile , int clearRadius)
+{
+    // Center of the rectangle
+    int centerX = Rect.x + Rect.w / 2;
+    int centerY = Rect.y + Rect.h / 2;
+    int extend = clearRadius;
+
+    // Radius == smaller side
+    clearRadius += std::min(Rect.w, Rect.h) / 2 - constant::HITBOX_REDUCTION;
+
+    for (int x = std::max(0, Rect.x - extend); x < std::min(static_cast<int>(vector.size() * constant::PIXEL_SIZE), Rect.x + Rect.w + extend); ++x)
+    {
+        for (int y = std::max(0, Rect.y - extend); y < std::min(static_cast<int>(vector[0].size() * constant::PIXEL_SIZE), Rect.y + Rect.h + extend); ++y)
+        {
+            // Pitagorov
+            int distanceX = x - centerX;
+            int distanceY = y - centerY;
+            double distance = std::sqrt(std::pow(distanceX, 2) + std::pow(distanceY, 2));
+            // If current point is within the circle radius
+            if (distance <= clearRadius)
+            {
+                if ( x / constant::PIXEL_SIZE < vector.size() && y / constant::PIXEL_SIZE < vector[0].size() )
+                {
+                    if ( vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] == target )
+                        vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] = tile;
+                }
+            }
+        }
+    }
+}
+
+void updateForestRandom(std::vector<std::vector<Tile>>& vector, SDL_Rect Rect, Tile tile, int clearRadius)
+{
+       // Center of the rectangle
+    int centerX = Rect.x + Rect.w / 2;
+    int centerY = Rect.y + Rect.h / 2;
+    int extend = clearRadius;
+
+    // Radius == smaller side
+    clearRadius += std::min(Rect.w, Rect.h) / 2 - constant::HITBOX_REDUCTION;
+
+    for (int x = std::max(0, Rect.x - extend); x < std::min(static_cast<int>(vector.size() * constant::PIXEL_SIZE), Rect.x + Rect.w + extend); ++x)
+    {
+        for (int y = std::max(0, Rect.y - extend); y < std::min(static_cast<int>(vector[0].size() * constant::PIXEL_SIZE), Rect.y + Rect.h + extend); ++y)
+        {
+            // Pitagorov
+            int distanceX = x - centerX;
+            int distanceY = y - centerY;
+            double distance = std::sqrt(std::pow(distanceX, 2) + std::pow(distanceY, 2));
+            // If current point is within the circle radius
+            if (distance <= clearRadius)
+            {
                 if (x / constant::PIXEL_SIZE < vector.size() && y / constant::PIXEL_SIZE < vector[0].size())
                 {
                     if ( vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] == Tile::Green )
@@ -155,6 +236,7 @@ void updateForest(std::vector<std::vector<Tile>>& vector, SDL_Rect Rect, Tile ti
         }
     }
 }
+
 
 int calculatePercentage(const std::vector<std::vector<Tile>>& vector , Tile tile )
 {
@@ -187,48 +269,55 @@ void spreadFire(std::vector<std::vector<Tile>>& Forest)
             if (Forest[x][y] == Tile::Red)
             {
                 int redCount = 0;
-                if ( x > 0 && ( Forest[x - 1][y] == Tile::Red || Forest[x - 1][y] == Tile::Black || Forest[x - 1][y] == Tile::Brown ) )
+                if (x > 0 && (Forest[x - 1][y] == Tile::Red || Forest[x - 1][y] == Tile::Black || Forest[x - 1][y] == Tile::Brown))
                     redCount++;
-                if ( x < Forest.size() - 1 && ( Forest[x + 1][y] == Tile::Red || Forest[x + 1][y] == Tile::Black || Forest[x + 1][y] == Tile::Brown ) )
+                if (x < Forest.size() - 1 && (Forest[x + 1][y] == Tile::Red || Forest[x + 1][y] == Tile::Black || Forest[x + 1][y] == Tile::Brown))
                     redCount++;
-                if ( y > 0 && ( Forest[x][y - 1] == Tile::Red || Forest[x][y - 1] == Tile::Black || Forest[x][y - 1] == Tile::Brown ) )
+                if (y > 0 && (Forest[x][y - 1] == Tile::Red || Forest[x][y - 1] == Tile::Black || Forest[x][y - 1] == Tile::Brown))
                     redCount++;
-                if ( y < Forest[0].size() - 1 && ( Forest[x][y + 1] == Tile::Red || Forest[x][y + 1] == Tile::Black || Forest[x][y + 1] == Tile::Brown ) )
+                if (y < Forest[0].size() - 1 && (Forest[x][y + 1] == Tile::Red || Forest[x][y + 1] == Tile::Black || Forest[x][y + 1] == Tile::Brown))
                     redCount++;
 
-                if ( redCount < 4 )
+                if (redCount < 4)
                 {
-                    if ( x > 0 && Forest[x - 1][y] == Tile::Green )
+                    if (x > 0 && Forest[x - 1][y] == Tile::Green)
                         fireSpreadCoords.emplace_back(x - 1, y);
-                    if ( x < Forest.size() - 1 && Forest[x + 1][y] == Tile::Green )
+                    if (x < Forest.size() - 1 && Forest[x + 1][y] == Tile::Green)
                         fireSpreadCoords.emplace_back(x + 1, y);
-                    if ( y > 0 && Forest[x][y - 1] == Tile::Green )
+                    if (y > 0 && Forest[x][y - 1] == Tile::Green)
                         fireSpreadCoords.emplace_back(x, y - 1);
-                    if ( y < Forest[0].size() - 1 && Forest[x][y + 1] == Tile::Green )
+                    if (y < Forest[0].size() - 1 && Forest[x][y + 1] == Tile::Green)
                         fireSpreadCoords.emplace_back(x, y + 1);
-                } else {
-                    burnedCoords.emplace_back( x , y );
+                }
+                else
+                {
+                    burnedCoords.emplace_back(x, y);
                 }
             }
         }
     }
 
-    for ( std::vector< std::pair<int, int> >::iterator IT = fireSpreadCoords.begin() ; IT < fireSpreadCoords.end() ; IT++ )
+    for (std::vector<std::pair<int, int>>::iterator IT = fireSpreadCoords.begin(); IT < fireSpreadCoords.end(); IT++)
     {
         int x = IT->first;
         int y = IT->second;
 
-        if ( ( x == 0 || x == Forest.size() - 1 ) || ( y == 0 || y == Forest[0].size() - 1 ) )
-            Forest[x][y] = Tile::Black;
-        else
-            Forest[x][y] = Tile::Red;
+        if ( ( x >= 0 && x < Forest.size() ) && ( y >= 0 && y < Forest[0].size() ) )
+        {
+            if (x == 0 || x == Forest.size() - 1 || y == 0 || y == Forest[0].size() - 1)
+                Forest[x][y] = Tile::Brown;
+            else
+                Forest[x][y] = Tile::Red;
+        }
     }
 
-    for ( std::vector< std::pair<int, int> >::iterator IT = burnedCoords.begin() ; IT < burnedCoords.end() ; IT++ )
+    for (std::vector<std::pair<int, int>>::iterator IT = burnedCoords.begin(); IT < burnedCoords.end(); IT++)
     {
         int x = IT->first;
         int y = IT->second;
-        Forest[x][y] = Tile::Black;
+
+        if ( ( x >= 0 && x < Forest.size() ) && ( y >= 0 && y < Forest[0].size() ) )
+            Forest[x][y] = Tile::Brown;
     }
 }
 

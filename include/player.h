@@ -49,9 +49,10 @@ void movePlayer ( structPlayer& player , int LevelWidth , int LevelHeight )
 
 }
 
-void playerGameLogic ( structPlayer& player )
+void playerGameLogic ( structPlayer& player , std::vector<std::vector<Tile>>& Forest )
 {
         player.Velocity = eventHandlerPlayer( player.Velocity );
         movePlayer( player , Resolution::LevelWidth , Resolution::LevelHeight );
+        updateForest( Forest , player.Rect , Tile::Red , Tile::Brown , 50 );
 }
 

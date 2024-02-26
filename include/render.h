@@ -27,6 +27,12 @@ void render ( Game Game )
                         Game.Entities.Enemy.at(i).Rect.y - Game.Background.Camera.y,
                         Game.Entities.Enemy.at(i).Rect.w,
                         Game.Entities.Enemy.at(i).Rect.h} );
+                else if ( Game.Entities.Enemy[i].Type == EntityType::FireEnemy )
+                    rendererAdd( Game.Window.Renderer, Textures::FireEnemy, {
+                        Game.Entities.Enemy.at(i).Rect.x - Game.Background.Camera.x,
+                        Game.Entities.Enemy.at(i).Rect.y - Game.Background.Camera.y,
+                        Game.Entities.Enemy.at(i).Rect.w,
+                        Game.Entities.Enemy.at(i).Rect.h} );
 
         for ( int i = 0 ; i < Game.Entities.Allies.size() ; i++ )
 

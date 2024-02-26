@@ -1,6 +1,7 @@
 enum EntityType
 {
     Enemy,
+    FireEnemy,
     Tree,
     Ally
 };

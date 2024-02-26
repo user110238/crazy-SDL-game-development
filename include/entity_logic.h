@@ -18,13 +18,18 @@
             {
                 if (collision(Entities.Enemy[i].Rect, Entities.Tree[j].Rect))
                 {
-                    updateForest( Forest , Entities.Tree[j].Rect , Tile::Brown , 100 );
+                    if ( Entities.Enemy[i].Type == EntityType::Enemy )
+                        updateForest( Forest , Entities.Tree[j].Rect , Tile::Brown , 100 );
+                    else if ( Entities.Enemy[i].Type == EntityType::FireEnemy )
+                        updateForest( Forest , Entities.Tree[j].Rect , Tile::Red , 10 );
+
                     Entities.Tree.erase( Entities.Tree.begin() + j);
                     --j;
                 }
             }
 
-            updateForest( Forest , Entities.Enemy[i].Rect , Tile::Brown , 0 );
+            if ( Entities.Enemy[i].Type == EntityType::Enemy )
+                updateForest( Forest , Entities.Enemy[i].Rect , Tile::Brown , 0 );
 
         }
         for ( int i = 0 ; i < Entities.Allies.size() ; ++i )

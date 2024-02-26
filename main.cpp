@@ -20,9 +20,9 @@
 #include "include/events.h"
 #include "include/frame_limiting.h"
 
-#include "include/player.h"
-
 #include "include/forest.h"
+
+#include "include/player.h"
 
 #include "include/entity.h"
 #include "include/enemy.h"
@@ -37,13 +37,11 @@
 #include "include/entity_logic.h"
 #include "include/main.h"
 
-
 int main(int argc, char* args[])
 {
     Game Game;
     setup( Game );
     gameLoop( Game );
-
 
     return 0;
 }

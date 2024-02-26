@@ -30,6 +30,8 @@ namespace Textures
     SDL_Texture* Player;
 
     SDL_Texture* Enemy;
+    SDL_Texture* FireEnemy;
+
     SDL_Texture* Tree;
     SDL_Texture* Ally;
 };

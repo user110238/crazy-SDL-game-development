@@ -16,6 +16,7 @@ void setup ( Game& Game )
 
     Textures::Player = loadTexture( Game.Window.Renderer , "assets/square.png" );
     Textures::Enemy = loadTexture( Game.Window.Renderer , "assets/circle.png" );
+    Textures::FireEnemy = loadTexture( Game.Window.Renderer , "assets/red_circle.png" );
     Textures::Tree = loadTexture( Game.Window.Renderer , "assets/triangle.png" );
     Textures::Ally = loadTexture( Game.Window.Renderer , "assets/star.png" );
 
@@ -24,7 +25,8 @@ void setup ( Game& Game )
     Game.Forest.resize( Resolution::LevelWidth / constant::PIXEL_SIZE , std::vector<Tile>( Resolution::LevelHeight / constant::PIXEL_SIZE , Tile::Green ) );
     fillvector( Game.Forest , 5 );
 
-    pushRandom( Game.Entities.Enemy , 10 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Enemy);
+    pushRandom( Game.Entities.Enemy , 5 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Enemy);
+    pushRandom( Game.Entities.Enemy , 5 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::FireEnemy);
     pushRandom( Game.Entities.Tree , 255 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Tree);
 
     std::vector<std::pair< int , int >> CampCoordinates = findCamps( Game.Forest );
@@ -36,7 +38,7 @@ void setup ( Game& Game )
     initText( Game.Text , Game.Window.Renderer , "assets/ARCADECLASSIC.ttf" );
 
     Game.FireSpread.lastFireSpreadTime = SDL_GetTicks();
-    Game.FireSpread.fireSpreadInterval = 500;
+    Game.FireSpread.fireSpreadInterval = 1000;
 }
 
 void gameLoop ( Game Game )
@@ -47,7 +49,7 @@ void gameLoop ( Game Game )
         Game.Frames.FrameStart = SDL_GetTicks();
 
         // Game logic
-        playerGameLogic( Game.Player );
+        playerGameLogic( Game.Player , Game.Forest );
         entityGameLogic( Game.Entities , Game.Forest , Game.Player.Rect );
 
         // Scrolling
