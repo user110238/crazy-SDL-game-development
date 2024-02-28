@@ -64,7 +64,7 @@ void gameLoop ( Game Game )
             // Calculate Fire spread, every (fireSpreadInterval / 1000) seconds
         if ( Game.Frames.FrameStart - Game.FireSpread.lastFireSpreadTime >= Game.FireSpread.fireSpreadInterval )
         {
-            spreadFire(Game.Forest);
+            spreadFire( Game.Forest );
             Game.FireSpread.lastFireSpreadTime = Game.Frames.FrameStart;
         }
 

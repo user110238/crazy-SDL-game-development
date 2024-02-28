@@ -72,7 +72,7 @@ Entity* findNearestEntity(SDL_Rect enemy, std::vector<Entity>& entity)
     return nearestEntity;
 }
 
-void moveTowards(SDL_Rect& srcRect, SDL_Rect& destRect, EntityType Type )
+void moveTowards(SDL_Rect& srcRect, SDL_Rect& destRect, int speed )
 {
         // distance between rectangles
     int DX = destRect.x - srcRect.x;
@@ -87,18 +87,26 @@ void moveTowards(SDL_Rect& srcRect, SDL_Rect& destRect, EntityType Type )
     double normDX = DX / lenght;
     double normDY = DY / lenght;
 
-            // move src rectangle acording to the normalized vector
-    if ( Type == EntityType::Enemy )
-    {
-        srcRect.x += (int)(normDX * constant::ENEMY_VELOCITY);
-        srcRect.y += (int)(normDY * constant::ENEMY_VELOCITY);
-    }
-    else if ( Type = EntityType::Ally )
-    {
-        srcRect.x += (int)(normDX * constant::ALLY_VELOCITY);
-        srcRect.y += (int)(normDY * constant::ALLY_VELOCITY);
+        // move src rectangle acording to the normalized vector
+    srcRect.x += (int)(normDX * speed);
+    srcRect.y += (int)(normDY * speed);
 
-    }
+}
+
+void moveRandomly(SDL_Rect& srcRect, int distance, int speed )
+{
+    //std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+    double randomAngle = static_cast<double>(std::rand()) / RAND_MAX * 2.0 * M_PI;
+
+    // Move towards the destination point
+    SDL_Rect destRect;
+    destRect.x = srcRect.x + static_cast<int>(std::cos(randomAngle) * distance);
+    destRect.y = srcRect.y + static_cast<int>(std::sin(randomAngle) * distance);
+    destRect.w = srcRect.w;
+    destRect.h = srcRect.h;
+
+    moveTowards(srcRect, destRect, speed );
 
 }
 

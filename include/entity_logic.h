@@ -1,5 +1,6 @@
  void entityGameLogic( AllEntities& Entities , std::vector< std::vector <Tile> >& Forest , const SDL_Rect& Player )
 {
+        std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
         if ( Entities.Enemy.size() == 0 )
             pushRandom( Entities.Enemy , 10 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Enemy);
@@ -44,5 +45,10 @@
                     --j;
                 }
             }
+        }
+        for ( int i = 0 ; i < Entities.Tree.size() ; ++i )
+        {
+            if ( isTreeCompromised( Forest , Entities.Tree[i].Rect ) )
+                Entities.Tree.erase( Entities.Tree.begin() + i );
         }
 }

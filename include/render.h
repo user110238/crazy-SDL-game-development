@@ -61,7 +61,7 @@ void render ( Game Game )
                              Game.Entities.Tree.at(i).Rect.h } );
 
 
-        rendererAdd( Game.Window.Renderer , Game.Text.scoreText , { Game.Background.Camera.w / 2 - 150 / 2 , 0 , 150 , 100 } );
+        rendererAdd( Game.Window.Renderer , Game.Text.scoreText , { Game.Background.Camera.w / 2 - 300 / 2 , 0 , 300 , 100 } );
         rendererAdd( Game.Window.Renderer , Game.Text.treeCount , { Game.Background.Camera.w / 2 - 150 / 2 , 100 , 150 , 100 } );
 
             // Draw Frame

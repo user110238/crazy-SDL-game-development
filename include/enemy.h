@@ -11,5 +11,5 @@ void HandleEnemyMovement(SDL_Rect& enemyRect, std::vector<Entity>& trees)
         targetRect.y = enemyRect.y;
     }
 
-    moveTowards( enemyRect , targetRect , EntityType::Enemy );
+    moveTowards( enemyRect , targetRect , constant::ENEMY_VELOCITY );
 }
