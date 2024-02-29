@@ -95,12 +95,12 @@ void moveTowards(SDL_Rect& srcRect, SDL_Rect& destRect, int speed )
 
 void moveRandomly(SDL_Rect& srcRect, int distance, int speed )
 {
-    //std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
     double randomAngle = static_cast<double>(std::rand()) / RAND_MAX * 2.0 * M_PI;
 
     // Move towards the destination point
     SDL_Rect destRect;
+
     destRect.x = srcRect.x + static_cast<int>(std::cos(randomAngle) * distance);
     destRect.y = srcRect.y + static_cast<int>(std::sin(randomAngle) * distance);
     destRect.w = srcRect.w;

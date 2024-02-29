@@ -25,9 +25,9 @@ void setup ( Game& Game )
     Game.Forest.resize( Resolution::LevelWidth / constant::PIXEL_SIZE , std::vector<Tile>( Resolution::LevelHeight / constant::PIXEL_SIZE , Tile::Green ) );
     fillvector( Game.Forest , 5 );
 
-    pushRandom( Game.Entities.Enemy , 5 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Enemy);
-    pushRandom( Game.Entities.Enemy , 5 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::FireEnemy);
-    pushRandom( Game.Entities.Tree , 255 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Tree);
+    pushRandom( Game.Entities.Enemy , 7 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Enemy);
+    pushRandom( Game.Entities.Enemy , 3 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::FireEnemy);
+    pushRandom( Game.Entities.Tree , 510 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Tree);
 
     std::vector<std::pair< int , int >> CampCoordinates = findCamps( Game.Forest );
     pushToPairCoords( Game.Entities.Allies , 5 , 1 , CampCoordinates , EntityType::Ally);
@@ -81,8 +81,4 @@ void gameLoop ( Game Game )
             SDL_Delay( Game.Frames.FrameDelay - Game.Frames.FrameTime );
         }
 
-
 }
-
-
-
