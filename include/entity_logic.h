@@ -35,7 +35,7 @@
         }
         for ( int i = 0 ; i < Entities.Allies.size() ; ++i )
         {
-            HandleAllyMovement( Entities.Allies[i].Rect , Entities.Enemy , 500 );
+            HandleAllyMovement( Entities.Allies[i].Rect , Entities.Enemy , 500 , Forest );
 
             for (int j = 0; j < Entities.Enemy.size(); j++)
             {
@@ -46,7 +46,7 @@
                 }
             }
 
-            updateForest( Forest , Entities.Allies[i].Rect , Tile::Green , 10 );
+            updateForest( Forest , Entities.Allies[i].Rect , Tile::Green , 30 );
         }
         for ( int i = 0 ; i < Entities.Tree.size() ; ++i )
         {
