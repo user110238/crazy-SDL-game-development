@@ -1,5 +1,4 @@
     // Types of tiles
-#include <cmath>
 enum class Tile
 {
     Green,  // Active forest
@@ -150,8 +149,8 @@ void updateForest( std::vector<std::vector<Tile>>& vector , SDL_Rect Rect , Tile
             {
                 if ( x / constant::PIXEL_SIZE < vector.size() && y / constant::PIXEL_SIZE < vector[0].size() )
                 {
-                    if ( vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] == Tile::Green )
-                        vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] = tile;
+                    if ( vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] == Tile::Green || vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] == Tile::Red )
+                        vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] = tile;  
                 }
             }
         }
@@ -316,4 +315,47 @@ void spreadFire( std::vector<std::vector<Tile>>& Forest )
             Forest[x][y] = Tile::Brown;
     }
 }
+
+std::pair<int, int> findNearestPoint(const std::vector<std::vector<Tile>>& vector, SDL_Rect Rect, Tile tile, int clearRadius)
+{
+    // Center of the rectangle
+    int centerX = Rect.x + Rect.w / 2;
+    int centerY = Rect.y + Rect.h / 2;
+    int extend = clearRadius;
+
+    // Radius == smaller side
+    clearRadius += std::min(Rect.w, Rect.h) / 2 - constant::HITBOX_REDUCTION;
+
+    // closest invalid point
+    int closestX = -1;
+    int closestY = -1;
+    double minDistance = std::numeric_limits<double>::max();
+
+    for (int x = std::max(0, Rect.x - extend); x < std::min(static_cast<int>(vector.size() * constant::PIXEL_SIZE), Rect.x + Rect.w + extend); ++x)
+    {
+        for (int y = std::max(0, Rect.y - extend); y < std::min(static_cast<int>(vector[0].size() * constant::PIXEL_SIZE), Rect.y + Rect.h + extend); ++y)
+        {
+            // Pitagorean theorem
+            int distanceX = x - centerX;
+            int distanceY = y - centerY;
+            double distance = std::sqrt(std::pow(distanceX, 2) + std::pow(distanceY, 2));
+
+            // If the current point is within the circle radius
+            if (distance <= clearRadius)
+            {
+                if (x / constant::PIXEL_SIZE < vector.size() && y / constant::PIXEL_SIZE < vector[0].size())
+                {
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                        closestX = x / constant::PIXEL_SIZE;
+                        closestY = y / constant::PIXEL_SIZE;
+                    }
+                }
+            }
+        }
+    }
+    return std::make_pair(closestX, closestY);
+}
+
 

@@ -6,8 +6,10 @@ void HandleAllyMovement( SDL_Rect& allyRect, std::vector<Entity>& Enemy, int det
     if ( nearestEntity!=nullptr && distance( allyRect.x , allyRect.y , nearestEntity->Rect.x , nearestEntity->Rect.y ) <= detection ) {
         targetRect = nearestEntity->Rect;
         moveTowards( allyRect , targetRect , constant::ALLY_VELOCITY );
+    } else if( 0 ) {
     } else {
-        moveRandomly( allyRect , 200 , constant::ALLY_WANDER_VEL );
+         moveRandomly( allyRect , 200 , constant::ALLY_WANDER_VEL );
+
     }
 
 }

@@ -45,6 +45,8 @@
                     --j;
                 }
             }
+
+            updateForest( Forest , Entities.Allies[i].Rect , Tile::Green , 10 );
         }
         for ( int i = 0 ; i < Entities.Tree.size() ; ++i )
         {
@@ -52,3 +54,5 @@
                 Entities.Tree.erase( Entities.Tree.begin() + i );
         }
 }
+
+
