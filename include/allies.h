@@ -13,7 +13,7 @@ void HandleAllyMovement(SDL_Rect& allyRect, std::vector<Entity>& Enemy, int dete
     else if (distance(allyRect.x, allyRect.y, nearestRedTile.first, nearestRedTile.second) <= detection)
     {
         targetRect.x = nearestRedTile.first;
-        targetRect.y = nearestRedTile.second ;
+        targetRect.y = nearestRedTile.second;
         moveTowards(allyRect, targetRect, constant::ALLY_VELOCITY);
     }
     else

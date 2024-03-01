@@ -1,4 +1,5 @@
     // Types of tiles
+#include <math.h>
 enum class Tile
 {
     Green,  // Active forest
@@ -154,6 +155,34 @@ void updateForest(std::vector<std::vector<Tile>>& vector, SDL_Rect Rect, Tile ti
     }
 }
 
+void updateForest( std::vector<std::vector<Tile>>& vector , SDL_Rect Rect , Tile target , Tile tile , int clearRadius )
+{
+    int centerX = Rect.x + Rect.w / 2;
+    int centerY = Rect.y + Rect.h / 2;
+    int extend = clearRadius;
+
+    clearRadius += std::min(Rect.w, Rect.h) / 2 - constant::HITBOX_REDUCTION;
+    clearRadius = clearRadius * clearRadius;
+
+    for (int x = std::max(0, Rect.x - extend); x < std::min(static_cast<int>(vector.size() * constant::PIXEL_SIZE), Rect.x + Rect.w + extend); ++x)
+    {
+        int DX = x - centerX;
+        int squaredDX = DX * DX;
+
+        for (int y = std::max(0, Rect.y - extend); y < std::min(static_cast<int>(vector[0].size() * constant::PIXEL_SIZE), Rect.y + Rect.h + extend); ++y)
+        {
+            int DY = y - centerY;
+            int distance_squared = squaredDX + DY * DY;
+
+            if (distance_squared <= clearRadius && x / constant::PIXEL_SIZE < vector.size() && y / constant::PIXEL_SIZE < vector[0].size())
+            {
+                if (vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] == target )
+                    vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] = tile;
+            }
+        }
+    }
+}
+
 bool isTreeCompromised( const std::vector<std::vector<Tile>>& vector , SDL_Rect Rect )
 {
     for (int x = std::max(0, Rect.x / constant::PIXEL_SIZE); x < std::min(static_cast<int>(vector.size()), (Rect.x + Rect.w) / constant::PIXEL_SIZE); ++x)
@@ -165,37 +194,6 @@ bool isTreeCompromised( const std::vector<std::vector<Tile>>& vector , SDL_Rect 
         }
     }
     return false;
-}
-
-void updateForest( std::vector<std::vector<Tile>>& vector , SDL_Rect Rect , Tile target , Tile tile , int clearRadius )
-{
-    // Center of the rectangle
-    int centerX = Rect.x + Rect.w / 2;
-    int centerY = Rect.y + Rect.h / 2;
-    int extend = clearRadius;
-
-    // Radius == smaller side
-    clearRadius += std::min(Rect.w, Rect.h) / 2 - constant::HITBOX_REDUCTION;
-
-    for ( int x = std::max(0, Rect.x - extend); x < std::min(static_cast<int>(vector.size() * constant::PIXEL_SIZE), Rect.x + Rect.w + extend); ++x )
-    {
-        for ( int y = std::max(0, Rect.y - extend); y < std::min(static_cast<int>(vector[0].size() * constant::PIXEL_SIZE), Rect.y + Rect.h + extend); ++y )
-        {
-            // Pitagorov
-            int distanceX = x - centerX;
-            int distanceY = y - centerY;
-            double distance = std::sqrt(std::pow(distanceX, 2) + std::pow(distanceY, 2));
-            // If current point is within the circle radius
-            if (distance <= clearRadius)
-            {
-                if ( x / constant::PIXEL_SIZE < vector.size() && y / constant::PIXEL_SIZE < vector[0].size() )
-                {
-                    if ( vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] == target )
-                        vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] = tile;
-                }
-            }
-        }
-    }
 }
 
 void updateForestRandom( std::vector<std::vector<Tile>>& vector , SDL_Rect Rect , Tile tile , int clearRadius )
@@ -316,6 +314,10 @@ void spreadFire( std::vector<std::vector<Tile>>& Forest )
 std::pair<int, int> findNearestRedTile(const SDL_Rect& allyRect, const std::vector<std::vector<Tile>>& Forest)
 {
     std::pair<int, int> nearestRedTile;
+
+    nearestRedTile.first = std::numeric_limits<int>::max();
+    nearestRedTile.second = std::numeric_limits<int>::max();
+
     float minDistance = std::numeric_limits<float>::max();
 
     for (int x = 0; x < Forest.size(); ++x)
@@ -325,7 +327,7 @@ std::pair<int, int> findNearestRedTile(const SDL_Rect& allyRect, const std::vect
             if (Forest[x][y] == Tile::Red)
             {
                 float currentDistance = distance( allyRect.x + allyRect.w / 2 , allyRect.y + allyRect.h / 2, x * constant::PIXEL_SIZE, y * constant::PIXEL_SIZE );
-                if (currentDistance < minDistance)
+                if (currentDistance <= minDistance)
                 {
                     minDistance = currentDistance;
                     nearestRedTile = {x * constant::PIXEL_SIZE , y * constant::PIXEL_SIZE };

@@ -46,7 +46,7 @@
                 }
             }
 
-            updateForest( Forest , Entities.Allies[i].Rect , Tile::Green , 30 );
+            updateForest( Forest , Entities.Allies[i].Rect , Tile::Red , Tile::Brown , 40 );
         }
         for ( int i = 0 ; i < Entities.Tree.size() ; ++i )
         {
