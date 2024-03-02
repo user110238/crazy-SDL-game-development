@@ -54,15 +54,15 @@ void pushToPairCoords( std::vector<struct Entity>& Entity , int x , int alliesPe
     }
 }
 
-Entity* findNearestEntity(SDL_Rect enemy, std::vector<Entity>& entity)
+Entity* findNearestEntity( SDL_Rect enemy , std::vector<Entity>& entity )
 {
     Entity* nearestEntity = nullptr;
     float minDistance = std::numeric_limits<float>::max();
 
-    for (std::vector<Entity>::iterator it = entity.begin(); it != entity.end(); ++it)
+    for ( std::vector<Entity>::iterator it = entity.begin() ; it != entity.end() ; ++it )
     {
-        float dist = distance(enemy.x, enemy.y, it->Rect.x, it->Rect.y);
-        if (dist < minDistance)
+        float dist = distance( enemy.x , enemy.y , it->Rect.x , it->Rect.y );
+        if ( dist < minDistance )
         {
             minDistance = dist;
             nearestEntity = &(*it);
@@ -72,7 +72,7 @@ Entity* findNearestEntity(SDL_Rect enemy, std::vector<Entity>& entity)
     return nearestEntity;
 }
 
-void moveTowards(SDL_Rect& srcRect, SDL_Rect& destRect, int speed )
+void moveTowards( SDL_Rect& srcRect , SDL_Rect& destRect , int speed )
 {
         // distance between rectangles
     int DX = destRect.x - srcRect.x;
@@ -88,29 +88,31 @@ void moveTowards(SDL_Rect& srcRect, SDL_Rect& destRect, int speed )
     double normDY = DY / lenght;
 
         // move src rectangle acording to the normalized vector
-    srcRect.x += (int)(normDX * speed);
-    srcRect.y += (int)(normDY * speed);
+    srcRect.x += (int)( normDX * speed );
+    srcRect.y += (int)( normDY * speed );
 
 }
 
-void moveRandomly(SDL_Rect& srcRect, int distance, int speed )
+void moveRandomly( SDL_Rect& srcRect , int distance , int speed )
 {
-
     double randomAngle = static_cast<double>(std::rand()) / RAND_MAX * 2.0 * M_PI;
 
-    // Move towards the destination point
+    int destX = srcRect.x + static_cast<int>(std::cos(randomAngle) * distance);
+    int destY = srcRect.y + static_cast<int>(std::sin(randomAngle) * distance);
+
+    destX = std::max( 0, std::min( destX, Resolution::LevelWidth - srcRect.w )  );
+    destY = std::max( 0, std::min( destY, Resolution::LevelHeight - srcRect.h ) );
+
     SDL_Rect destRect;
+    destRect.x = destX;
+    destRect.y = destY;
+    destRect.w = 0;
+    destRect.h = 0;
 
-    destRect.x = srcRect.x + static_cast<int>(std::cos(randomAngle) * distance);
-    destRect.y = srcRect.y + static_cast<int>(std::sin(randomAngle) * distance);
-    destRect.w = srcRect.w;
-    destRect.h = srcRect.h;
-
-    moveTowards(srcRect, destRect, speed );
-
+    moveTowards(  srcRect, destRect, speed );
 }
 
-bool collision( SDL_Rect a, SDL_Rect b )
+bool collision( SDL_Rect a , SDL_Rect b )
 {
     int leftA, leftB;
     int rightA, rightB;
@@ -149,3 +151,25 @@ bool collision( SDL_Rect a, SDL_Rect b )
 
     return true;
 }
+
+void moveRectAway( SDL_Rect &rect1 , SDL_Rect &rect2 , float speed )
+{
+    int DX = ( rect2.x + rect2.w / 2 ) - ( rect1.x + rect1.w / 2 );
+    int DY = ( rect2.y + rect2.h / 2 ) - ( rect1.y + rect1.h / 2 );
+
+    float lenght = sqrt( DX * DX + DY * DY );
+
+    if ( lenght < 100 )
+    {
+            // Normalize vector
+        float normDX = DX / lenght;
+        float normDY = DY / lenght;
+
+        rect1.x -= static_cast<int>( speed * normDX );
+        rect1.y -= static_cast<int>( speed * normDY );
+
+        rect2.x += static_cast<int>( speed * normDX );
+        rect2.y += static_cast<int>( speed * normDY );
+    }
+}
+

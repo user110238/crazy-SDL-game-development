@@ -23,14 +23,14 @@ void setup ( Game& Game )
     initPlayer( Game.Player , Resolution::LevelWidth /2 , Resolution::LevelHeight / 2 );
 
     Game.Forest.resize( Resolution::LevelWidth / constant::PIXEL_SIZE , std::vector<Tile>( Resolution::LevelHeight / constant::PIXEL_SIZE , Tile::Green ) );
-    fillvector( Game.Forest , 5 );
+    fillvector( Game.Forest , 5 ); // Number of camps
 
     pushRandom( Game.Entities.Enemy , 7 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Enemy);
     pushRandom( Game.Entities.Enemy , 3 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::FireEnemy);
-    pushRandom( Game.Entities.Tree , 510 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Tree);
+    pushRandom( Game.Entities.Tree , 512 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Tree);
 
     std::vector<std::pair< int , int >> CampCoordinates = findCamps( Game.Forest );
-    pushToPairCoords( Game.Entities.Allies , 5 , 1 , CampCoordinates , EntityType::Ally);
+    pushToPairCoords( Game.Entities.Allies , 5 , 1 , CampCoordinates , EntityType::Ally); // Number of allies ; Allies per camps
 
     initBackground( Game.Background );
     Game.Background.Texture = fillBackground( Game.Forest , Game.Window.Renderer );

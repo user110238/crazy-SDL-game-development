@@ -27,7 +27,8 @@ void offset( structBackground& Background )
 
 }
 
-void scrolling(SDL_Rect& camera, const SDL_Rect& Player, int WindowWidth, int WindowHeight, int LevelWidth, int LevelHeight) {
+void scrolling( SDL_Rect& camera , const SDL_Rect& Player , int WindowWidth , int WindowHeight , int LevelWidth , int LevelHeight )
+{
 
     int centerX = Player.x + Player.w / 2;
     int centerY = Player.y + Player.h / 2;

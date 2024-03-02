@@ -63,6 +63,8 @@ void render ( Game Game )
 
         rendererAdd( Game.Window.Renderer , Game.Text.scoreText , { Game.Background.Camera.w / 2 - 300 / 2 , 0 , 300 , 100 } );
         rendererAdd( Game.Window.Renderer , Game.Text.treeCount , { Game.Background.Camera.w / 2 - 150 / 2 , 100 , 150 , 100 } );
+        if ( Game.Entities.Enemy.size() == 0 && (calculatePercentage( Game.Forest , Tile::Green )) > 30 )
+            rendererAdd( Game.Window.Renderer , Game.Text.victory , { Game.Background.Camera.w / 2 - 300 / 2 , 200 , 300 , 100 } );
 
             // Draw Frame
         SDL_RenderPresent( Game.Window.Renderer );

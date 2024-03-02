@@ -17,7 +17,7 @@ struct structFireSpread
 
 void fillvector( std::vector<std::vector<Tile>>& vector , int campCount )
 {
-    for (int i = 0; i < campCount; ++i)
+    for (int i = 0 ; i < campCount ; ++i)
     {
         int startX = getRandomNumber(0, vector.size());
         int startY = getRandomNumber(0, vector.at(0).size());
@@ -31,9 +31,9 @@ void fillvector( std::vector<std::vector<Tile>>& vector , int campCount )
         }
     }
 
-    for ( int x = 0; x < vector.size(); ++x )
+    for ( int x = 0 ; x < vector.size() ; ++x )
     {
-        for ( int y = 0; y < vector[0].size(); ++y )
+        for ( int y = 0 ; y < vector[0].size() ; ++y )
         {
             if ( vector[x][y] != Tile::Black )
                 vector[x][y] = Tile::Green;
@@ -53,9 +53,9 @@ SDL_Texture* fillBackground( std::vector<std::vector<Tile>>& vector , SDL_Render
         // PIXEL_SIZE is 10, probably
     SDL_Rect rect = {0, 0, constant::PIXEL_SIZE, constant::PIXEL_SIZE};
 
-    for ( int x = 0; x < vector.size(); ++x )
+    for ( int x = 0 ; x < vector.size() ; ++x )
     {
-        for ( int y = 0; y < vector[0].size(); ++y )
+        for ( int y = 0 ; y < vector[0].size() ; ++y )
         {
             rect.x = x * constant::PIXEL_SIZE;
             rect.y = y * constant::PIXEL_SIZE;
@@ -70,7 +70,7 @@ SDL_Texture* fillBackground( std::vector<std::vector<Tile>>& vector , SDL_Render
                     r = 53; g = 94; b = 60; // Green
                     break;
                 case Tile::Red:
-                    r = 255; g = getRandomNumber( 0 , 50 ); b = 25;
+                    r = 255; g = getRandomNumber( 0 , 50 ); b = 25; // Shifting Red
                     break;
                 case Tile::Black:
                     r = 0; g = 0; b = 0; // Black
@@ -81,7 +81,7 @@ SDL_Texture* fillBackground( std::vector<std::vector<Tile>>& vector , SDL_Render
             SDL_RenderFillRect( Renderer, &rect );
         }
     }
-    SDL_SetRenderTarget(Renderer, nullptr);
+    SDL_SetRenderTarget( Renderer, nullptr );
     return Texture;
 }
 
@@ -95,10 +95,10 @@ void updateBackgroundTexture( std::vector<std::vector<Tile>> vector , SDL_Textur
     // PIXEL_SIZE is 10, probably
     SDL_Rect rect = {0, 0, constant::PIXEL_SIZE, constant::PIXEL_SIZE};
 
-    for ( int x = std::max(0, camera.x / constant::PIXEL_SIZE); x < std::min( static_cast<int>( vector.size() ) ,
-        (camera.x + camera.w + constant::EXTRA_RENDER ) / constant::PIXEL_SIZE); ++x) {
-        for ( int y = std::max(0, camera.y / constant::PIXEL_SIZE); y < std::min( static_cast<int>( vector[0].size() ) ,
-            (camera.y + camera.h + constant::EXTRA_RENDER ) / constant::PIXEL_SIZE); ++y) {
+    for ( int x = std::max(0, camera.x / constant::PIXEL_SIZE) ; x < std::min( static_cast<int>( vector.size() ) ,
+        (camera.x + camera.w + constant::EXTRA_RENDER ) / constant::PIXEL_SIZE) ; ++x) {
+        for ( int y = std::max(0, camera.y / constant::PIXEL_SIZE) ; y < std::min( static_cast<int>( vector[0].size() ) ,
+            (camera.y + camera.h + constant::EXTRA_RENDER ) / constant::PIXEL_SIZE) ; ++y) {
 
             rect.x = x * constant::PIXEL_SIZE;
             rect.y = y * constant::PIXEL_SIZE;
@@ -112,7 +112,7 @@ void updateBackgroundTexture( std::vector<std::vector<Tile>> vector , SDL_Textur
                     r = 53; g = 94; b = 60; // Green
                     break;
                 case Tile::Red:
-                    r = 255; g = getRandomNumber(0, 50); b = 25;
+                    r = 255; g = getRandomNumber(0, 50); b = 25; // Shifting Red
                     break;
                 case Tile::Black:
                     r = 0; g = 0; b = 0; // Black
@@ -127,7 +127,7 @@ void updateBackgroundTexture( std::vector<std::vector<Tile>> vector , SDL_Textur
 }
 
 
-void updateForest(std::vector<std::vector<Tile>>& vector, SDL_Rect Rect, Tile tile, int clearRadius)
+void updateForest( std::vector<std::vector<Tile>>& vector , SDL_Rect Rect , Tile tile , int clearRadius )
 {
     int centerX = Rect.x + Rect.w / 2;
     int centerY = Rect.y + Rect.h / 2;
@@ -136,19 +136,19 @@ void updateForest(std::vector<std::vector<Tile>>& vector, SDL_Rect Rect, Tile ti
     clearRadius += std::min(Rect.w, Rect.h) / 2 - constant::HITBOX_REDUCTION;
     clearRadius = clearRadius * clearRadius;
 
-    for (int x = std::max(0, Rect.x - extend); x < std::min(static_cast<int>(vector.size() * constant::PIXEL_SIZE), Rect.x + Rect.w + extend); ++x)
+    for (int x = std::max(0, Rect.x - extend) ; x < std::min(static_cast<int>(vector.size() * constant::PIXEL_SIZE), Rect.x + Rect.w + extend) ; ++x)
     {
         int DX = x - centerX;
         int squaredDX = DX * DX;
 
-        for (int y = std::max(0, Rect.y - extend); y < std::min(static_cast<int>(vector[0].size() * constant::PIXEL_SIZE), Rect.y + Rect.h + extend); ++y)
+        for (int y = std::max(0, Rect.y - extend) ; y < std::min(static_cast<int>(vector[0].size() * constant::PIXEL_SIZE), Rect.y + Rect.h + extend) ; ++y)
         {
             int DY = y - centerY;
             int distance_squared = squaredDX + DY * DY;
 
-            if (distance_squared <= clearRadius && x / constant::PIXEL_SIZE < vector.size() && y / constant::PIXEL_SIZE < vector[0].size())
+            if ( distance_squared <= clearRadius && x / constant::PIXEL_SIZE < vector.size() && y / constant::PIXEL_SIZE < vector[0].size() )
             {
-                if (vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] == Tile::Green || vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] == Tile::Red)
+                if ( vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] == Tile::Green || vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] == Tile::Red )
                     vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] = tile;
             }
         }
@@ -164,19 +164,19 @@ void updateForest( std::vector<std::vector<Tile>>& vector , SDL_Rect Rect , Tile
     clearRadius += std::min(Rect.w, Rect.h) / 2 - constant::HITBOX_REDUCTION;
     clearRadius = clearRadius * clearRadius;
 
-    for (int x = std::max(0, Rect.x - extend); x < std::min(static_cast<int>(vector.size() * constant::PIXEL_SIZE), Rect.x + Rect.w + extend); ++x)
+    for (int x = std::max(0, Rect.x - extend) ; x < std::min(static_cast<int>(vector.size() * constant::PIXEL_SIZE) , Rect.x + Rect.w + extend) ; ++x)
     {
         int DX = x - centerX;
         int squaredDX = DX * DX;
 
-        for (int y = std::max(0, Rect.y - extend); y < std::min(static_cast<int>(vector[0].size() * constant::PIXEL_SIZE), Rect.y + Rect.h + extend); ++y)
+        for (int y = std::max(0, Rect.y - extend) ; y < std::min(static_cast<int>(vector[0].size() * constant::PIXEL_SIZE), Rect.y + Rect.h + extend) ; ++y)
         {
             int DY = y - centerY;
             int distance_squared = squaredDX + DY * DY;
 
-            if (distance_squared <= clearRadius && x / constant::PIXEL_SIZE < vector.size() && y / constant::PIXEL_SIZE < vector[0].size())
+            if ( distance_squared <= clearRadius && x / constant::PIXEL_SIZE < vector.size() && y / constant::PIXEL_SIZE < vector[0].size() )
             {
-                if (vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] == target )
+                if ( vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] == target )
                     vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] = tile;
             }
         }
@@ -187,9 +187,9 @@ bool isTreeCompromised( const std::vector<std::vector<Tile>>& vector , SDL_Rect 
 {
     for (int x = std::max(0, Rect.x / constant::PIXEL_SIZE); x < std::min(static_cast<int>(vector.size()), (Rect.x + Rect.w) / constant::PIXEL_SIZE); ++x)
     {
-        for (int y = std::max(0, Rect.y / constant::PIXEL_SIZE); y < std::min(static_cast<int>(vector[0].size()), (Rect.y + Rect.h) / constant::PIXEL_SIZE); ++y)
+        for (int y = std::max(0, Rect.y / constant::PIXEL_SIZE) ; y < std::min(static_cast<int>(vector[0].size()), (Rect.y + Rect.h) / constant::PIXEL_SIZE) ; ++y)
         {
-            if (vector[x][y] != Tile::Green)
+            if ( vector[x][y] != Tile::Green )
                 return true;
         }
     }
@@ -206,18 +206,18 @@ void updateForestRandom( std::vector<std::vector<Tile>>& vector , SDL_Rect Rect 
     // Radius == smaller side
     clearRadius += std::min(Rect.w, Rect.h) / 2 - constant::HITBOX_REDUCTION;
 
-    for ( int x = std::max(0, Rect.x - extend); x < std::min(static_cast<int>(vector.size() * constant::PIXEL_SIZE), Rect.x + Rect.w + extend); ++x )
+    for ( int x = std::max(0, Rect.x - extend) ; x < std::min(static_cast<int>(vector.size() * constant::PIXEL_SIZE), Rect.x + Rect.w + extend) ; ++x )
     {
-        for ( int y = std::max(0, Rect.y - extend); y < std::min(static_cast<int>(vector[0].size() * constant::PIXEL_SIZE), Rect.y + Rect.h + extend); ++y )
+        for ( int y = std::max(0, Rect.y - extend) ; y < std::min(static_cast<int>(vector[0].size() * constant::PIXEL_SIZE), Rect.y + Rect.h + extend) ; ++y )
         {
             // Pitagorov
             int distanceX = x - centerX;
             int distanceY = y - centerY;
             double distance = std::sqrt(std::pow(distanceX, 2) + std::pow(distanceY, 2));
             // If current point is within the circle radius
-            if (distance <= clearRadius)
+            if ( distance <= clearRadius )
             {
-                if (x / constant::PIXEL_SIZE < vector.size() && y / constant::PIXEL_SIZE < vector[0].size())
+                if ( x / constant::PIXEL_SIZE < vector.size() && y / constant::PIXEL_SIZE < vector[0].size() )
                 {
                     if ( vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] == Tile::Green )
                         vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] = tile;
@@ -233,9 +233,9 @@ int calculatePercentage( const std::vector<std::vector<Tile>>& vector , Tile til
     int totalTiles = 0;
     int brownTiles = 0;
 
-    for (int i = 0; i < vector.size(); ++i)
+    for (int i = 0 ; i < vector.size() ; ++i)
     {
-        for (int j = 0; j < vector[i].size(); ++j)
+        for (int j = 0 ; j < vector[i].size() ; ++j)
         {
             ++totalTiles;
             if ( vector[i][j] == tile )
@@ -252,9 +252,9 @@ void spreadFire( std::vector<std::vector<Tile>>& Forest )
     std::vector<std::pair<int, int>> fireSpreadCoords;
     std::vector<std::pair<int, int>> burnedCoords;
 
-    for ( int x = 0; x < Forest.size(); ++x )
+    for ( int x = 0 ; x < Forest.size() ; ++x )
     {
-        for ( int y = 0; y < Forest[0].size(); ++y )
+        for ( int y = 0 ; y < Forest[0].size() ; ++y )
         {
             if ( Forest[x][y] == Tile::Red )
             {
@@ -268,7 +268,7 @@ void spreadFire( std::vector<std::vector<Tile>>& Forest )
                 if (y < Forest[0].size() - 1 && (Forest[x][y + 1] == Tile::Red || Forest[x][y + 1] == Tile::Black || Forest[x][y + 1] == Tile::Brown))
                     redCount++;
 
-                if (redCount < 4)
+                if ( redCount < 4 )
                 {
                     if (x > 0 && Forest[x - 1][y] == Tile::Green)
                         fireSpreadCoords.emplace_back(x - 1, y);
@@ -287,21 +287,21 @@ void spreadFire( std::vector<std::vector<Tile>>& Forest )
         }
     }
 
-    for ( std::vector<std::pair<int, int>>::iterator IT = fireSpreadCoords.begin(); IT < fireSpreadCoords.end(); IT++ )
+    for ( std::vector<std::pair<int, int>>::iterator IT = fireSpreadCoords.begin() ; IT < fireSpreadCoords.end() ; IT++ )
     {
         int x = IT->first;
         int y = IT->second;
 
         if ( ( x >= 0 && x < Forest.size() ) && ( y >= 0 && y < Forest[0].size() ) )
         {
-            if (x == 0 || x == Forest.size() - 1 || y == 0 || y == Forest[0].size() - 1)
+            if ( x == 0 || x == Forest.size() - 1 || y == 0 || y == Forest[0].size() - 1 )
                 Forest[x][y] = Tile::Brown;
             else
                 Forest[x][y] = Tile::Red;
         }
     }
 
-    for (std::vector<std::pair<int, int>>::iterator IT = burnedCoords.begin(); IT < burnedCoords.end(); IT++)
+    for ( std::vector<std::pair<int, int>>::iterator IT = burnedCoords.begin() ; IT < burnedCoords.end() ; IT++ )
     {
         int x = IT->first;
         int y = IT->second;
@@ -311,7 +311,7 @@ void spreadFire( std::vector<std::vector<Tile>>& Forest )
     }
 }
 
-std::pair<int, int> findNearestRedTile(const SDL_Rect& allyRect, const std::vector<std::vector<Tile>>& Forest)
+std::pair<int, int> findNearestRedTile( const SDL_Rect& allyRect , const std::vector<std::vector<Tile>>& Forest )
 {
     std::pair<int, int> nearestRedTile;
 
@@ -320,14 +320,14 @@ std::pair<int, int> findNearestRedTile(const SDL_Rect& allyRect, const std::vect
 
     float minDistance = std::numeric_limits<float>::max();
 
-    for (int x = 0; x < Forest.size(); ++x)
+    for (int x = 0 ; x < Forest.size() ; ++x)
     {
-        for (int y = 0; y < Forest[0].size(); ++y)
+        for (int y = 0 ; y < Forest[0].size() ; ++y)
         {
-            if (Forest[x][y] == Tile::Red)
+            if ( Forest[x][y] == Tile::Red )
             {
                 float currentDistance = distance( allyRect.x + allyRect.w / 2 , allyRect.y + allyRect.h / 2, x * constant::PIXEL_SIZE, y * constant::PIXEL_SIZE );
-                if (currentDistance <= minDistance)
+                if ( currentDistance <= minDistance )
                 {
                     minDistance = currentDistance;
                     nearestRedTile = {x * constant::PIXEL_SIZE , y * constant::PIXEL_SIZE };

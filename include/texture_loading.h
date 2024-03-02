@@ -11,7 +11,7 @@ SDL_Texture* loadTexture( SDL_Renderer* Renderer , std::string path )
     return Texture;
 }
 
-SDL_Texture* loadTextureFromText(SDL_Renderer* renderer, std::string text, TTF_Font* font)
+SDL_Texture* loadTextureFromText( SDL_Renderer* renderer , std::string text , TTF_Font* font )
 {
     SDL_Texture* texture = nullptr;
 
@@ -26,9 +26,9 @@ SDL_Texture* loadTextureFromText(SDL_Renderer* renderer, std::string text, TTF_F
         return nullptr;
     }
 
-    texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+    texture = SDL_CreateTextureFromSurface( renderer, loadedSurface );
 
-    SDL_FreeSurface(loadedSurface);
+    SDL_FreeSurface( loadedSurface );
 
     return texture;
 }
