@@ -18,7 +18,7 @@ void initPlayer ( structPlayer& player , int x , int y  )
 
 }
 
-void movePlayer ( structPlayer& player , int LevelWidth , int LevelHeight )
+void movePlayer ( structPlayer& player )
 {
         // lenght of the vector
         // pitagorov zakon po slovensko
@@ -38,11 +38,11 @@ void movePlayer ( structPlayer& player , int LevelWidth , int LevelHeight )
     int newY = player.Rect.y + static_cast<int>(scaledY);
 
         // move back if out of bounds
-    if (newX >= 0 && newX + player.Rect.w <= LevelWidth)
+    if (newX >= 0 && newX + player.Rect.w <= Resolution::LevelWidth)
     {
         player.Rect.x = newX;
     }
-    if (newY >= 0 && newY + player.Rect.h <= LevelHeight)
+    if (newY >= 0 && newY + player.Rect.h <= Resolution::LevelHeight)
     {
         player.Rect.y = newY;
     }
@@ -52,7 +52,25 @@ void movePlayer ( structPlayer& player , int LevelWidth , int LevelHeight )
 void playerGameLogic ( structPlayer& player , std::vector<std::vector<Tile>>& Forest )
 {
         player.Velocity = eventHandlerPlayer( player.Velocity );
-        movePlayer( player , Resolution::LevelWidth , Resolution::LevelHeight );
+        movePlayer( player );
         updateForest( Forest , player.Rect , Tile::Red , Tile::Brown , 50 );
+
+
+    if ( player.Rect.x <= 0 )
+    {
+        player.Rect.x += 10;
+    }
+    if ( player.Rect.x + player.Rect.w >= Resolution::LevelWidth )
+    {
+        player.Rect.x -= 10;
+    }
+    if ( player.Rect.y <= 0 )
+    {
+        player.Rect.y += 10;
+    }
+    if ( player.Rect.y + player.Rect.h >= Resolution::LevelHeight )
+    {
+        player.Rect.y -= 10;
+    }
 }
 

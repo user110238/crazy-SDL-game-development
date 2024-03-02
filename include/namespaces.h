@@ -8,6 +8,7 @@ namespace constant
     const int ENEMY_VELOCITY =      3;
     const int ALLY_VELOCITY =       5;
     const int ALLY_WANDER_VEL =     3;
+    const int PUSH_SPEED =          2;
 
     const int CAMP_SPAWN_DISTANCE = 250;
     const int PIXEL_SIZE =          10;
