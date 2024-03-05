@@ -1,10 +1,12 @@
     // Types of tiles
-#include <math.h>
 enum class Tile
 {
     Green,  // Active forest
     Red,    // Burning
     Brown,  // Burned forest
+
+    Blue,
+    Sand,
 
     Black,  // Testing, camp center right now
 };
@@ -69,8 +71,14 @@ SDL_Texture* fillBackground( std::vector<std::vector<Tile>>& vector , SDL_Render
                 case Tile::Green:
                     r = 53; g = 94; b = 60; // Green
                     break;
+                case Tile::Blue:
+                    r = 0; g = 105; b = 148; // Blue
+                    break;
+                case Tile::Sand:
+                    r = 180; g = 160; b = 130; // Sand grey-ish
+                    break;
                 case Tile::Red:
-                    r = 255; g = getRandomNumber( 0 , 50 ); b = 25; // Shifting Red
+                    r = 247; g = 55; b = 24; // Red
                     break;
                 case Tile::Black:
                     r = 0; g = 0; b = 0; // Black
@@ -111,8 +119,14 @@ void updateBackgroundTexture( std::vector<std::vector<Tile>> vector , SDL_Textur
                 case Tile::Green:
                     r = 53; g = 94; b = 60; // Green
                     break;
+                case Tile::Blue:
+                    r = 0; g = 105; b = 148; // Blue
+                    break;
+                case Tile::Sand:
+                    r = 180; g = 160; b = 130; // Sand grey-ish
+                    break;
                 case Tile::Red:
-                    r = 255; g = getRandomNumber(0, 50); b = 25; // Shifting Red
+                    r = 247; g = 55; b = 24; // Red
                     break;
                 case Tile::Black:
                     r = 0; g = 0; b = 0; // Black
@@ -183,13 +197,26 @@ void updateForest( std::vector<std::vector<Tile>>& vector , SDL_Rect Rect , Tile
     }
 }
 
-bool isTreeCompromised( const std::vector<std::vector<Tile>>& vector , SDL_Rect Rect )
+bool isNotOnTile( const std::vector<std::vector<Tile>>& vector , SDL_Rect Rect , Tile tile )
 {
     for (int x = std::max(0, Rect.x / constant::PIXEL_SIZE); x < std::min(static_cast<int>(vector.size()), (Rect.x + Rect.w) / constant::PIXEL_SIZE); ++x)
     {
         for (int y = std::max(0, Rect.y / constant::PIXEL_SIZE) ; y < std::min(static_cast<int>(vector[0].size()), (Rect.y + Rect.h) / constant::PIXEL_SIZE) ; ++y)
         {
-            if ( vector[x][y] != Tile::Green )
+            if ( vector[x][y] != tile )
+                return true;
+        }
+    }
+    return false;
+}
+
+bool isOnTile( const std::vector<std::vector<Tile>>& vector , SDL_Rect Rect , Tile tile )
+{
+    for (int x = std::max(0, Rect.x / constant::PIXEL_SIZE); x < std::min(static_cast<int>(vector.size()), (Rect.x + Rect.w) / constant::PIXEL_SIZE); ++x)
+    {
+        for (int y = std::max(0, Rect.y / constant::PIXEL_SIZE) ; y < std::min(static_cast<int>(vector[0].size()), (Rect.y + Rect.h) / constant::PIXEL_SIZE) ; ++y)
+        {
+            if ( vector[x][y] == tile )
                 return true;
         }
     }
@@ -259,13 +286,13 @@ void spreadFire( std::vector<std::vector<Tile>>& Forest )
             if ( Forest[x][y] == Tile::Red )
             {
                 int redCount = 0;
-                if (x > 0 && (Forest[x - 1][y] == Tile::Red || Forest[x - 1][y] == Tile::Black || Forest[x - 1][y] == Tile::Brown))
+                if ( x > 0 && Forest[x - 1][y] != Tile::Green )
                     redCount++;
-                if (x < Forest.size() - 1 && (Forest[x + 1][y] == Tile::Red || Forest[x + 1][y] == Tile::Black || Forest[x + 1][y] == Tile::Brown))
+                if ( x < Forest.size() - 1 && Forest[x + 1][y] != Tile::Green )
                     redCount++;
-                if (y > 0 && (Forest[x][y - 1] == Tile::Red || Forest[x][y - 1] == Tile::Black || Forest[x][y - 1] == Tile::Brown))
+                if ( y > 0 && Forest[x][y - 1] != Tile::Green )
                     redCount++;
-                if (y < Forest[0].size() - 1 && (Forest[x][y + 1] == Tile::Red || Forest[x][y + 1] == Tile::Black || Forest[x][y + 1] == Tile::Brown))
+                if ( y < Forest[0].size() - 1 && Forest[x][y + 1] != Tile::Green )
                     redCount++;
 
                 if ( redCount < 4 )

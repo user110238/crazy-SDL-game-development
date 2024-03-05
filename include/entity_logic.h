@@ -32,7 +32,7 @@
         for ( int i = 0 ; i < Entities.Allies.size() ; ++i )
         {
             HandleAllyMovement( Entities.Allies[i].Rect , Entities.Enemy , 500 , Forest );
-            moveRectAway( Entities.Allies[i].Rect , Player , constant::PUSH_SPEED ) ;
+            moveRectAwayEachother( Entities.Allies[i].Rect , Player , constant::PUSH_SPEED ) ;
 
             for (int j = 0; j < Entities.Enemy.size(); j++)
             {
@@ -43,7 +43,7 @@
                 }
                 if (i != j )
                 {
-                    moveRectAway( Entities.Allies[i].Rect , Entities.Allies[j].Rect , constant::PUSH_SPEED * 5 ) ;
+                    moveRectAwayEachother( Entities.Allies[i].Rect , Entities.Allies[j].Rect , constant::PUSH_SPEED ) ;
                 }
             }
 
@@ -51,11 +51,11 @@
         }
         for ( int i = 0 ; i < Entities.Tree.size() ; ++i )
         {
-            if ( isTreeCompromised( Forest , Entities.Tree[i].Rect ) )
+            if ( isNotOnTile( Forest , Entities.Tree[i].Rect , Tile::Green) )
                 Entities.Tree.erase( Entities.Tree.begin() + i );
             for ( int j = 0 ; j < Entities.Allies.size() ; ++j )
-                moveRectAway( Entities.Tree[i].Rect , Entities.Allies[j].Rect , constant::PUSH_SPEED );
-            moveRectAway( Entities.Tree[i].Rect , Player , constant::PUSH_SPEED );
+                moveRectAway( Entities.Allies[j].Rect , Entities.Tree[i].Rect , constant::PUSH_SPEED );
+            moveRectAway( Player , Entities.Tree[i].Rect , constant::PUSH_SPEED );
         }
 }
 

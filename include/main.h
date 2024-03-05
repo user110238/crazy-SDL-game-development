@@ -24,6 +24,7 @@ void setup ( Game& Game )
 
     Game.Forest.resize( Resolution::LevelWidth / constant::PIXEL_SIZE , std::vector<Tile>( Resolution::LevelHeight / constant::PIXEL_SIZE , Tile::Green ) );
     fillvector( Game.Forest , 5 ); // Number of camps
+    river( Game.Forest );
 
     pushRandom( Game.Entities.Enemy , 7 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Enemy);
     pushRandom( Game.Entities.Enemy , 3 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::FireEnemy);

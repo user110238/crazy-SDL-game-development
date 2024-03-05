@@ -18,7 +18,7 @@ void initPlayer ( structPlayer& player , int x , int y  )
 
 }
 
-void movePlayer ( structPlayer& player )
+void movePlayer ( structPlayer& player , const std::vector<std::vector<Tile>>& Forest )
 {
         // lenght of the vector
         // pitagorov zakon po slovensko
@@ -29,9 +29,19 @@ void movePlayer ( structPlayer& player )
     float normX = player.Velocity.x / lenght;
     float normY = player.Velocity.y / lenght;
 
+    float scaledX;
+    float scaledY;
+
         // scale the normalized vector by velocity
-    float scaledX = normX * constant::PLAYER_VELOCITY;
-    float scaledY = normY * constant::PLAYER_VELOCITY;
+    if ( isOnTile( Forest , player.Rect , Tile::Blue ) )
+    {
+        scaledX = normX * constant::PLAYER_VELOCITY / constant::WATER_SLOWDOWN;
+        scaledY = normY * constant::PLAYER_VELOCITY / constant::WATER_SLOWDOWN;
+    } else {
+        scaledX = normX * constant::PLAYER_VELOCITY;
+        scaledY = normY * constant::PLAYER_VELOCITY;
+
+    }
 
         // create the new postion
     int newX = player.Rect.x + static_cast<int>(scaledX);
@@ -51,9 +61,9 @@ void movePlayer ( structPlayer& player )
 
 void playerGameLogic ( structPlayer& player , std::vector<std::vector<Tile>>& Forest )
 {
-        player.Velocity = eventHandlerPlayer( player.Velocity );
-        movePlayer( player );
-        updateForest( Forest , player.Rect , Tile::Red , Tile::Brown , 50 );
+    player.Velocity = eventHandlerPlayer( player.Velocity );
+    movePlayer( player , Forest );
+    updateForest( Forest , player.Rect , Tile::Red , Tile::Brown , 50 );
 
 
     if ( player.Rect.x <= 0 )

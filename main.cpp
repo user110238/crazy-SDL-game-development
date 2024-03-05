@@ -21,6 +21,7 @@
 #include "include/frame_limiting.h"
 
 #include "include/forest.h"
+#include "include/river.h"
 
 #include "include/player.h"
 

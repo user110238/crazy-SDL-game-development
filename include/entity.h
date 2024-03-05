@@ -32,8 +32,8 @@ void pushRandom( std::vector<struct Entity> &Entity , int x , int LevelWidth , i
 
     for ( int i = 0 ; i < x ; i++ )
     {
-        int Randomx = rand()%(LevelWidth);
-        int Randomy = rand()%(WindowHeight);
+        int Randomx = rand()%(LevelWidth - constant::ENTITY_SIZE_X);
+        int Randomy = rand()%(WindowHeight - constant::ENTITY_SIZE_Y);
 
         Entity.push_back( { Randomx, Randomy, constant::ENTITY_SIZE_X, constant::ENTITY_SIZE_Y, Type } );
 
@@ -152,7 +152,7 @@ bool collision( SDL_Rect a , SDL_Rect b )
     return true;
 }
 
-void moveRectAway( SDL_Rect &rect1 , SDL_Rect &rect2 , float speed )
+void moveRectAwayEachother( SDL_Rect &rect1 , SDL_Rect &rect2 , float speed )
 {
     int DX = ( rect2.x + rect2.w / 2 ) - ( rect1.x + rect1.w / 2 );
     int DY = ( rect2.y + rect2.h / 2 ) - ( rect1.y + rect1.h / 2 );
@@ -170,6 +170,24 @@ void moveRectAway( SDL_Rect &rect1 , SDL_Rect &rect2 , float speed )
 
         rect2.x += static_cast<int>( speed * normDX );
         rect2.y += static_cast<int>( speed * normDY );
+    }
+}
+
+void moveRectAway( SDL_Rect &rect1 , SDL_Rect &rect2 , float speed )
+{
+    int DX = ( rect2.x + rect2.w / 2 ) - ( rect1.x + rect1.w / 2 );
+    int DY = ( rect2.y + rect2.h / 2 ) - ( rect1.y + rect1.h / 2 );
+
+    float lenght = sqrt( DX * DX + DY * DY );
+
+    if ( lenght < 100 )
+    {
+            // Normalize vector
+        float normDX = DX / lenght;
+        float normDY = DY / lenght;
+
+        rect1.x -= static_cast<int>( speed * normDX );
+        rect1.y -= static_cast<int>( speed * normDY );
     }
 }
 
