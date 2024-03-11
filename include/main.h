@@ -1,51 +1,27 @@
 void setup ( Game& Game )
 {
-    SDL_Init(SDL_INIT_EVERYTHING);
-    IMG_Init(IMG_INIT_PNG);
-    TTF_Init();
-
-    setFrameLimit( Game.Frames , 60 );
-    srand(time(NULL));
-
-    Resolution::WindowWidth = 1600;
-    Resolution::WindowHeight = 800;
-    Resolution::LevelWidth = Resolution::WindowWidth * 3;
-    Resolution::LevelHeight = Resolution::WindowHeight * 3;
-
-    initWindow ( Game.Window );
-
-    Textures::Player = loadTexture( Game.Window.Renderer , "assets/square.png" );
-    Textures::Enemy = loadTexture( Game.Window.Renderer , "assets/circle.png" );
-    Textures::FireEnemy = loadTexture( Game.Window.Renderer , "assets/red_circle.png" );
-    Textures::Tree = loadTexture( Game.Window.Renderer , "assets/triangle.png" );
-    Textures::Ally = loadTexture( Game.Window.Renderer , "assets/star.png" );
-
-    initPlayer( Game.Player , Resolution::LevelWidth /2 , Resolution::LevelHeight / 2 );
+    initPlayer( Game.Player , Resolution::LevelWidth / 2 , Resolution::LevelHeight / 2 );
 
     Game.Forest.resize( Resolution::LevelWidth / constant::PIXEL_SIZE , std::vector<Tile>( Resolution::LevelHeight / constant::PIXEL_SIZE , Tile::Green ) );
-    fillvector( Game.Forest , 5 ); // Number of camps
+    fillvector( Game.Forest , 5 , Game.CampCoordinates ); // Number of camps
     river( Game.Forest );
 
     pushRandom( Game.Entities.Enemy , 7 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Enemy);
     pushRandom( Game.Entities.Enemy , 3 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::FireEnemy);
     pushRandom( Game.Entities.Tree , 512 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Tree);
 
-    std::vector<std::pair< int , int >> CampCoordinates = findCamps( Game.Forest );
-    pushToPairCoords( Game.Entities.Allies , 5 , 1 , CampCoordinates , EntityType::Ally); // Number of allies ; Allies per camps
+    pushToPairCoords( Game.Entities.Allies , 5 , 1 , Game.CampCoordinates , EntityType::Ally); // Number of allies ; Allies per camps
 
     initBackground( Game.Background );
     Game.Background.Texture = fillBackground( Game.Forest , Game.Window.Renderer );
-
-    initText( Game.Text , Game.Window.Renderer , "assets/ARCADECLASSIC.ttf" );
 
     Game.FireSpread.lastFireSpreadTime = SDL_GetTicks();
     Game.FireSpread.fireSpreadInterval = 1000;
 }
 
-void gameLoop ( Game Game )
+void gameLoop ( Game& Game )
 {
-    while ( endGame() )
-    {
+
             // Used to calculate time per instance of loop
         Game.Frames.FrameStart = SDL_GetTicks();
 
@@ -73,13 +49,82 @@ void gameLoop ( Game Game )
         Game.Text.treeCount = loadTextureFromText( Game.Window.Renderer , std::to_string(calculatePercentage( Game.Forest , Tile::Green )).c_str() , Game.Text.Font );
 
         // Rendering
-        render( Game );
+        renderGame( Game );
 
         // Framing
             // Frame delay / limit
         Game.Frames.FrameTime = SDL_GetTicks() - Game.Frames.FrameStart;
         if ( Game.Frames.FrameDelay > Game.Frames.FrameTime )
             SDL_Delay( Game.Frames.FrameDelay - Game.Frames.FrameTime );
+
+}
+
+void startup( Game& Game )
+{
+
+    SDL_Init(SDL_INIT_EVERYTHING);
+    IMG_Init(IMG_INIT_PNG);
+    TTF_Init();
+
+    setFrameLimit( Game.Frames , 60 );
+    srand(time(NULL));
+
+    Resolution::WindowWidth = 1600;
+    Resolution::WindowHeight = 800;
+    Resolution::LevelWidth = Resolution::WindowWidth * 3;
+    Resolution::LevelHeight = Resolution::WindowHeight * 3;
+
+    initWindow ( Game.Window );
+
+    Textures::Player = loadTexture( Game.Window.Renderer , "assets/square.png" );
+    Textures::Enemy = loadTexture( Game.Window.Renderer , "assets/circle.png" );
+    Textures::FireEnemy = loadTexture( Game.Window.Renderer , "assets/red_circle.png" );
+    Textures::Tree = loadTexture( Game.Window.Renderer , "assets/triangle.png" );
+    Textures::Ally = loadTexture( Game.Window.Renderer , "assets/star.png" );
+
+    initText( Game.Text , Game.Window.Renderer , "assets/ARCADECLASSIC.ttf" );
+
+}
+
+void mainMenu( Game Game )
+{
+    renderMenu( Game );
+}
+
+void pauseGame( Game Game )
+{
+    renderGame( Game );
+}
+
+void GameControl( Game Game )
+{
+    startup( Game );
+    setup( Game );
+
+    Game.State = gameState::mainMenuRunning;
+
+    while ( 1 )
+    {
+        eventHandler( Game );
+
+        switch( Game.State )
+        {
+            case gameState::gameRunning:
+                gameLoop( Game );
+                break;
+            case gameState::mainMenuRunning:
+                mainMenu( Game );
+                break;
+            case gameState::gamePause:
+                pauseGame( Game );
+                break;
+
+            case gameState::endGame:
+                Game.Forest.clear();
+                return;
+
         }
 
+
+    }
 }

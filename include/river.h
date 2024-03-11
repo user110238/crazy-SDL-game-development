@@ -1,4 +1,4 @@
-void generateRiver( std::vector<std::vector<Tile>>& vector , int SX , int SY , int RW , int negChange , int posChange )
+void generateRiverHorizontal( std::vector<std::vector<Tile>>& vector , int SX , int SY , int RW , int negChange , int posChange )
 {
     int RX = SX;
     int RY = SY;
@@ -14,6 +14,26 @@ void generateRiver( std::vector<std::vector<Tile>>& vector , int SX , int SY , i
         }
         RX++;
         RY += getRandomNumber( negChange , posChange );
+
+    }
+}
+
+void generateRiverVertical( std::vector<std::vector<Tile>>& vector , int SX , int SY , int RW , int negChange , int posChange )
+{
+    int RX = SX;
+    int RY = SY;
+
+    while ( RX < static_cast<int>(vector.size()) && RY < static_cast<int>(vector[0].size()) )
+    {
+        for ( int x = RX ; x < std::min( RX + RW  , static_cast<int>(vector.size()) ) ; ++x )
+        {
+            for ( int y = RY ; y < std::min( RY + RW , static_cast<int>(vector[0].size()) ); ++y )
+            {
+                vector[x][y] = Tile::Blue;
+            }
+        }
+        RX += getRandomNumber( negChange , posChange );
+        RY++;
 
     }
 }
@@ -53,16 +73,37 @@ void river( std::vector<std::vector<Tile>>& vector )
     int RW = 10;
     int riverStartX;
     int riverStartY;
+    int numberOfRivers = 3;
+    bool isHorizontal;
+    bool isChaotic;
 
-    riverStartX = 100;
-    riverStartY = 0;
+    for ( int i = 0 ; i < numberOfRivers ; ++i )
+    {
+        isHorizontal = rand()%(2);
+        isChaotic = rand()%(2);
 
-    generateRiver( vector , riverStartX , riverStartY , RW , -2 , 4 );
+        if ( isHorizontal )
+        {
+            riverStartX = 0;
+            riverStartY = getRandomNumber( RW , vector[0].size() - RW );
 
-    riverStartX = 0;
-    riverStartY = getRandomNumber( 50 , vector.size() - RW - 11 );
+            if( isChaotic )
+                generateRiverHorizontal( vector , riverStartX , riverStartY , RW , -4 , 4 );
+            else
+                generateRiverHorizontal( vector , riverStartX , riverStartY , RW , -2 , 2 );
 
-    generateRiver( vector , riverStartX , riverStartY , RW , -2 , 2 );
+        } else {
+            riverStartX = getRandomNumber( RW , vector.size() - RW );;
+            riverStartY = 0;
+
+            if( isChaotic )
+                generateRiverVertical( vector , riverStartX , riverStartY , RW , -4 , 4 );
+            else
+                generateRiverVertical( vector , riverStartX , riverStartY , RW , -2 , 2 );
+
+        }
+
+    }
 
     riverBanks( vector , 3 );
 

@@ -1,9 +1,13 @@
-void render ( Game Game )
+void renderGame ( Game Game )
 {
             // Clear current frame
         SDL_RenderClear( Game.Window.Renderer );
             // render background ( level )
-        rendererAdd( Game.Window.Renderer , Game.Background.Texture ,  Game.Background.backgroundRect );
+        rendererAdd( Game.Window.Renderer , Game.Background.Texture , {
+            Game.Background.backgroundRect.x ,
+            Game.Background.backgroundRect.y ,
+            Game.Background.backgroundRect.w ,
+            Game.Background.backgroundRect.h  } );
 
             // Render player with camera offset
         SDL_Rect playerRect =
@@ -69,4 +73,14 @@ void render ( Game Game )
             // Draw Frame
         SDL_RenderPresent( Game.Window.Renderer );
 
+}
+
+void renderMenu( Game Game )
+{
+    SDL_RenderClear( Game.Window.Renderer );
+
+    rendererAdd( Game.Window.Renderer , Game.Text.credits , { Resolution::WindowWidth / 2 - 300 , Resolution::WindowHeight / 2 - 100 , 300 , 100 } );
+    rendererAdd( Game.Window.Renderer , Game.Text.name , { Resolution::WindowWidth / 2 - 300 , Resolution::WindowHeight / 2 - 200 , 300 , 100 } );
+
+    SDL_RenderPresent( Game.Window.Renderer );
 }

@@ -17,16 +17,18 @@ struct structFireSpread
     int fireSpreadInterval;
 };
 
-void fillvector( std::vector<std::vector<Tile>>& vector , int campCount )
+void fillvector( std::vector<std::vector<Tile>>& vector , int campCount , std::vector<std::pair< int , int >>& CampCoordinates )
 {
     for (int i = 0 ; i < campCount ; ++i)
     {
-        int startX = getRandomNumber(0, vector.size());
-        int startY = getRandomNumber(0, vector.at(0).size());
+        int X = getRandomNumber(0, vector.size());
+        int Y = getRandomNumber(0, vector.at(0).size());
 
-        for (int x = startX; x < startX + 5; ++x)
+        CampCoordinates.push_back(std::make_pair( X , Y ));
+
+        for (int x = X; x < X + 5; ++x)
         {
-            for (int y = startY; y < startY + 5; ++y)
+            for (int y = Y; y < Y + 5; ++y)
             {
                 vector[x][y] = Tile::Black;
             }
@@ -75,7 +77,7 @@ SDL_Texture* fillBackground( std::vector<std::vector<Tile>>& vector , SDL_Render
                     r = 0; g = 105; b = 148; // Blue
                     break;
                 case Tile::Sand:
-                    r = 180; g = 160; b = 130; // Sand grey-ish
+                    r = 125; g = 125; b = 0; // Sand grey-ish
                     break;
                 case Tile::Red:
                     r = 247; g = 55; b = 24; // Red
@@ -85,11 +87,12 @@ SDL_Texture* fillBackground( std::vector<std::vector<Tile>>& vector , SDL_Render
                     break;
             }
 
-            SDL_SetRenderDrawColor( Renderer, r, g, b, 255 );
-            SDL_RenderFillRect( Renderer, &rect );
+            SDL_SetRenderDrawColor( Renderer , r , g , b , 255 );
+            SDL_RenderFillRect( Renderer , &rect );
         }
     }
-    SDL_SetRenderTarget( Renderer, nullptr );
+    SDL_SetRenderTarget( Renderer , nullptr );
+    SDL_SetRenderDrawColor( Renderer , 0 , 0 , 0 , 0 );
     return Texture;
 }
 
@@ -123,7 +126,7 @@ void updateBackgroundTexture( std::vector<std::vector<Tile>> vector , SDL_Textur
                     r = 0; g = 105; b = 148; // Blue
                     break;
                 case Tile::Sand:
-                    r = 180; g = 160; b = 130; // Sand grey-ish
+                    r = 225; g = 167; b = 80;  // Sand grey-ish
                     break;
                 case Tile::Red:
                     r = 247; g = 55; b = 24; // Red
@@ -138,6 +141,7 @@ void updateBackgroundTexture( std::vector<std::vector<Tile>> vector , SDL_Textur
         }
     }
     SDL_SetRenderTarget( renderer, nullptr );
+    SDL_SetRenderDrawColor( renderer , 0 , 0 , 0 , 0 );
 }
 
 

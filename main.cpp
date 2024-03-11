@@ -17,7 +17,6 @@
 #include "include/math.h"
 
 #include "include/texture_loading.h"
-#include "include/events.h"
 #include "include/frame_limiting.h"
 
 #include "include/forest.h"
@@ -35,14 +34,14 @@
 #include "include/game.h"
 #include "include/render.h"
 
+#include "include/events.h"
+
 #include "include/entity_logic.h"
 #include "include/main.h"
 
 int main(int argc, char* args[])
 {
     Game Game;
-    setup( Game );
-    gameLoop( Game );
-
+    GameControl( Game );
     return 0;
 }

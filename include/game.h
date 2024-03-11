@@ -1,5 +1,18 @@
+enum gameState
+{
+    startUp,
+
+    gameRunning,
+    gamePause,
+
+    mainMenuRunning,
+
+    endGame
+};
+
 struct Game
 {
+    gameState State;
 
     structWindow Window;
 
@@ -7,6 +20,7 @@ struct Game
     AllEntities Entities;
 
     std::vector<std::vector <Tile> > Forest;
+    std::vector<std::pair< int , int >> CampCoordinates;
     structFireSpread FireSpread;
 
     structBackground Background;
