@@ -5,8 +5,8 @@ enum class Tile
     Red,    // Burning
     Brown,  // Burned forest
 
-    Blue,
-    Sand,
+    Blue,   // Water
+    Sand,   // River Bank
 
     Black,  // Testing, camp center right now
 };

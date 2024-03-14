@@ -2,7 +2,7 @@ void setup ( Game& Game )
 {
     initPlayer( Game.Player , Resolution::LevelWidth / 2 , Resolution::LevelHeight / 2 );
 
-    Game.Forest.resize( Resolution::LevelWidth / constant::PIXEL_SIZE , std::vector<Tile>( Resolution::LevelHeight / constant::PIXEL_SIZE , Tile::Green ) );
+    Game.Forest.resize( Resolution::LevelWidth / constant::PIXEL_SIZE + 1 , std::vector<Tile>( Resolution::LevelHeight / constant::PIXEL_SIZE + 1 , Tile::Green ) );
     fillvector( Game.Forest , 5 , Game.CampCoordinates ); // Number of camps
     river( Game.Forest );
 
@@ -86,12 +86,12 @@ void startup( Game& Game )
 
 }
 
-void mainMenu( Game Game )
+void mainMenu( Game& Game )
 {
     renderMenu( Game );
 }
 
-void pauseGame( Game Game )
+void pauseGame( Game& Game )
 {
     renderGame( Game );
 }
@@ -120,7 +120,7 @@ void GameControl( Game Game )
                 break;
 
             case gameState::endGame:
-                Game.Forest.clear();
+                cleanUp( Game );
                 return;
 
         }

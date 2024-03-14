@@ -19,13 +19,6 @@ SDL_Texture* loadTextureFromText( SDL_Renderer* renderer , std::string text , TT
 
     SDL_Surface* loadedSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
 
-    if (loadedSurface == nullptr)
-    {
-        // Handle error, maybe print an error message
-        TTF_CloseFont(font);
-        return nullptr;
-    }
-
     texture = SDL_CreateTextureFromSurface( renderer, loadedSurface );
 
     SDL_FreeSurface( loadedSurface );
