@@ -3,7 +3,7 @@ void setup ( Game& Game )
     initPlayer( Game.Player , Resolution::LevelWidth / 2 , Resolution::LevelHeight / 2 );
 
     Game.Forest.resize( Resolution::LevelWidth / constant::PIXEL_SIZE , std::vector<Tile>( Resolution::LevelHeight / constant::PIXEL_SIZE , Tile::Green ) );
-    fillvector( Game.Forest , 5 , Game.CampCoordinates ); // Number of camps
+    placeCamps( Game.Forest , 5 , Game.CampCoordinates ); // Number of camps
     river( Game.Forest );
 
     pushRandom( Game.Entities.Enemy , 7 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Enemy );

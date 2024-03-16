@@ -17,7 +17,7 @@ struct structFireSpread
     int fireSpreadInterval;
 };
 
-void fillvector( std::vector<std::vector<Tile>>& vector , int campCount , std::vector<std::pair< int , int >>& CampCoordinates )
+void placeCamps( std::vector<std::vector<Tile>>& vector , int campCount , std::vector<std::pair< int , int >>& CampCoordinates )
 {
     for (int i = 0 ; i < campCount ; ++i)
     {
@@ -25,27 +25,10 @@ void fillvector( std::vector<std::vector<Tile>>& vector , int campCount , std::v
         int Y = getRandomNumber( 0 , vector[i].size() );
 
         CampCoordinates.push_back(std::make_pair( X , Y ));
-
-        for ( int x = X ; x < X + 5 ; ++x )
-        {
-            for ( int y = Y ; y < Y + 5 ; ++y )
-            {
-                vector[x][y] = Tile::Black;
-            }
-        }
-    }
-
-    for ( int x = 0 ; x < vector.size() ; ++x )
-    {
-        for ( int y = 0 ; y < vector[0].size() ; ++y )
-        {
-            if ( vector[x][y] != Tile::Black )
-                vector[x][y] = Tile::Green;
-        }
     }
 }
 
-SDL_Texture* fillBackground( std::vector<std::vector<Tile>>& vector , SDL_Renderer* Renderer )
+SDL_Texture* fillBackground( const std::vector<std::vector<Tile>>& vector , SDL_Renderer* Renderer )
 {
         // Temporary texture to draw
     SDL_Texture* Texture = SDL_CreateTexture( Renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, vector.size() * constant::PIXEL_SIZE, vector[0].size() * constant::PIXEL_SIZE );
@@ -96,7 +79,7 @@ SDL_Texture* fillBackground( std::vector<std::vector<Tile>>& vector , SDL_Render
     return Texture;
 }
 
-void updateBackgroundTexture( std::vector<std::vector<Tile>> vector , SDL_Texture* texture , SDL_Renderer* renderer , SDL_Rect camera ) {
+void updateBackgroundTexture( const std::vector<std::vector<Tile>>& vector , SDL_Texture* texture , SDL_Renderer* renderer , SDL_Rect camera ) {
     // Set renderer to texture
     SDL_SetRenderTarget( renderer, texture );
 
@@ -227,38 +210,6 @@ bool isOnTile( const std::vector<std::vector<Tile>>& vector , SDL_Rect Rect , Ti
     return false;
 }
 
-void updateForestRandom( std::vector<std::vector<Tile>>& vector , SDL_Rect Rect , Tile tile , int clearRadius )
-{
-       // Center of the rectangle
-    int centerX = Rect.x + Rect.w / 2;
-    int centerY = Rect.y + Rect.h / 2;
-    int extend = clearRadius;
-
-    // Radius == smaller side
-    clearRadius += std::min(Rect.w, Rect.h) / 2 - constant::HITBOX_REDUCTION;
-
-    for ( int x = std::max(0, Rect.x - extend) ; x < std::min(static_cast<int>(vector.size() * constant::PIXEL_SIZE), Rect.x + Rect.w + extend) ; ++x )
-    {
-        for ( int y = std::max(0, Rect.y - extend) ; y < std::min(static_cast<int>(vector[0].size() * constant::PIXEL_SIZE), Rect.y + Rect.h + extend) ; ++y )
-        {
-            // Pitagorov
-            int distanceX = x - centerX;
-            int distanceY = y - centerY;
-            double distance = std::sqrt(std::pow(distanceX, 2) + std::pow(distanceY, 2));
-            // If current point is within the circle radius
-            if ( distance <= clearRadius )
-            {
-                if ( x / constant::PIXEL_SIZE < vector.size() && y / constant::PIXEL_SIZE < vector[0].size() )
-                {
-                    if ( vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] == Tile::Green )
-                        vector[x / constant::PIXEL_SIZE][y / constant::PIXEL_SIZE] = tile;
-                }
-            }
-        }
-    }
-}
-
-
 int calculatePercentage( const std::vector<std::vector<Tile>>& vector , Tile tile )
 {
     int totalTiles = 0;
@@ -302,17 +253,17 @@ void spreadFire( std::vector<std::vector<Tile>>& Forest )
                 if ( redCount < 4 )
                 {
                     if (x > 0 && Forest[x - 1][y] == Tile::Green)
-                        fireSpreadCoords.emplace_back(x - 1, y);
+                        fireSpreadCoords.push_back({x - 1, y});
                     if (x < Forest.size() - 1 && Forest[x + 1][y] == Tile::Green)
-                        fireSpreadCoords.emplace_back(x + 1, y);
+                        fireSpreadCoords.push_back({x + 1, y});
                     if (y > 0 && Forest[x][y - 1] == Tile::Green)
-                        fireSpreadCoords.emplace_back(x, y - 1);
+                        fireSpreadCoords.push_back({x, y - 1});
                     if (y < Forest[0].size() - 1 && Forest[x][y + 1] == Tile::Green)
-                        fireSpreadCoords.emplace_back(x, y + 1);
+                        fireSpreadCoords.push_back({x, y + 1});
                 }
                 else
                 {
-                    burnedCoords.emplace_back(x, y);
+                    burnedCoords.push_back({x, y});
                 }
             }
         }
