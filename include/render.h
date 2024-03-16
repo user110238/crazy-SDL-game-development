@@ -72,7 +72,20 @@ void renderGame ( Game Game )
             if ( Game.Entities.Enemy.size() == 0 && (calculatePercentage( Game.Forest , Tile::Green )) > 30 )
                 rendererAdd( Game.Window.Renderer , Game.Text.victory , { Game.Background.Camera.w / 2 - 300 / 2 , 200 , 300 , 100 } );
         } else if ( Game.State == gameState::gamePause ) {
-            rendererAdd( Game.Window.Renderer , Game.Text.pause , { Game.Background.Camera.w / 2 - 300 / 2 , Game.Background.Camera.h / 2 - 100 / 2 , 300 , 100 } );
+
+            rendererAdd( Game.Window.Renderer , Game.Text.pause , { Game.Background.Camera.w / 2 - 600 / 2 , Game.Background.Camera.h / 2 - 800 / 2 , 600 , 300 } );
+
+            if ( Game.Button == buttonState::resume )
+            {
+                rendererAdd( Game.Window.Renderer , Game.Text.resume , { Game.Background.Camera.w / 2 - 300 / 2 , Game.Background.Camera.h / 2 - 300 / 2 , 300 + 25 , 100 + 25 } );
+                rendererAdd( Game.Window.Renderer , Game.Text.mainMenu , { Game.Background.Camera.w / 2 - 300 / 2 , Game.Background.Camera.h / 2 - 100 / 2 , 300 , 100 } );
+
+            } else if ( Game.Button == buttonState::menu ) {
+                rendererAdd( Game.Window.Renderer , Game.Text.resume , { Game.Background.Camera.w / 2 - 300 / 2 , Game.Background.Camera.h / 2 - 300 / 2 , 300 , 100 } );
+                rendererAdd( Game.Window.Renderer , Game.Text.mainMenu , { Game.Background.Camera.w / 2 - 300 / 2 , Game.Background.Camera.h / 2 - 100 / 2 , 300 + 25 , 100 + 25 } );
+
+
+            }
 
         }
 
@@ -85,8 +98,28 @@ void renderMenu( Game Game )
 {
     SDL_RenderClear( Game.Window.Renderer );
 
-    rendererAdd( Game.Window.Renderer , Game.Text.credits , { Resolution::WindowWidth / 2 - 300 , Resolution::WindowHeight / 2 - 100 , 300 , 100 } );
-    rendererAdd( Game.Window.Renderer , Game.Text.name , { Resolution::WindowWidth / 2 - 300 , Resolution::WindowHeight / 2 - 200 , 300 , 100 } );
+    if ( Game.Button == buttonState::play )
+    {
+        rendererAdd( Game.Window.Renderer , Game.Text.play , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 - 400 , 300 + 50 , 200 + 50 } );
+        rendererAdd( Game.Window.Renderer , Game.Text.save , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 - 200 , 300 , 200 } );
+        rendererAdd( Game.Window.Renderer , Game.Text.quit , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 , 300 , 200 } );
+
+
+
+    } else if ( Game.Button == buttonState::save ) {
+        rendererAdd( Game.Window.Renderer , Game.Text.play , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 - 400 , 300 , 200 } );
+        rendererAdd( Game.Window.Renderer , Game.Text.save , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 - 200 , 300 + 50  , 200 + 50  } );
+        rendererAdd( Game.Window.Renderer , Game.Text.quit , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 , 300 , 200 } );
+
+
+    } else if ( Game.Button == buttonState::quit ) {
+        rendererAdd( Game.Window.Renderer , Game.Text.play , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 - 400 , 300 , 200 } );
+        rendererAdd( Game.Window.Renderer , Game.Text.save , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 - 200 , 300 , 200 } );
+        rendererAdd( Game.Window.Renderer , Game.Text.quit , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 , 300 + 50 , 200 + 50 } );
+
+
+    }
+
 
     SDL_RenderPresent( Game.Window.Renderer );
 }

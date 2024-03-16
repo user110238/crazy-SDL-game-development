@@ -19,6 +19,7 @@ void eventHandler( Game& Game )
                             {
                                 case SDLK_ESCAPE:
                                     Game.State = gameState::gamePause;
+                                    Game.Button = buttonState::resume;
                                     break;
 
                                 case SDLK_w:
@@ -62,8 +63,48 @@ void eventHandler( Game& Game )
                         {
                             switch (Event.key.keysym.sym)
                             {
-                                case SDLK_BACKSPACE:
-                                    Game.State = gameState::gameRunning;
+                                case SDLK_RETURN:
+                                    switch( Game.Button )
+                                    {
+                                        case buttonState::play:
+                                            Game.State = gameState::gameRunning;
+                                            Game.Player.Velocity.y = 0;
+                                            Game.Player.Velocity.x = 0;
+                                            break;
+                                        case buttonState::save:
+                                            break;
+                                        case buttonState::quit:
+                                            Game.State = gameState::endGame;
+                                            break;
+                                    }
+                                    break;
+                                case SDLK_DOWN:
+                                    switch( Game.Button )
+                                    {
+                                        case buttonState::play:
+                                            Game.Button = buttonState::save;
+                                            break;
+                                        case buttonState::save:
+                                            Game.Button = buttonState::quit;
+                                            break;
+                                        case buttonState::quit:
+                                            Game.Button = buttonState::play;
+                                            break;
+                                    }
+                                    break;
+                                case SDLK_UP:
+                                    switch( Game.Button )
+                                    {
+                                        case buttonState::play:
+                                            Game.Button = buttonState::quit;
+                                            break;
+                                        case buttonState::save:
+                                            Game.Button = buttonState::play;
+                                            break;
+                                        case buttonState::quit:
+                                            Game.Button = buttonState::save;
+                                            break;
+                                    }
                                     break;
                             }
                         }
@@ -85,9 +126,40 @@ void eventHandler( Game& Game )
                                     Game.State = gameState::endGame;
                                     break;
                                 case SDLK_RETURN:
-                                    Game.State = gameState::gameRunning;
-                                    Game.Player.Velocity.y = 0;
-                                    Game.Player.Velocity.x = 0;
+                                    switch( Game.Button )
+                                    {
+                                        case buttonState::resume:
+                                            Game.State = gameState::gameRunning;
+                                            Game.Player.Velocity.y = 0;
+                                            Game.Player.Velocity.x = 0;
+                                            break;
+                                        case buttonState::menu:
+                                            Game.State = gameState::mainMenuRunning;
+                                            Game.Button = buttonState::play;
+                                            break;
+                                    }
+                                    break;
+                                case SDLK_DOWN:
+                                    switch( Game.Button )
+                                    {
+                                        case buttonState::resume:
+                                            Game.Button = buttonState::menu;
+                                            break;
+                                        case buttonState::menu:
+                                            Game.Button = buttonState::resume;
+                                            break;
+                                    }
+                                    break;
+                                case SDLK_UP:
+                                    switch( Game.Button )
+                                    {
+                                        case buttonState::resume:
+                                            Game.Button = buttonState::menu;
+                                            break;
+                                        case buttonState::menu:
+                                            Game.Button = buttonState::resume;
+                                            break;
+                                    }
                                     break;
                             }
                         }

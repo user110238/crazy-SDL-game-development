@@ -21,14 +21,14 @@ void fillvector( std::vector<std::vector<Tile>>& vector , int campCount , std::v
 {
     for (int i = 0 ; i < campCount ; ++i)
     {
-        int X = getRandomNumber(0, vector.size());
-        int Y = getRandomNumber(0, vector.at(0).size());
+        int X = getRandomNumber( 0 , vector.size() );
+        int Y = getRandomNumber( 0 , vector[i].size() );
 
         CampCoordinates.push_back(std::make_pair( X , Y ));
 
-        for (int x = X; x < X + 5; ++x)
+        for ( int x = X ; x < X + 5 ; ++x )
         {
-            for (int y = Y; y < Y + 5; ++y)
+            for ( int y = Y ; y < Y + 5 ; ++y )
             {
                 vector[x][y] = Tile::Black;
             }

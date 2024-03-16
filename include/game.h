@@ -10,9 +10,23 @@ enum gameState
     endGame
 };
 
+enum buttonState
+{
+    play,
+    resume,
+
+    menu,
+
+    save,
+    quit,
+
+    nothing
+};
+
 struct Game
 {
     gameState State;
+    buttonState Button;
 
     structWindow Window;
 
