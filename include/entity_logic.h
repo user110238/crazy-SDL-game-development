@@ -51,7 +51,7 @@
         }
         for ( int i = 0 ; i < Entities.Tree.size() ; ++i )
         {
-            if ( isNotOnTile( Forest , Entities.Tree[i].Rect , Tile::Green) )
+            if ( isNotOnTile( Forest , Entities.Tree[i].Rect , Tile::Green ) )
                 Entities.Tree.erase( Entities.Tree.begin() + i );
             for ( int j = 0 ; j < Entities.Allies.size() ; ++j )
                 moveRectAway( Entities.Allies[j].Rect , Entities.Tree[i].Rect , constant::PUSH_SPEED );

@@ -8,7 +8,7 @@ void setup ( Game& Game )
 
     pushRandom( Game.Entities.Enemy , 7 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Enemy );
     pushRandom( Game.Entities.Enemy , 3 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::FireEnemy );
-    pushRandom( Game.Entities.Tree , 512 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Tree );
+    pushRandomTree( Game.Entities.Tree , 512 , Resolution::LevelWidth , Resolution::LevelHeight , Game.Forest );
 
     pushToPairCoords( Game.Entities.Allies , 5 , 1 , Game.CampCoordinates , EntityType::Ally ); // Number of allies ; Allies per CampCoordinates
 
@@ -79,7 +79,9 @@ void startup( Game& Game )
     Textures::Player = loadTexture( Game.Window.Renderer , "assets/square.png" );
     Textures::Enemy = loadTexture( Game.Window.Renderer , "assets/circle.png" );
     Textures::FireEnemy = loadTexture( Game.Window.Renderer , "assets/red_circle.png" );
-    Textures::Tree = loadTexture( Game.Window.Renderer , "assets/triangle.png" );
+    Textures::Tree1 = loadTexture( Game.Window.Renderer , "assets/tree1.png" );
+    Textures::Tree2 = loadTexture( Game.Window.Renderer , "assets/tree2.png" );
+    Textures::Tree3 = loadTexture( Game.Window.Renderer , "assets/tree3.png" );
     Textures::Ally = loadTexture( Game.Window.Renderer , "assets/star.png" );
 
     initText( Game.Text , Game.Window.Renderer , "assets/ARCADECLASSIC.ttf" );

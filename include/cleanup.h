@@ -10,7 +10,9 @@ void cleanUp( Game& Game )
     SDL_DestroyTexture( Textures::Player );
     SDL_DestroyTexture( Textures::Enemy );
     SDL_DestroyTexture( Textures::FireEnemy );
-    SDL_DestroyTexture( Textures::Tree );
+    SDL_DestroyTexture( Textures::Tree1 );
+    SDL_DestroyTexture( Textures::Tree2 );
+    SDL_DestroyTexture( Textures::Tree3 );
     SDL_DestroyTexture( Textures::Ally );
 
     SDL_DestroyTexture( Game.Text.scoreText );
@@ -26,7 +28,9 @@ void cleanUp( Game& Game )
     Textures::Player = nullptr;
     Textures::Enemy = nullptr;
     Textures::FireEnemy = nullptr;
-    Textures::Tree = nullptr;
+    Textures::Tree1 = nullptr;
+    Textures::Tree2 = nullptr;
+    Textures::Tree3 = nullptr;
     Textures::Ally = nullptr;
 
     Game.Text.scoreText = nullptr;

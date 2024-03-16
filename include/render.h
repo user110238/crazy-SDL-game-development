@@ -56,13 +56,28 @@ void renderGame ( Game Game )
             if ( distance( Game.Player.Rect.x , Game.Player.Rect.y ,
                 Game.Entities.Tree.at(i).Rect.x ,  Game.Entities.Tree.at(i).Rect.y)
                 <= std::max( Game.Background.Camera.w , Game.Background.Camera.h ) )
-
-                if ( Game.Entities.Tree[i].Type == EntityType::Tree )
-                rendererAdd( Game.Window.Renderer, Textures::Tree, {
-                    Game.Entities.Tree.at(i).Rect.x - Game.Background.Camera.x,
+                {
+                    if ( Game.Entities.Tree[i].Type == EntityType::Tree1 )
+                        rendererAdd( Game.Window.Renderer, Textures::Tree1, {
+                             Game.Entities.Tree.at(i).Rect.x - Game.Background.Camera.x,
                              Game.Entities.Tree.at(i).Rect.y - Game.Background.Camera.y,
                              Game.Entities.Tree.at(i).Rect.w,
                              Game.Entities.Tree.at(i).Rect.h } );
+                    if ( Game.Entities.Tree[i].Type == EntityType::Tree2 )
+                        rendererAdd( Game.Window.Renderer, Textures::Tree2, {
+                             Game.Entities.Tree.at(i).Rect.x - Game.Background.Camera.x,
+                             Game.Entities.Tree.at(i).Rect.y - Game.Background.Camera.y,
+                             Game.Entities.Tree.at(i).Rect.w,
+                             Game.Entities.Tree.at(i).Rect.h } );
+                    if ( Game.Entities.Tree[i].Type == EntityType::Tree3 )
+                        rendererAdd( Game.Window.Renderer, Textures::Tree3, {
+                             Game.Entities.Tree.at(i).Rect.x - Game.Background.Camera.x,
+                             Game.Entities.Tree.at(i).Rect.y - Game.Background.Camera.y,
+                             Game.Entities.Tree.at(i).Rect.w,
+                             Game.Entities.Tree.at(i).Rect.h } );
+
+                }
+
 
 
         if( Game.State == gameState::gameRunning )

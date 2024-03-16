@@ -1,8 +1,13 @@
+#include <SDL2/SDL_ttf.h>
+#include <cmath>
 enum EntityType
 {
     Enemy,
     FireEnemy,
     Tree,
+    Tree1,
+    Tree2,
+    Tree3,
     Ally
 };
 
@@ -36,7 +41,36 @@ void pushRandom( std::vector<struct Entity> &Entity , int x , int LevelWidth , i
         int Randomy = rand()%(WindowHeight - constant::ENTITY_SIZE_Y);
 
         Entity.push_back( { Randomx, Randomy, constant::ENTITY_SIZE_X, constant::ENTITY_SIZE_Y, Type } );
+    }
+}
 
+void pushRandomTree( std::vector<struct Entity> &Entity , int x , int LevelWidth , int WindowHeight , const std::vector< std::vector<Tile> >& Forest )
+{
+
+    for ( int i = 0 ; i < x ; i++ )
+    {
+        int Randomx = rand()%(LevelWidth - constant::ENTITY_SIZE_X);
+        int Randomy = rand()%(WindowHeight - constant::ENTITY_SIZE_Y);
+
+
+        if ( isNotOnTile( Forest , { Randomx , Randomy , constant::ENTITY_SIZE_X , constant::ENTITY_SIZE_Y } , Tile::Green ) )
+        {
+            int Randomx = rand()%(LevelWidth - constant::ENTITY_SIZE_X);
+            int Randomy = rand()%(WindowHeight - constant::ENTITY_SIZE_Y);
+        }
+
+        switch ( rand()%( 3 + 1) )
+        {
+            case 1:
+                Entity.push_back( { Randomx, Randomy, constant::ENTITY_SIZE_X, constant::ENTITY_SIZE_Y, EntityType::Tree1 } );
+                break;
+            case 2:
+                Entity.push_back( { Randomx, Randomy, constant::ENTITY_SIZE_X, constant::ENTITY_SIZE_Y, EntityType::Tree2 } );
+                break;
+            case 3:
+                Entity.push_back( { Randomx, Randomy, constant::ENTITY_SIZE_X, constant::ENTITY_SIZE_Y, EntityType::Tree3 } );
+                break;
+        }
     }
 }
 
