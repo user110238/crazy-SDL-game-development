@@ -1,5 +1,7 @@
 void setup ( Game& Game )
 {
+    srand(time(NULL));
+
     initPlayer( Game.Player , Resolution::LevelWidth / 2 , Resolution::LevelHeight / 2 );
 
     Game.Forest.resize( Resolution::LevelWidth / constant::PIXEL_SIZE , std::vector<Tile>( Resolution::LevelHeight / constant::PIXEL_SIZE , Tile::Green ) );
@@ -67,7 +69,6 @@ void startup( Game& Game )
     TTF_Init();
 
     setFrameLimit( Game.Frames , 60 );
-    srand(time(NULL));
 
     Resolution::WindowWidth = 1600;
     Resolution::WindowHeight = 800;

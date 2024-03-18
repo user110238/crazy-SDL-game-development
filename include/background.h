@@ -8,8 +8,8 @@ struct structBackground
 
 void initBackground ( structBackground& Background )
 {
-    Background.Camera.x = 0;
-    Background.Camera.y = 0;
+    Background.Camera.x = Resolution::LevelWidth / 2 - Resolution::WindowWidth / 2;
+    Background.Camera.y = Resolution::LevelHeight / 2 - Resolution::WindowHeight / 2;
     Background.Camera.w = Resolution::WindowWidth;
     Background.Camera.h = Resolution::WindowHeight;
 
@@ -27,25 +27,27 @@ void offset( structBackground& Background )
 
 }
 
-void scrolling( SDL_Rect& camera , const SDL_Rect& Player , int WindowWidth , int WindowHeight , int LevelWidth , int LevelHeight )
+void scrolling( SDL_Rect& camera , const SDL_Rect& player , int windowWidth , int windowHeight , int levelWidth , int levelHeight )
 {
+    int destX = player.x + player.w / 2 - windowWidth / 2;
+    int desty = player.y + player.h / 2 - windowHeight / 2;
 
-    int centerX = Player.x + Player.w / 2;
-    int centerY = Player.y + Player.h / 2;
+    int distanceX = destX - camera.x;
+    int distanceY = desty - camera.y;
 
-    camera.x = centerX - WindowWidth / 2;
-    camera.y = centerY - WindowHeight / 2;
+    camera.x += static_cast<int>( distanceX * 0.1 );
+    camera.y += static_cast<int>( distanceY * 0.1 );
 
-    // Keep the camera within the bounds of the level
     if (camera.x < 0)
         camera.x = 0;
     if (camera.y < 0)
         camera.y = 0;
-    if (camera.x > LevelWidth - camera.w)
-        camera.x = LevelWidth - camera.w;
-    if (camera.y > LevelHeight - camera.h)
-        camera.y = LevelHeight - camera.h;
+    if (camera.x > levelWidth - camera.w)
+        camera.x = levelWidth - camera.w;
+    if (camera.y > levelHeight - camera.h)
+        camera.y = levelHeight - camera.h;
 }
+
 
 
 

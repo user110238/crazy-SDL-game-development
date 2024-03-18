@@ -67,19 +67,19 @@ void playerGameLogic ( structPlayer& player , std::vector<std::vector<Tile>>& Fo
 
     if ( player.Rect.x <= 0 )
     {
-        player.Rect.x += 10;
+        player.Rect.x = 1;
     }
     if ( player.Rect.x + player.Rect.w >= Resolution::LevelWidth )
     {
-        player.Rect.x -= 10;
+        player.Rect.x = Resolution::LevelWidth - player.Rect.w;
     }
     if ( player.Rect.y <= 0 )
     {
-        player.Rect.y += 10;
+        player.Rect.y = 1;
     }
     if ( player.Rect.y + player.Rect.h >= Resolution::LevelHeight )
     {
-        player.Rect.y -= 10;
+        player.Rect.y = Resolution::LevelHeight - player.Rect.h;
     }
 }
 

@@ -58,23 +58,23 @@ void renderGame ( Game Game )
                 <= std::max( Game.Background.Camera.w , Game.Background.Camera.h ) )
                 {
                     if ( Game.Entities.Tree[i].Type == EntityType::Tree1 )
-                        rendererAdd( Game.Window.Renderer, Textures::Tree1, {
+                        rendererAddFlip( Game.Window.Renderer, Textures::Tree1, {
                              Game.Entities.Tree.at(i).Rect.x - Game.Background.Camera.x,
                              Game.Entities.Tree.at(i).Rect.y - Game.Background.Camera.y,
                              Game.Entities.Tree.at(i).Rect.w,
-                             Game.Entities.Tree.at(i).Rect.h } );
+                             Game.Entities.Tree.at(i).Rect.h } , SDL_FLIP_VERTICAL );
                     if ( Game.Entities.Tree[i].Type == EntityType::Tree2 )
-                        rendererAdd( Game.Window.Renderer, Textures::Tree2, {
+                        rendererAddFlip( Game.Window.Renderer, Textures::Tree2, {
                              Game.Entities.Tree.at(i).Rect.x - Game.Background.Camera.x,
                              Game.Entities.Tree.at(i).Rect.y - Game.Background.Camera.y,
                              Game.Entities.Tree.at(i).Rect.w,
-                             Game.Entities.Tree.at(i).Rect.h } );
+                             Game.Entities.Tree.at(i).Rect.h } , SDL_FLIP_VERTICAL );
                     if ( Game.Entities.Tree[i].Type == EntityType::Tree3 )
-                        rendererAdd( Game.Window.Renderer, Textures::Tree3, {
+                        rendererAddFlip( Game.Window.Renderer, Textures::Tree3, {
                              Game.Entities.Tree.at(i).Rect.x - Game.Background.Camera.x,
                              Game.Entities.Tree.at(i).Rect.y - Game.Background.Camera.y,
                              Game.Entities.Tree.at(i).Rect.w,
-                             Game.Entities.Tree.at(i).Rect.h } );
+                             Game.Entities.Tree.at(i).Rect.h } , SDL_FLIP_VERTICAL );
 
                 }
 
