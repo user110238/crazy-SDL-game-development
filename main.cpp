@@ -22,11 +22,11 @@
 #include "include/forest.h"
 #include "include/river.h"
 
-#include "include/player.h"
-
 #include "include/entity.h"
 #include "include/enemy.h"
 #include "include/allies.h"
+
+#include "include/player.h"
 
 #include "include/background.h"
 #include "include/text.h"

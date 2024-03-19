@@ -2,7 +2,10 @@ void setup ( Game& Game )
 {
     srand(time(NULL));
 
-    initPlayer( Game.Player , Resolution::LevelWidth / 2 , Resolution::LevelHeight / 2 );
+    Game.movePlayerBy.x = 0;
+    Game.movePlayerBy.y = 0;
+
+    Game.controllable = 0;
 
     Game.Forest.resize( Resolution::LevelWidth / constant::PIXEL_SIZE , std::vector<Tile>( Resolution::LevelHeight / constant::PIXEL_SIZE , Tile::Green ) );
     placeCamps( Game.Forest , 5 , Game.CampCoordinates ); // Number of camps
@@ -28,12 +31,12 @@ void gameLoop ( Game& Game )
         Game.Frames.FrameStart = SDL_GetTicks();
 
         // Game logic
-        playerGameLogic( Game.Player , Game.Forest );
-        entityGameLogic( Game.Entities , Game.Forest , Game.Player.Rect );
+        playerGameLogic( Game.Player , Game.movePlayerBy , Game.Forest );
+        entityGameLogic( Game );
 
         // Scrolling
             // Update camera position to center on player
-        scrolling( Game.Background.Camera , Game.Player.Rect , Resolution::WindowWidth , Resolution::WindowHeight , Resolution::LevelWidth , Resolution::LevelHeight );
+        scrolling( Game.Background.Camera , Game.Entities.Allies[Game.controllable].Rect , Resolution::WindowWidth , Resolution::WindowHeight , Resolution::LevelWidth , Resolution::LevelHeight );
 
             // Offset everything with camera
             // remake the background texture

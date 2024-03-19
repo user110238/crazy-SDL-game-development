@@ -106,7 +106,7 @@ Entity* findNearestEntity( SDL_Rect enemy , std::vector<Entity>& entity )
     return nearestEntity;
 }
 
-void moveTowards( SDL_Rect& srcRect , SDL_Rect& destRect , int speed )
+void moveTowards( SDL_Rect& srcRect , SDL_Rect destRect , int speed )
 {
         // distance between rectangles
     int DX = destRect.x - srcRect.x;

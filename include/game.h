@@ -30,7 +30,10 @@ struct Game
 
     structWindow Window;
 
-    structPlayer Player;
+    Entity Player;
+    SDL_Point movePlayerBy;
+    int controllable;
+
     AllEntities Entities;
 
     std::vector<std::vector <Tile> > Forest;

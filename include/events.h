@@ -21,15 +21,20 @@ void eventHandler( Game& Game )
                                     Game.State = gameState::gamePause;
                                     Game.Button = buttonState::resume;
                                     break;
+                                case SDLK_TAB:
+                                    Game.controllable = Game.controllable + 1;
+                                    if ( Game.controllable >= Game.Entities.Allies.size() )
+                                        Game.controllable = 0;
+                                    break;
 
                                 case SDLK_w:
-                                case SDLK_UP: Game.Player.Velocity.y -= constant::PLAYER_VELOCITY; break;
+                                case SDLK_UP: Game.movePlayerBy.y -= constant::PLAYER_VELOCITY; break;
                                 case SDLK_s:
-                                case SDLK_DOWN: Game.Player.Velocity.y += constant::PLAYER_VELOCITY; break;
+                                case SDLK_DOWN: Game.movePlayerBy.y += constant::PLAYER_VELOCITY; break;
                                 case SDLK_a:
-                                case SDLK_LEFT: Game.Player.Velocity.x -= constant::PLAYER_VELOCITY; break;
+                                case SDLK_LEFT: Game.movePlayerBy.x -= constant::PLAYER_VELOCITY; break;
                                 case SDLK_d:
-                                case SDLK_RIGHT: Game.Player.Velocity.x += constant::PLAYER_VELOCITY; break;
+                                case SDLK_RIGHT: Game.movePlayerBy.x += constant::PLAYER_VELOCITY; break;
                             }
                         }
                         break;
@@ -39,13 +44,13 @@ void eventHandler( Game& Game )
                             switch (Event.key.keysym.sym)
                             {
                                 case SDLK_w:
-                                case SDLK_UP: Game.Player.Velocity.y += constant::PLAYER_VELOCITY; break;
+                                case SDLK_UP: Game.movePlayerBy.y += constant::PLAYER_VELOCITY; break;
                                 case SDLK_s:
-                                case SDLK_DOWN: Game.Player.Velocity.y -= constant::PLAYER_VELOCITY; break;
+                                case SDLK_DOWN: Game.movePlayerBy.y -= constant::PLAYER_VELOCITY; break;
                                 case SDLK_a:
-                                case SDLK_LEFT: Game.Player.Velocity.x += constant::PLAYER_VELOCITY; break;
+                                case SDLK_LEFT: Game.movePlayerBy.x += constant::PLAYER_VELOCITY; break;
                                 case SDLK_d:
-                                case SDLK_RIGHT: Game.Player.Velocity.x -= constant::PLAYER_VELOCITY; break;
+                                case SDLK_RIGHT: Game.movePlayerBy.x -= constant::PLAYER_VELOCITY; break;
                             }
                         }
                     break;
@@ -68,8 +73,8 @@ void eventHandler( Game& Game )
                                     {
                                         case buttonState::play:
                                             Game.State = gameState::gameRunning;
-                                            Game.Player.Velocity.y = 0;
-                                            Game.Player.Velocity.x = 0;
+                                            Game.movePlayerBy.y = 0;
+                                            Game.movePlayerBy.x = 0;
                                             break;
                                         case buttonState::save:
                                             break;
@@ -130,8 +135,8 @@ void eventHandler( Game& Game )
                                     {
                                         case buttonState::resume:
                                             Game.State = gameState::gameRunning;
-                                            Game.Player.Velocity.y = 0;
-                                            Game.Player.Velocity.x = 0;
+                                            Game.movePlayerBy.y = 0;
+                                            Game.movePlayerBy.x = 0;
                                             break;
                                         case buttonState::menu:
                                             Game.State = gameState::mainMenuRunning;

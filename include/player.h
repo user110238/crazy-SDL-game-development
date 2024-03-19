@@ -1,33 +1,26 @@
 struct structPlayer
 {
     SDL_Rect Rect;
-    SDL_Point Velocity;
 };
 
-void initPlayer ( structPlayer& player , int x , int y  )
+void initPlayer ( Entity& player , int x , int y  )
 {
 
     player.Rect.x = x;
     player.Rect.y = y;
     player.Rect.w = constant::ENTITY_SIZE_X;
     player.Rect.h = constant::ENTITY_SIZE_Y;
-
-    player.Velocity.x = 0;
-    player.Velocity.y = 0;
-
-
 }
 
-void movePlayer ( structPlayer& player , const std::vector<std::vector<Tile>>& Forest )
+void movePlayer ( Entity& player , SDL_Point dest , const std::vector<std::vector<Tile>>& Forest )
 {
         // lenght of the vector
         // pitagorov zakon po slovensko
-    float lenght = std::sqrt(player.Velocity.x * player.Velocity.x + player.Velocity.y * player.Velocity.y);
-
+    float lenght = std::sqrt( dest.x * dest.x + dest.y * dest.y );
 
         // normalize the vector
-    float normX = player.Velocity.x / lenght;
-    float normY = player.Velocity.y / lenght;
+    float normX = dest.x / lenght;
+    float normY = dest.y / lenght;
 
     float scaledX;
     float scaledY;
@@ -59,9 +52,9 @@ void movePlayer ( structPlayer& player , const std::vector<std::vector<Tile>>& F
 
 }
 
-void playerGameLogic ( structPlayer& player , std::vector<std::vector<Tile>>& Forest )
+void playerGameLogic ( Entity& player , SDL_Point moveBy , std::vector<std::vector<Tile>>& Forest )
 {
-    movePlayer( player , Forest );
+    movePlayer( player , moveBy , Forest );
     updateForest( Forest , player.Rect , Tile::Red , Tile::Brown , 50 );
 
 
