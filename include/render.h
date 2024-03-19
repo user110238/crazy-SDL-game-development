@@ -117,23 +117,37 @@ void renderMenu( Game Game )
     {
         rendererAdd( Game.Window.Renderer , Game.Text.play , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 - 400 , 300 + 50 , 200 + 50 } );
         rendererAdd( Game.Window.Renderer , Game.Text.save , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 - 200 , 300 , 200 } );
-        rendererAdd( Game.Window.Renderer , Game.Text.quit , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 , 300 , 200 } );
-
+        rendererAdd( Game.Window.Renderer , Game.Text.load , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 , 300 , 200 } );
+        rendererAdd( Game.Window.Renderer , Game.Text.quit , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 + 200 , 300 , 200 } );
 
 
     } else if ( Game.Button == buttonState::save ) {
         rendererAdd( Game.Window.Renderer , Game.Text.play , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 - 400 , 300 , 200 } );
         rendererAdd( Game.Window.Renderer , Game.Text.save , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 - 200 , 300 + 50  , 200 + 50  } );
-        rendererAdd( Game.Window.Renderer , Game.Text.quit , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 , 300 , 200 } );
+        rendererAdd( Game.Window.Renderer , Game.Text.load , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 , 300 , 200 } );
+        rendererAdd( Game.Window.Renderer , Game.Text.quit , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 + 200 , 300 , 200 } );
 
 
-    } else if ( Game.Button == buttonState::quit ) {
+    } else if ( Game.Button == buttonState::load ) {
         rendererAdd( Game.Window.Renderer , Game.Text.play , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 - 400 , 300 , 200 } );
         rendererAdd( Game.Window.Renderer , Game.Text.save , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 - 200 , 300 , 200 } );
-        rendererAdd( Game.Window.Renderer , Game.Text.quit , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 , 300 + 50 , 200 + 50 } );
+        rendererAdd( Game.Window.Renderer , Game.Text.load , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 , 300 + 50 , 200 + 50 } );
+        rendererAdd( Game.Window.Renderer , Game.Text.quit , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 + 200 , 300 , 200 } );
+
+
+
+    }  else if ( Game.Button == buttonState::quit ) {
+        rendererAdd( Game.Window.Renderer , Game.Text.play , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 - 400 , 300 , 200 } );
+        rendererAdd( Game.Window.Renderer , Game.Text.save , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 - 200 , 300 , 200 } );
+        rendererAdd( Game.Window.Renderer , Game.Text.load , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 , 300 , 200 } );
+        rendererAdd( Game.Window.Renderer , Game.Text.quit , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 + 200 , 300 + 50 , 200 + 50 } );
 
 
     }
+
+
+
+
 
 
     SDL_RenderPresent( Game.Window.Renderer );

@@ -12,10 +12,12 @@ struct structText
     SDL_Texture* mainMenu;
         // Main menu
     SDL_Texture* name;
+
     SDL_Texture* play;
     SDL_Texture* save;
+    SDL_Texture* load;
+
     SDL_Texture* quit;
-    SDL_Texture* credits;
 };
 
 void initText ( structText& Text , SDL_Renderer* Renderer , std::string fontPath )
@@ -32,7 +34,7 @@ void initText ( structText& Text , SDL_Renderer* Renderer , std::string fontPath
     Text.play = loadTextureFromText( Renderer , "play" , Text.Font );
     Text.quit = loadTextureFromText( Renderer , "quit" , Text.Font );
     Text.save = loadTextureFromText( Renderer , "save" , Text.Font );
-    Text.credits = loadTextureFromText( Renderer , "By Microsoft" , Text.Font );
+    Text.load = loadTextureFromText( Renderer , "load" , Text.Font );
 }
 
 

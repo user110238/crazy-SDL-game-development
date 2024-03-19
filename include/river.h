@@ -1,3 +1,4 @@
+#include <cmath>
 void generateRiverHorizontal(std::vector<std::vector<Tile>>& vector, int SX, int SY, int RW, int negChange, int posChange)
 {
     int RX = SX;
@@ -70,22 +71,22 @@ void riverBanks(std::vector<std::vector<Tile>>& vector, int borderW)
 
 void river(std::vector<std::vector<Tile>>& vector)
 {
-    int RW = 10;
-    int numberOfRivers = 3;
+    int RW = getRandomNumber( 8 , 15 );
+    int numberOfRivers = getRandomNumber( 1 , 4 );
     int riverStartX, riverStartY;
     bool isHorizontal, isChaotic;
 
     for (int i = 0; i < numberOfRivers; ++i)
     {
         isHorizontal = rand() % 2;
-        isChaotic = rand() % 2;
+        isChaotic = rand() % 4;
 
         if (isHorizontal)
         {
             riverStartX = 0;
             riverStartY = getRandomNumber(RW, static_cast<int>(vector[0].size()) - RW);
 
-            if (isChaotic)
+            if (!isChaotic)
                 generateRiverHorizontal(vector, riverStartX, riverStartY, RW, -4, 4);
             else
                 generateRiverHorizontal(vector, riverStartX, riverStartY, RW, -2, 2);

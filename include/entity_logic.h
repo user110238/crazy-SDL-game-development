@@ -4,7 +4,7 @@
 
         for ( int i = 0 ; i < Game.Entities.Enemy.size() ; ++i )
         {
-            HandleEnemyMovement( Game.Entities.Enemy[i].Rect , Game.Entities.Tree );
+            HandleEnemyMovement( Game.Entities.Enemy[i].Rect , Game.Entities.Tree , Game.Forest );
                 // Check if any enemy is collision-ing
             if ( collision ( Game.Player.Rect , Game.Entities.Enemy[i].Rect ) )
             {

@@ -7,6 +7,9 @@ enum gameState
 
     mainMenuRunning,
 
+    saved,
+    loaded,
+
     endGame
 };
 
@@ -18,6 +21,8 @@ enum buttonState
     menu,
 
     save,
+    load,
+
     quit,
 
     nothing

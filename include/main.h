@@ -17,7 +17,7 @@ void setup ( Game& Game )
 
     pushToPairCoords( Game.Entities.Allies , 5 , 1 , Game.CampCoordinates , EntityType::Ally ); // Number of allies ; Allies per CampCoordinates
 
-    initBackground( Game.Background );
+    initBackground( Game.Background , Game.Entities.Allies[Game.controllable].Rect );
     Game.Background.Texture = fillBackground( Game.Forest , Game.Window.Renderer );
 
     Game.FireSpread.lastFireSpreadTime = SDL_GetTicks();
@@ -97,12 +97,24 @@ void mainMenu( Game& Game )
     renderMenu( Game );
 }
 
+void saving( Game& Game )
+{
+    writeToFile( "game.txt" , &Game );
+    Game.State = gameState::mainMenuRunning;
+}
+
+void loading( Game& Game )
+{
+    readFromFile( "game.txt" , &Game );
+    Game.State = gameState::mainMenuRunning;
+}
+
 void pauseGame( Game& Game )
 {
     renderGame( Game );
 }
 
-void GameControl( Game Game )
+void GameControl( Game& Game )
 {
     startup( Game );
     setup( Game );
@@ -119,9 +131,16 @@ void GameControl( Game Game )
             case gameState::gameRunning:
                 gameLoop( Game );
                 break;
+
             case gameState::mainMenuRunning:
                 mainMenu( Game );
                 break;
+            case gameState::saved:
+                saving ( Game );
+                break;
+            case gameState::loaded:
+                loading( Game );
+
             case gameState::gamePause:
                 pauseGame( Game );
                 break;

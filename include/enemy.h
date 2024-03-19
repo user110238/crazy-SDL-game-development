@@ -1,4 +1,4 @@
-void HandleEnemyMovement( SDL_Rect& enemyRect , std::vector<Entity>& trees )
+void HandleEnemyMovement( SDL_Rect& enemyRect , std::vector<Entity>& trees , const std::vector<std::vector<Tile>>& Forest )
 {
     Entity* nearestTree = findNearestEntity(enemyRect, trees);
     SDL_Rect targetRect;
@@ -11,5 +11,8 @@ void HandleEnemyMovement( SDL_Rect& enemyRect , std::vector<Entity>& trees )
         targetRect.y = enemyRect.y;
     }
 
-    moveTowards( enemyRect , targetRect , constant::ENEMY_VELOCITY );
+    if ( isOnTile( Forest , enemyRect , Tile::Blue ) )
+        moveTowards( enemyRect , targetRect , constant::ENEMY_VELOCITY / constant::WATER_SLOWDOWN );
+    else
+        moveTowards( enemyRect , targetRect , constant::ENEMY_VELOCITY );
 }

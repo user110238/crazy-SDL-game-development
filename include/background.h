@@ -6,10 +6,10 @@ struct structBackground
     SDL_Rect backgroundRect;
 };
 
-void initBackground ( structBackground& Background )
+void initBackground ( structBackground& Background , const SDL_Rect& startCamera )
 {
-    Background.Camera.x = Resolution::LevelWidth / 2 - Resolution::WindowWidth / 2;
-    Background.Camera.y = Resolution::LevelHeight / 2 - Resolution::WindowHeight / 2;
+    Background.Camera.x = startCamera.x - Resolution::WindowWidth / 2;
+    Background.Camera.y = startCamera.y - Resolution::WindowHeight / 2;
     Background.Camera.w = Resolution::WindowWidth;
     Background.Camera.h = Resolution::WindowHeight;
 

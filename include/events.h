@@ -77,6 +77,10 @@ void eventHandler( Game& Game )
                                             Game.movePlayerBy.x = 0;
                                             break;
                                         case buttonState::save:
+                                            Game.State = gameState::saved;
+                                            break;
+                                        case buttonState::load:
+                                            Game.State = gameState::loaded;
                                             break;
                                         case buttonState::quit:
                                             Game.State = gameState::endGame;
@@ -90,6 +94,9 @@ void eventHandler( Game& Game )
                                             Game.Button = buttonState::save;
                                             break;
                                         case buttonState::save:
+                                            Game.Button = buttonState::load;
+                                            break;
+                                        case buttonState::load:
                                             Game.Button = buttonState::quit;
                                             break;
                                         case buttonState::quit:
@@ -106,8 +113,11 @@ void eventHandler( Game& Game )
                                         case buttonState::save:
                                             Game.Button = buttonState::play;
                                             break;
-                                        case buttonState::quit:
+                                        case buttonState::load:
                                             Game.Button = buttonState::save;
+                                            break;
+                                        case buttonState::quit:
+                                            Game.Button = buttonState::load;
                                             break;
                                     }
                                     break;

@@ -34,6 +34,8 @@
 #include "include/game.h"
 #include "include/render.h"
 
+#include "include/files.h"
+
 #include "include/events.h"
 
 #include "include/entity_logic.h"
