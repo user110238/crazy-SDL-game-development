@@ -1,6 +1,5 @@
 struct structBackground
 {
-
     SDL_Texture* Texture;
     SDL_Rect Camera;
     SDL_Rect backgroundRect;

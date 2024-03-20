@@ -1,9 +1,9 @@
 void writeToFile( const char* filename , Game* game ) {
     FILE* file = fopen( filename , "w" );
 
-    fprintf( file , "%d %d\n" , game->State , game->Button );
-
     fprintf( file , "%d %d %d %d %d\n" , game->Player.Rect.x , game->Player.Rect.y , game->Player.Rect.w , game->Player.Rect.h , game->Player.Type );
+
+    fprintf( file , "%d %d %d %d\n" , game->Background.Camera.x , game->Background.Camera.y , game->Background.Camera.w , game->Background.Camera.h );
 
     for ( int i = 0 ; i < Resolution::LevelWidth / constant::PIXEL_SIZE ; ++i )
     {
@@ -45,9 +45,9 @@ void readFromFile( const char* filename, Game* game )
 {
     FILE* file = fopen( filename , "r" );
 
-    fscanf( file, "%d %d" , &game->State , &game->Button );
-
     fscanf( file , "%d %d %d %d %d" , &game->Player.Rect.x , &game->Player.Rect.y , &game->Player.Rect.w , &game->Player.Rect.h , &game->Player.Type );
+
+    fscanf( file, "%d %d %d %d" , &game->Background.Camera.x , &game->Background.Camera.y , &game->Background.Camera.w , &game->Background.Camera.h );
 
     for ( int i = 0 ; i < Resolution::LevelWidth / constant::PIXEL_SIZE ; ++i )
     {

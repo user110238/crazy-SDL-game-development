@@ -100,13 +100,13 @@ void mainMenu( Game& Game )
 void saving( Game& Game )
 {
     writeToFile( "game.txt" , &Game );
-    Game.State = gameState::mainMenuRunning;
+    renderSaved( Game );
 }
 
 void loading( Game& Game )
 {
     readFromFile( "game.txt" , &Game );
-    Game.State = gameState::mainMenuRunning;
+    renderLoaded( Game );
 }
 
 void pauseGame( Game& Game )
@@ -135,11 +135,13 @@ void GameControl( Game& Game )
             case gameState::mainMenuRunning:
                 mainMenu( Game );
                 break;
+
             case gameState::saved:
                 saving ( Game );
                 break;
             case gameState::loaded:
                 loading( Game );
+                break;
 
             case gameState::gamePause:
                 pauseGame( Game );

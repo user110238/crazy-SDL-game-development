@@ -1,4 +1,4 @@
-void renderGame ( Game Game )
+void renderGame ( const Game& Game )
 {
             // Clear current frame
         SDL_RenderClear( Game.Window.Renderer );
@@ -109,7 +109,7 @@ void renderGame ( Game Game )
 
 }
 
-void renderMenu( Game Game )
+void renderMenu( const Game& Game )
 {
     SDL_RenderClear( Game.Window.Renderer );
 
@@ -142,13 +142,26 @@ void renderMenu( Game Game )
         rendererAdd( Game.Window.Renderer , Game.Text.load , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 , 300 , 200 } );
         rendererAdd( Game.Window.Renderer , Game.Text.quit , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 + 200 , 300 + 50 , 200 + 50 } );
 
-
     }
 
 
+    SDL_RenderPresent( Game.Window.Renderer );
+}
 
+void renderSaved( const Game& Game )
+{
+    SDL_RenderClear( Game.Window.Renderer );
 
+    rendererAdd( Game.Window.Renderer , Game.Text.saved , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 - 200 / 2 , 300 , 200 } );
 
+    SDL_RenderPresent( Game.Window.Renderer );
+}
+
+void renderLoaded( const Game& Game )
+{
+    SDL_RenderClear( Game.Window.Renderer );
+
+    rendererAdd( Game.Window.Renderer , Game.Text.loaded , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 - 200 / 2 , 300 , 200 } );
 
     SDL_RenderPresent( Game.Window.Renderer );
 }

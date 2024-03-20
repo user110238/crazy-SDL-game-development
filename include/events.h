@@ -180,5 +180,44 @@ void eventHandler( Game& Game )
                         }
                 }
             }
+            else if ( Game.State == gameState::saved )
+            {
+                switch (Event.type)
+                {
+                    case SDL_QUIT:
+                        Game.State = gameState::endGame;
+                        break;
+                    case SDL_KEYDOWN:
+                        if (Event.key.repeat == 0)
+                        {
+                            switch (Event.key.keysym.sym)
+                            {
+                                case SDLK_ESCAPE:
+                                    Game.State = gameState::mainMenuRunning;
+                                    break;
+                            }
+                        }
+                }
+            }
+            else if ( Game.State == gameState::loaded )
+            {
+                switch (Event.type)
+                {
+                    case SDL_QUIT:
+                        Game.State = gameState::endGame;
+                        break;
+                    case SDL_KEYDOWN:
+                        if (Event.key.repeat == 0)
+                        {
+                            switch (Event.key.keysym.sym)
+                            {
+                                case SDLK_ESCAPE:
+                                    Game.State = gameState::mainMenuRunning;
+                                    break;
+                            }
+                        }
+                }
+            }
+
     }
 }

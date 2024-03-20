@@ -14,8 +14,11 @@ struct structText
     SDL_Texture* name;
 
     SDL_Texture* play;
+
     SDL_Texture* save;
+    SDL_Texture* saved;
     SDL_Texture* load;
+    SDL_Texture* loaded;
 
     SDL_Texture* quit;
 };
@@ -33,8 +36,11 @@ void initText ( structText& Text , SDL_Renderer* Renderer , std::string fontPath
     Text.name = loadTextureFromText( Renderer , "Amazonka" , Text.Font );
     Text.play = loadTextureFromText( Renderer , "play" , Text.Font );
     Text.quit = loadTextureFromText( Renderer , "quit" , Text.Font );
+
     Text.save = loadTextureFromText( Renderer , "save" , Text.Font );
+    Text.saved = loadTextureFromText( Renderer , "saved" , Text.Font );
     Text.load = loadTextureFromText( Renderer , "load" , Text.Font );
+    Text.loaded = loadTextureFromText( Renderer , "loaded" , Text.Font );
 }
 
 
