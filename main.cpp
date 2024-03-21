@@ -36,10 +36,9 @@
 
 #include "include/files.h"
 
-#include "include/events.h"
-
 #include "include/entity_logic.h"
 #include "include/cleanup.h"
+#include "include/events.h"
 #include "include/main.h"
 
 int main(int argc, char* args[])

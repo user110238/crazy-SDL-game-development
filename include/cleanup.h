@@ -1,6 +1,13 @@
-void cleanUp( Game& Game )
+void cleanUpGame( Game& Game )
 {
     Game.Forest.clear();
+    Game.Entities.Enemy.clear();
+    Game.Entities.Tree.clear();
+    Game.Entities.Allies.clear();
+}
+
+void cleanUp( Game& Game )
+{
     Game.Forest.clear();
     Game.Entities.Enemy.clear();
     Game.Entities.Tree.clear();

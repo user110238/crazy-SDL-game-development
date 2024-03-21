@@ -80,26 +80,34 @@ void renderGame ( const Game& Game )
 
 
 
-        if( Game.State == gameState::gameRunning )
+        if( Game.State == gameState::gameRunning || Game.State == gameState::gameReplaying )
         {
             rendererAdd( Game.Window.Renderer , Game.Text.scoreText , { Game.Background.Camera.w / 2 - 300 / 2 , 0 , 300 , 100 } );
             rendererAdd( Game.Window.Renderer , Game.Text.treeCount , { Game.Background.Camera.w / 2 - 150 / 2 , 100 , 150 , 100 } );
             if ( Game.Entities.Enemy.size() == 0 && (calculatePercentage( Game.Forest , Tile::Green )) > 30 )
                 rendererAdd( Game.Window.Renderer , Game.Text.victory , { Game.Background.Camera.w / 2 - 300 / 2 , 200 , 300 , 100 } );
+            if ( Game.State == gameState::gameReplaying )
+            {
+                rendererAdd( Game.Window.Renderer , Game.Text.liveReplay , { Game.Background.Camera.w / 2 - 600 / 2 , 300 , 600 , 100 } );
+            }
+
         } else if ( Game.State == gameState::gamePause ) {
 
-            rendererAdd( Game.Window.Renderer , Game.Text.pause , { Game.Background.Camera.w / 2 - 600 / 2 , Game.Background.Camera.h / 2 - 800 / 2 , 600 , 300 } );
+            rendererAdd( Game.Window.Renderer , Game.Text.pause , { Game.Background.Camera.w / 2 - 600 / 2 , Game.Background.Camera.h / 2 - 400 , 600 , 300 } );
 
             if ( Game.Button == buttonState::resume )
             {
-                rendererAdd( Game.Window.Renderer , Game.Text.resume , { Game.Background.Camera.w / 2 - 300 / 2 , Game.Background.Camera.h / 2 - 300 / 2 , 300 + 25 , 100 + 25 } );
-                rendererAdd( Game.Window.Renderer , Game.Text.mainMenu , { Game.Background.Camera.w / 2 - 300 / 2 , Game.Background.Camera.h / 2 - 100 / 2 , 300 , 100 } );
-
+                rendererAdd( Game.Window.Renderer , Game.Text.resume , { Game.Background.Camera.w / 2 - 300 / 2 , Game.Background.Camera.h / 2 - 150 , 300 + 25 , 100 + 25 } );
+                rendererAdd( Game.Window.Renderer , Game.Text.replay , { Game.Background.Camera.w / 2 - 300 / 2 , Game.Background.Camera.h / 2 - 50 , 300 , 100 } );
+                rendererAdd( Game.Window.Renderer , Game.Text.mainMenu , { Game.Background.Camera.w / 2 - 300 / 2 , Game.Background.Camera.h / 2 + 50 , 300 , 100 } );
+            } else if ( Game.Button == buttonState::replay ) {
+                rendererAdd( Game.Window.Renderer , Game.Text.resume , { Game.Background.Camera.w / 2 - 300 / 2 , Game.Background.Camera.h / 2 - 150 , 300 , 100 } );
+                rendererAdd( Game.Window.Renderer , Game.Text.replay , { Game.Background.Camera.w / 2 - 300 / 2 , Game.Background.Camera.h / 2 - 50 , 300 + 25 , 100 + 25 } );
+                rendererAdd( Game.Window.Renderer , Game.Text.mainMenu , { Game.Background.Camera.w / 2 - 300 / 2 , Game.Background.Camera.h / 2 + 50 , 300 , 100 } );
             } else if ( Game.Button == buttonState::menu ) {
-                rendererAdd( Game.Window.Renderer , Game.Text.resume , { Game.Background.Camera.w / 2 - 300 / 2 , Game.Background.Camera.h / 2 - 300 / 2 , 300 , 100 } );
-                rendererAdd( Game.Window.Renderer , Game.Text.mainMenu , { Game.Background.Camera.w / 2 - 300 / 2 , Game.Background.Camera.h / 2 - 100 / 2 , 300 + 25 , 100 + 25 } );
-
-
+                rendererAdd( Game.Window.Renderer , Game.Text.resume , { Game.Background.Camera.w / 2 - 300 / 2 , Game.Background.Camera.h / 2 - 150 , 300 , 100 } );
+                rendererAdd( Game.Window.Renderer , Game.Text.replay , { Game.Background.Camera.w / 2 - 300 / 2 , Game.Background.Camera.h / 2 - 50 , 300 , 100 } );
+                rendererAdd( Game.Window.Renderer , Game.Text.mainMenu , { Game.Background.Camera.w / 2 - 300 / 2 , Game.Background.Camera.h / 2 + 50 , 300 + 25 , 100 + 25 } );
             }
 
         }

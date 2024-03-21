@@ -56,6 +56,32 @@ void eventHandler( Game& Game )
                     break;
                 }
             }
+            else if ( Game.State == gameState::gameReplaying )
+            {
+                switch (Event.type)
+                {
+                    case SDL_QUIT:
+                        Game.State = gameState::endGame;
+                        break;
+                    case SDL_KEYDOWN:
+                        if (Event.key.repeat == 0)
+                        {
+                            switch (Event.key.keysym.sym)
+                            {
+                                case SDLK_ESCAPE:
+                                    Game.State = gameState::gamePause;
+                                    Game.Button = buttonState::resume;
+                                    break;
+                                case SDLK_TAB:
+                                    Game.controllable = Game.controllable + 1;
+                                    if ( Game.controllable >= Game.Entities.Allies.size() )
+                                        Game.controllable = 0;
+                                    break;
+                            }
+                        }
+                        break;
+                }
+            }
             else if ( Game.State == gameState::mainMenuRunning )
             {
                 switch (Event.type)
@@ -148,6 +174,9 @@ void eventHandler( Game& Game )
                                             Game.movePlayerBy.y = 0;
                                             Game.movePlayerBy.x = 0;
                                             break;
+                                        case buttonState::replay:
+                                            Game.State = gameState::reSetup;
+                                            break;
                                         case buttonState::menu:
                                             Game.State = gameState::mainMenuRunning;
                                             Game.Button = buttonState::play;
@@ -158,6 +187,9 @@ void eventHandler( Game& Game )
                                     switch( Game.Button )
                                     {
                                         case buttonState::resume:
+                                            Game.Button = buttonState::replay;
+                                            break;
+                                        case buttonState::replay:
                                             Game.Button = buttonState::menu;
                                             break;
                                         case buttonState::menu:
@@ -171,8 +203,11 @@ void eventHandler( Game& Game )
                                         case buttonState::resume:
                                             Game.Button = buttonState::menu;
                                             break;
-                                        case buttonState::menu:
+                                        case buttonState::replay:
                                             Game.Button = buttonState::resume;
+                                            break;
+                                        case buttonState::menu:
+                                            Game.Button = buttonState::replay;
                                             break;
                                     }
                                     break;

@@ -1,8 +1,10 @@
 enum gameState
 {
     startUp,
+    reSetup,
 
     gameRunning,
+    gameReplaying,
     gamePause,
 
     mainMenuRunning,
@@ -16,8 +18,9 @@ enum gameState
 enum buttonState
 {
     play,
-    resume,
 
+    resume,
+    replay,
     menu,
 
     save,
@@ -37,7 +40,7 @@ struct Game
 
     Entity Player;
     SDL_Point movePlayerBy;
-    int controllable;
+    int controllable = 0;
 
     AllEntities Entities;
 
@@ -49,5 +52,7 @@ struct Game
     structText Text;
 
     FrameLimit Frames;
+
+    double seed;
 
 };

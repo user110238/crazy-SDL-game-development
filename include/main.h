@@ -1,11 +1,9 @@
 void setup ( Game& Game )
 {
-    srand(time(NULL));
+    srand(Game.seed);
 
     Game.movePlayerBy.x = 0;
     Game.movePlayerBy.y = 0;
-
-    Game.controllable = 0;
 
     Game.Forest.resize( Resolution::LevelWidth / constant::PIXEL_SIZE , std::vector<Tile>( Resolution::LevelHeight / constant::PIXEL_SIZE , Tile::Green ) );
     placeCamps( Game.Forest , 5 , Game.CampCoordinates ); // Number of camps
@@ -26,6 +24,15 @@ void setup ( Game& Game )
 
 void gameLoop ( Game& Game )
 {
+
+        if ( Game.State == gameState::gameReplaying )
+        {
+            readFromReplayOnce( "replay.txt" , &Game );
+        }
+        else
+        {
+           writeToReplay( "replay.txt" , &Game );
+        }
 
             // Used to calculate time per instance of loop
         Game.Frames.FrameStart = SDL_GetTicks();
@@ -90,6 +97,9 @@ void startup( Game& Game )
 
     initText( Game.Text , Game.Window.Renderer , "assets/ARCADECLASSIC.ttf" );
 
+    FILE *resetFile = fopen( "replay.txt" , "w" );
+    fclose(resetFile);
+
 }
 
 void mainMenu( Game& Game )
@@ -116,6 +126,8 @@ void pauseGame( Game& Game )
 
 void GameControl( Game& Game )
 {
+    Game.seed = time(NULL);
+
     startup( Game );
     setup( Game );
 
@@ -128,7 +140,16 @@ void GameControl( Game& Game )
 
         switch( Game.State )
         {
+            case gameState::reSetup:
+                cleanUpGame( Game );
+                setup( Game );
+                Game.State = gameState::gameReplaying;
+                break;
+
             case gameState::gameRunning:
+                gameLoop( Game );
+                break;
+            case gameState::gameReplaying:
                 gameLoop( Game );
                 break;
 

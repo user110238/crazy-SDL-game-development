@@ -6,9 +6,11 @@ struct structText
     SDL_Texture* scoreText;
     SDL_Texture* treeCount;
     SDL_Texture* victory;
+    SDL_Texture* liveReplay;
         // Pause screen
     SDL_Texture* pause;
     SDL_Texture* resume;
+    SDL_Texture* replay;
     SDL_Texture* mainMenu;
         // Main menu
     SDL_Texture* name;
@@ -28,9 +30,11 @@ void initText ( structText& Text , SDL_Renderer* Renderer , std::string fontPath
     Text.Font = TTF_OpenFont( fontPath.c_str() , 64 );
     Text.scoreText = loadTextureFromText( Renderer , "Score" , Text.Font );
     Text.victory = loadTextureFromText( Renderer , "Victory!" , Text.Font );
+    Text.liveReplay = loadTextureFromText( Renderer , "Live Replay" , Text.Font );
 
     Text.pause = loadTextureFromText( Renderer , "Pause" , Text.Font );
     Text.resume = loadTextureFromText( Renderer , "Resume" , Text.Font );
+    Text.replay = loadTextureFromText( Renderer , "Replay" , Text.Font );
     Text.mainMenu = loadTextureFromText( Renderer , "Main Menu" , Text.Font );
 
     Text.name = loadTextureFromText( Renderer , "Amazonka" , Text.Font );
