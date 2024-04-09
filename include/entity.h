@@ -16,6 +16,7 @@ struct Entity
 
     SDL_Rect Rect;
     EntityType Type;
+    SDL_RendererFlip Flip;
 
 };
 
@@ -40,7 +41,7 @@ void pushRandom( std::vector<struct Entity> &Entity , int x , int LevelWidth , i
         int Randomx = rand()%(LevelWidth - constant::ENTITY_SIZE_X);
         int Randomy = rand()%(WindowHeight - constant::ENTITY_SIZE_Y);
 
-        Entity.push_back( { Randomx, Randomy, constant::ENTITY_SIZE_X, constant::ENTITY_SIZE_Y, Type } );
+        Entity.push_back( { Randomx, Randomy, constant::ENTITY_SIZE_X, constant::ENTITY_SIZE_Y, Type, SDL_FLIP_NONE } );
     }
 }
 
@@ -62,13 +63,13 @@ void pushRandomTree( std::vector<struct Entity> &Entity , int x , int LevelWidth
         switch ( rand()%( 3 + 1) )
         {
             case 1:
-                Entity.push_back( { Randomx, Randomy, constant::ENTITY_SIZE_X, constant::ENTITY_SIZE_Y, EntityType::Tree1 } );
+                Entity.push_back( { Randomx, Randomy, constant::ENTITY_SIZE_X, constant::ENTITY_SIZE_Y, EntityType::Tree1, SDL_FLIP_NONE } );
                 break;
             case 2:
-                Entity.push_back( { Randomx, Randomy, constant::ENTITY_SIZE_X, constant::ENTITY_SIZE_Y, EntityType::Tree2 } );
+                Entity.push_back( { Randomx, Randomy, constant::ENTITY_SIZE_X, constant::ENTITY_SIZE_Y, EntityType::Tree2, SDL_FLIP_NONE } );
                 break;
             case 3:
-                Entity.push_back( { Randomx, Randomy, constant::ENTITY_SIZE_X, constant::ENTITY_SIZE_Y, EntityType::Tree3 } );
+                Entity.push_back( { Randomx, Randomy, constant::ENTITY_SIZE_X, constant::ENTITY_SIZE_Y, EntityType::Tree3, SDL_FLIP_NONE } );
                 break;
         }
     }
@@ -83,7 +84,7 @@ void pushToPairCoords( std::vector<struct Entity>& Entity , int x , int alliesPe
         int Randomx = rand()%(constant::CAMP_SPAWN_DISTANCE);
         int Randomy = rand()%(constant::CAMP_SPAWN_DISTANCE);
 
-        Entity.push_back( { Coords[i].first*constant::PIXEL_SIZE + Randomx, Coords[i].second*constant::PIXEL_SIZE + Randomy, constant::ENTITY_SIZE_X, constant::ENTITY_SIZE_Y, Type } );
+        Entity.push_back( { Coords[i].first*constant::PIXEL_SIZE + Randomx, Coords[i].second*constant::PIXEL_SIZE + Randomy, constant::ENTITY_SIZE_X, constant::ENTITY_SIZE_Y, Type, SDL_FLIP_NONE } );
         }
     }
 }
@@ -127,15 +128,15 @@ void moveTowards( SDL_Rect& srcRect , SDL_Rect destRect , int speed )
 
 }
 
-void moveRandomly( SDL_Rect& srcRect , int distance , int speed )
+void moveRandomly( Entity& src , int distance , int speed )
 {
     double randomAngle = static_cast<double>(std::rand()) / RAND_MAX * 2.0 * M_PI;
 
-    int destX = srcRect.x + static_cast<int>(std::cos(randomAngle) * distance);
-    int destY = srcRect.y + static_cast<int>(std::sin(randomAngle) * distance);
+    int destX = src.Rect.x + static_cast<int>(std::cos(randomAngle) * distance);
+    int destY = src.Rect.y + static_cast<int>(std::sin(randomAngle) * distance);
 
-    destX = std::max( 0, std::min( destX, Resolution::LevelWidth - srcRect.w )  );
-    destY = std::max( 0, std::min( destY, Resolution::LevelHeight - srcRect.h ) );
+    destX = std::max( 0, std::min( destX, Resolution::LevelWidth - src.Rect.w )  );
+    destY = std::max( 0, std::min( destY, Resolution::LevelHeight - src.Rect.h ) );
 
     SDL_Rect destRect;
     destRect.x = destX;
@@ -143,7 +144,13 @@ void moveRandomly( SDL_Rect& srcRect , int distance , int speed )
     destRect.w = 0;
     destRect.h = 0;
 
-    moveTowards(  srcRect, destRect, speed );
+    if ( src.Rect.x > destRect.x ){
+        src.Flip = SDL_FLIP_HORIZONTAL;
+    } else if ( src.Rect.x < destRect.x ) {
+        src.Flip = SDL_FLIP_NONE;
+    }
+
+    moveTowards( src.Rect, destRect, speed );
 }
 
 bool collision( SDL_Rect a , SDL_Rect b )

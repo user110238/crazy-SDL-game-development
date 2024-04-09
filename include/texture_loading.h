@@ -33,7 +33,7 @@ void rendererAdd( SDL_Renderer* Renderer , SDL_Texture* Texture , SDL_Rect Dest 
 
 }
 
-void rendererAdd( SDL_Renderer* Renderer , SDL_Texture* Texture , SDL_Rect Src , SDL_Rect Dest )
+void rendererAddSrc( SDL_Renderer* Renderer , SDL_Texture* Texture , SDL_Rect Src , SDL_Rect Dest )
 {
 
     SDL_RenderCopy( Renderer, Texture , &Src , &Dest );

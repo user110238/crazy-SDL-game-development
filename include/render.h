@@ -22,59 +22,59 @@ void renderGame ( const Game& Game )
         for ( int i = 0 ; i < Game.Entities.Enemy.size() ; i++ )
 
             if ( distance( Game.Entities.Allies[Game.controllable].Rect.x , Game.Entities.Allies[Game.controllable].Rect.y ,
-                Game.Entities.Enemy.at(i).Rect.x ,  Game.Entities.Enemy.at(i).Rect.y)
+                Game.Entities.Enemy[i].Rect.x ,  Game.Entities.Enemy[i].Rect.y)
                 <= std::max( Game.Background.Camera.w , Game.Background.Camera.h ) )
 
                 if ( Game.Entities.Enemy[i].Type == EntityType::Enemy )
-                    rendererAdd( Game.Window.Renderer, Textures::Enemy, {
-                        Game.Entities.Enemy.at(i).Rect.x - Game.Background.Camera.x,
-                        Game.Entities.Enemy.at(i).Rect.y - Game.Background.Camera.y,
-                        Game.Entities.Enemy.at(i).Rect.w,
-                        Game.Entities.Enemy.at(i).Rect.h} );
+                    rendererAddFlip( Game.Window.Renderer, Textures::Enemy, {
+                        Game.Entities.Enemy[i].Rect.x - Game.Background.Camera.x,
+                        Game.Entities.Enemy[i].Rect.y - Game.Background.Camera.y,
+                        Game.Entities.Enemy[i].Rect.w,
+                        Game.Entities.Enemy[i].Rect.h} , Game.Entities.Enemy[i].Flip );
                 else if ( Game.Entities.Enemy[i].Type == EntityType::FireEnemy )
-                    rendererAdd( Game.Window.Renderer, Textures::FireEnemy, {
-                        Game.Entities.Enemy.at(i).Rect.x - Game.Background.Camera.x,
-                        Game.Entities.Enemy.at(i).Rect.y - Game.Background.Camera.y,
-                        Game.Entities.Enemy.at(i).Rect.w,
-                        Game.Entities.Enemy.at(i).Rect.h} );
+                    rendererAddFlip( Game.Window.Renderer, Textures::FireEnemy, {
+                        Game.Entities.Enemy[i].Rect.x - Game.Background.Camera.x,
+                        Game.Entities.Enemy[i].Rect.y - Game.Background.Camera.y,
+                        Game.Entities.Enemy[i].Rect.w,
+                        Game.Entities.Enemy[i].Rect.h} , Game.Entities.Enemy[i].Flip );
 
         for ( int i = 0 ; i < Game.Entities.Allies.size() ; i++ )
 
             if ( distance( Game.Entities.Allies[Game.controllable].Rect.x , Game.Entities.Allies[Game.controllable].Rect.y ,
-                Game.Entities.Allies.at(i).Rect.x ,  Game.Entities.Allies.at(i).Rect.y)
+                Game.Entities.Allies[i].Rect.x ,  Game.Entities.Allies[i].Rect.y)
                 <= std::max( Game.Background.Camera.w , Game.Background.Camera.h ) )
 
                 if ( Game.Entities.Allies[i].Type == EntityType::Ally )
-                rendererAdd( Game.Window.Renderer, Textures::Ally, {
-                    Game.Entities.Allies.at(i).Rect.x - Game.Background.Camera.x,
-                             Game.Entities.Allies.at(i).Rect.y - Game.Background.Camera.y,
-                             Game.Entities.Allies.at(i).Rect.w,
-                             Game.Entities.Allies.at(i).Rect.h } );
+                rendererAddFlip( Game.Window.Renderer, Textures::Ally, {
+                    Game.Entities.Allies[i].Rect.x - Game.Background.Camera.x,
+                             Game.Entities.Allies[i].Rect.y - Game.Background.Camera.y,
+                             Game.Entities.Allies[i].Rect.w,
+                             Game.Entities.Allies[i].Rect.h } , Game.Entities.Allies[i].Flip );
 
         for ( int i = 0 ; i < Game.Entities.Tree.size() ; i++ )
 
             if ( distance( Game.Entities.Allies[Game.controllable].Rect.x , Game.Entities.Allies[Game.controllable].Rect.y ,
-                Game.Entities.Tree.at(i).Rect.x ,  Game.Entities.Tree.at(i).Rect.y)
+                Game.Entities.Tree[i].Rect.x ,  Game.Entities.Tree[i].Rect.y)
                 <= std::max( Game.Background.Camera.w , Game.Background.Camera.h ) )
                 {
                     if ( Game.Entities.Tree[i].Type == EntityType::Tree1 )
                         rendererAdd( Game.Window.Renderer, Textures::Tree1, {
-                             Game.Entities.Tree.at(i).Rect.x - Game.Background.Camera.x,
-                             Game.Entities.Tree.at(i).Rect.y - Game.Background.Camera.y,
-                             Game.Entities.Tree.at(i).Rect.w,
-                             Game.Entities.Tree.at(i).Rect.h } );
+                             Game.Entities.Tree[i].Rect.x - Game.Background.Camera.x,
+                             Game.Entities.Tree[i].Rect.y - Game.Background.Camera.y,
+                             Game.Entities.Tree[i].Rect.w,
+                             Game.Entities.Tree[i].Rect.h } );
                     if ( Game.Entities.Tree[i].Type == EntityType::Tree2 )
                         rendererAdd( Game.Window.Renderer, Textures::Tree2, {
-                             Game.Entities.Tree.at(i).Rect.x - Game.Background.Camera.x,
-                             Game.Entities.Tree.at(i).Rect.y - Game.Background.Camera.y,
-                             Game.Entities.Tree.at(i).Rect.w,
-                             Game.Entities.Tree.at(i).Rect.h } );
+                             Game.Entities.Tree[i].Rect.x - Game.Background.Camera.x,
+                             Game.Entities.Tree[i].Rect.y - Game.Background.Camera.y,
+                             Game.Entities.Tree[i].Rect.w,
+                             Game.Entities.Tree[i].Rect.h } );
                     if ( Game.Entities.Tree[i].Type == EntityType::Tree3 )
                         rendererAdd( Game.Window.Renderer, Textures::Tree3, {
-                             Game.Entities.Tree.at(i).Rect.x - Game.Background.Camera.x,
-                             Game.Entities.Tree.at(i).Rect.y - Game.Background.Camera.y,
-                             Game.Entities.Tree.at(i).Rect.w,
-                             Game.Entities.Tree.at(i).Rect.h } );
+                             Game.Entities.Tree[i].Rect.x - Game.Background.Camera.x,
+                             Game.Entities.Tree[i].Rect.y - Game.Background.Camera.y,
+                             Game.Entities.Tree[i].Rect.w,
+                             Game.Entities.Tree[i].Rect.h } );
 
                 }
 
@@ -156,20 +156,13 @@ void renderMenu( const Game& Game )
     SDL_RenderPresent( Game.Window.Renderer );
 }
 
-void renderSaved( const Game& Game )
+void renderInput ( const Game& Game )
 {
     SDL_RenderClear( Game.Window.Renderer );
 
-    rendererAdd( Game.Window.Renderer , Game.Text.saved , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 - 200 / 2 , 300 , 200 } );
+    int TextWidth = Game.SessionName.size() * 100;
 
-    SDL_RenderPresent( Game.Window.Renderer );
-}
-
-void renderLoaded( const Game& Game )
-{
-    SDL_RenderClear( Game.Window.Renderer );
-
-    rendererAdd( Game.Window.Renderer , Game.Text.loaded , { Resolution::WindowWidth / 2 - 300 / 2 , Resolution::WindowHeight / 2 - 200 / 2 , 300 , 200 } );
+    rendererAdd( Game.Window.Renderer , Game.Text.SessionName , { Resolution::WindowWidth / 2 - TextWidth / 2 , Resolution::WindowHeight / 2 - 200 / 2 , TextWidth , 200 } );
 
     SDL_RenderPresent( Game.Window.Renderer );
 }

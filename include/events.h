@@ -1,3 +1,4 @@
+#include <SDL2/SDL_keycode.h>
 void eventHandler( Game& Game )
 {
 
@@ -101,6 +102,7 @@ void eventHandler( Game& Game )
                                             Game.State = gameState::gameRunning;
                                             Game.movePlayerBy.y = 0;
                                             Game.movePlayerBy.x = 0;
+                                            resetReplay();
                                             break;
                                         case buttonState::save:
                                             Game.State = gameState::saved;
@@ -217,6 +219,8 @@ void eventHandler( Game& Game )
             }
             else if ( Game.State == gameState::saved )
             {
+                SDL_StartTextInput();
+
                 switch (Event.type)
                 {
                     case SDL_QUIT:
@@ -230,8 +234,20 @@ void eventHandler( Game& Game )
                                 case SDLK_ESCAPE:
                                     Game.State = gameState::mainMenuRunning;
                                     break;
+                                case SDLK_RETURN:
+                                    writeToFile( Game.SessionName.c_str() , &Game );
+                                    Game.State = gameState::mainMenuRunning;
+                                    break;
+                                case SDLK_BACKSPACE:
+                                    if ( Game.SessionName.size() > 0 )
+                                        Game.SessionName.pop_back();
+                                    break;
                             }
                         }
+                        break;
+                    case SDL_TEXTINPUT:
+                        Game.SessionName += Event.text.text;
+                        break;
                 }
             }
             else if ( Game.State == gameState::loaded )
@@ -249,8 +265,20 @@ void eventHandler( Game& Game )
                                 case SDLK_ESCAPE:
                                     Game.State = gameState::mainMenuRunning;
                                     break;
+                                case SDLK_RETURN:
+                                    readFromFile( Game.SessionName.c_str() , &Game );
+                                    Game.State = gameState::mainMenuRunning;
+                                    break;
+                                case SDLK_BACKSPACE:
+                                    if ( Game.SessionName.size() > 0 )
+                                        Game.SessionName.pop_back();
+                                    break;
                             }
                         }
+                        break;
+                    case SDL_TEXTINPUT:
+                        Game.SessionName += Event.text.text;
+                        break;
                 }
             }
 

@@ -4,11 +4,19 @@
 
         for ( int i = 0 ; i < Game.Entities.Enemy.size() ; ++i )
         {
-            HandleEnemyMovement( Game.Entities.Enemy[i].Rect , Game.Entities.Tree , Game.Forest );
+            HandleEnemyMovement( Game.Entities.Enemy[i] , Game.Entities.Tree , Game.Forest );
                 // Check if any enemy is collision-ing
             if ( collision ( Game.Player.Rect , Game.Entities.Enemy[i].Rect ) )
             {
                 Game.Entities.Enemy.erase(Game.Entities.Enemy.begin() + i);
+            }
+
+            for (int j = 0; j < Game.Entities.Enemy.size(); j++)
+            {
+                    if (i != j )
+                    {
+                        moveRectAwayEachother( Game.Entities.Enemy[i].Rect , Game.Entities.Enemy[j].Rect , constant::PUSH_SPEED * 1.5 ) ;
+                    }
             }
 
             for (int j = 0 ; j < Game.Entities.Tree.size() ; j++)
@@ -37,7 +45,7 @@
             }
             else
             {
-                HandleAllyMovement( Game.Entities.Allies[i].Rect , Game.Entities.Enemy , 500 , Game.Forest );
+                HandleAllyMovement( Game.Entities.Allies[i] , Game.Entities.Enemy , 500 , Game.Forest );
             }
 
             for (int j = 0; j < Game.Entities.Enemy.size(); j++)
@@ -54,7 +62,6 @@
                 }
 
                 updateForest( Game.Forest , Game.Entities.Allies[i].Rect , Tile::Red , Tile::Brown , 40 );
-
         }
         for ( int i = 0 ; i < Game.Entities.Tree.size() ; ++i )
         {

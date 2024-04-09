@@ -23,6 +23,8 @@ struct structText
     SDL_Texture* loaded;
 
     SDL_Texture* quit;
+
+    SDL_Texture* SessionName;
 };
 
 void initText ( structText& Text , SDL_Renderer* Renderer , std::string fontPath )

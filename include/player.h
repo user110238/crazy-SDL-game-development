@@ -1,17 +1,3 @@
-struct structPlayer
-{
-    SDL_Rect Rect;
-};
-
-void initPlayer ( Entity& player , int x , int y  )
-{
-
-    player.Rect.x = x;
-    player.Rect.y = y;
-    player.Rect.w = constant::ENTITY_SIZE_X;
-    player.Rect.h = constant::ENTITY_SIZE_Y;
-}
-
 void movePlayer ( Entity& player , SDL_Point dest , const std::vector<std::vector<Tile>>& Forest )
 {
         // lenght of the vector
@@ -35,10 +21,15 @@ void movePlayer ( Entity& player , SDL_Point dest , const std::vector<std::vecto
         scaledY = normY * constant::PLAYER_VELOCITY;
 
     }
-
         // create the new postion
     int newX = player.Rect.x + static_cast<int>(scaledX);
     int newY = player.Rect.y + static_cast<int>(scaledY);
+
+    if ( player.Rect.x > newX ){
+        player.Flip = SDL_FLIP_HORIZONTAL;
+    } else if ( player.Rect.x < newX ) {
+        player.Flip = SDL_FLIP_NONE;
+    }
 
         // move back if out of bounds
     if (newX >= 0 && newX + player.Rect.w <= Resolution::LevelWidth)

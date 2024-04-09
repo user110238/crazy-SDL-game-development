@@ -142,3 +142,9 @@ void readFromReplayOnce( const char* filename , Game* game )
     }
 
 }
+
+void resetReplay()
+{
+    FILE *fptr = fopen( "replay.txt" , "w" );
+    fclose(fptr);
+}

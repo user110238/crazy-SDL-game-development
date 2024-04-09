@@ -88,18 +88,14 @@ void startup( Game& Game )
     initWindow ( Game.Window );
 
     Textures::Player = loadTexture( Game.Window.Renderer , "assets/square.png" );
-    Textures::Enemy = loadTexture( Game.Window.Renderer , "assets/circle.png" );
-    Textures::FireEnemy = loadTexture( Game.Window.Renderer , "assets/red_circle.png" );
+    Textures::Enemy = loadTexture( Game.Window.Renderer , "assets/enemy.png" );
+    Textures::FireEnemy = loadTexture( Game.Window.Renderer , "assets/enemy.png" );
     Textures::Tree1 = loadTexture( Game.Window.Renderer , "assets/tree1.png" );
     Textures::Tree2 = loadTexture( Game.Window.Renderer , "assets/tree2.png" );
     Textures::Tree3 = loadTexture( Game.Window.Renderer , "assets/tree3.png" );
-    Textures::Ally = loadTexture( Game.Window.Renderer , "assets/star.png" );
+    Textures::Ally = loadTexture( Game.Window.Renderer , "assets/duck.png" );
 
     initText( Game.Text , Game.Window.Renderer , "assets/ARCADECLASSIC.ttf" );
-
-    FILE *resetFile = fopen( "replay.txt" , "w" );
-    fclose(resetFile);
-
 }
 
 void mainMenu( Game& Game )
@@ -109,14 +105,14 @@ void mainMenu( Game& Game )
 
 void saving( Game& Game )
 {
-    writeToFile( "game.txt" , &Game );
-    renderSaved( Game );
+    Game.Text.SessionName = loadTextureFromText( Game.Window.Renderer , Game.SessionName.c_str() , Game.Text.Font );
+    renderInput( Game );
 }
 
 void loading( Game& Game )
 {
-    readFromFile( "game.txt" , &Game );
-    renderLoaded( Game );
+    Game.Text.SessionName = loadTextureFromText( Game.Window.Renderer , Game.SessionName.c_str() , Game.Text.Font );
+    renderInput( Game );
 }
 
 void pauseGame( Game& Game )

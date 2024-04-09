@@ -51,6 +51,8 @@ struct Game
     structBackground Background;
     structText Text;
 
+    std::string SessionName = "";
+
     FrameLimit Frames;
 
     double seed;

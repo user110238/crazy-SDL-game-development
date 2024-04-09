@@ -8,7 +8,7 @@ enum class Tile
     Blue,   // Water
     Sand,   // River Bank
 
-    Black,  // Testing, camp center right now
+    Black,  // Testing
 };
 
 struct structFireSpread
@@ -252,18 +252,18 @@ void spreadFire( std::vector<std::vector<Tile>>& Forest )
 
                 if ( redCount < 4 )
                 {
-                    if (x > 0 && Forest[x - 1][y] == Tile::Green)
-                        fireSpreadCoords.push_back({x - 1, y});
-                    if (x < Forest.size() - 1 && Forest[x + 1][y] == Tile::Green)
-                        fireSpreadCoords.push_back({x + 1, y});
-                    if (y > 0 && Forest[x][y - 1] == Tile::Green)
-                        fireSpreadCoords.push_back({x, y - 1});
-                    if (y < Forest[0].size() - 1 && Forest[x][y + 1] == Tile::Green)
-                        fireSpreadCoords.push_back({x, y + 1});
+                    if ( x > 0 && Forest[x - 1][y] == Tile::Green )
+                        fireSpreadCoords.push_back( {x - 1, y} );
+                    if ( x < Forest.size() - 1 && Forest[x + 1][y] == Tile::Green )
+                        fireSpreadCoords.push_back( {x + 1, y} );
+                    if ( y > 0 && Forest[x][y - 1] == Tile::Green )
+                        fireSpreadCoords.push_back( {x, y - 1} );
+                    if ( y < Forest[0].size() - 1 && Forest[x][y + 1] == Tile::Green )
+                        fireSpreadCoords.push_back( {x, y + 1} );
                 }
                 else
                 {
-                    burnedCoords.push_back({x, y});
+                    burnedCoords.push_back( {x, y} );
                 }
             }
         }
