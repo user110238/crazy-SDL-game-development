@@ -72,7 +72,7 @@ void riverBanks(std::vector<std::vector<Tile>>& vector, int borderW)
 void river(std::vector<std::vector<Tile>>& vector)
 {
     int RW = getRandomNumber( 8 , 15 );
-    int numberOfRivers = getRandomNumber( 1 , 4 );
+    int numberOfRivers = getRandomNumber( 1 , 2 );
     int riverStartX, riverStartY;
     bool isHorizontal, isChaotic;
 

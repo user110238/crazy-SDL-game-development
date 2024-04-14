@@ -18,9 +18,13 @@ void eventHandler( Game& Game )
                         {
                             switch (Event.key.keysym.sym)
                             {
+
                                 case SDLK_ESCAPE:
                                     Game.State = gameState::gamePause;
                                     Game.Button = buttonState::resume;
+                                    break;
+                                case SDLK_SPACE:
+                                    updateForest( Game.Forest , Game.Entities.Allies[Game.controllable].Rect , Tile::Brown , Tile::Green , 100 );
                                     break;
                                 case SDLK_TAB:
                                     Game.controllable = Game.controllable + 1;
@@ -99,9 +103,8 @@ void eventHandler( Game& Game )
                                     switch( Game.Button )
                                     {
                                         case buttonState::play:
+                                            resetSDLPoint( Game.movePlayerBy );
                                             Game.State = gameState::gameRunning;
-                                            Game.movePlayerBy.y = 0;
-                                            Game.movePlayerBy.x = 0;
                                             resetReplay();
                                             break;
                                         case buttonState::save:
@@ -177,7 +180,7 @@ void eventHandler( Game& Game )
                                             Game.movePlayerBy.x = 0;
                                             break;
                                         case buttonState::replay:
-                                            Game.State = gameState::reSetup;
+                                            Game.State = gameState::reSetupBeforeReplay;
                                             break;
                                         case buttonState::menu:
                                             Game.State = gameState::mainMenuRunning;
@@ -278,6 +281,52 @@ void eventHandler( Game& Game )
                         break;
                     case SDL_TEXTINPUT:
                         Game.SessionName += Event.text.text;
+                        break;
+                }
+            }
+            else if ( Game.State == gameState::gameCompleted )
+            {
+                switch (Event.type)
+                {
+                    case SDL_QUIT:
+                        Game.State = gameState::endGame;
+                        break;
+                    case SDL_KEYDOWN:
+                        if (Event.key.repeat == 0)
+                        {
+                            switch (Event.key.keysym.sym)
+                            {
+                                case SDLK_ESCAPE:
+                                    Game.State = gameState::mainMenuRunning;
+                                    break;
+                                case SDLK_RETURN:
+                                    resetSDLPoint( Game.movePlayerBy );
+                                    Game.State = gameState::reSetupRandom;
+                                    break;
+                            }
+                        }
+                        break;
+                }
+            }
+            else if ( Game.State == gameState::gameFailed )
+            {
+                switch (Event.type)
+                {
+                    case SDL_QUIT:
+                        Game.State = gameState::endGame;
+                        break;
+                    case SDL_KEYDOWN:
+                        if (Event.key.repeat == 0)
+                        {
+                            switch (Event.key.keysym.sym)
+                            {
+                                case SDLK_RETURN:
+                                case SDLK_ESCAPE:
+                                    resetSDLPoint( Game.movePlayerBy );
+                                    Game.State = gameState::reSetupRandom;
+                                    break;
+                            }
+                        }
                         break;
                 }
             }

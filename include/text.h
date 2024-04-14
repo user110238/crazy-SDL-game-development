@@ -3,9 +3,12 @@ struct structText
     TTF_Font* Font;
 
         // Game
-    SDL_Texture* scoreText;
+    SDL_Texture* areaBurnt;
     SDL_Texture* treeCount;
+
     SDL_Texture* victory;
+    SDL_Texture* defeat;
+
     SDL_Texture* liveReplay;
         // Pause screen
     SDL_Texture* pause;
@@ -30,8 +33,11 @@ struct structText
 void initText ( structText& Text , SDL_Renderer* Renderer , std::string fontPath )
 {
     Text.Font = TTF_OpenFont( fontPath.c_str() , 64 );
-    Text.scoreText = loadTextureFromText( Renderer , "Score" , Text.Font );
+    Text.areaBurnt = loadTextureFromText( Renderer , "Area Burnt" , Text.Font );
+
     Text.victory = loadTextureFromText( Renderer , "Victory!" , Text.Font );
+    Text.defeat = loadTextureFromText( Renderer , "Defeat!" , Text.Font );
+
     Text.liveReplay = loadTextureFromText( Renderer , "Live Replay" , Text.Font );
 
     Text.pause = loadTextureFromText( Renderer , "Pause" , Text.Font );

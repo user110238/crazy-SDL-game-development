@@ -2,6 +2,8 @@ void writeToFile( const char* filename , Game* game )
 {
     FILE* file = fopen( filename , "w" );
 
+    fprintf ( file , "%f\n" , game->seed );
+
     fprintf( file , "%d %d %d %d %d\n" , game->Player.Rect.x , game->Player.Rect.y , game->Player.Rect.w , game->Player.Rect.h , game->Player.Type );
 
     fprintf( file , "%d %d %d %d\n" , game->Background.Camera.x , game->Background.Camera.y , game->Background.Camera.w , game->Background.Camera.h );
@@ -58,6 +60,8 @@ void writeToReplay( const char* filename , Game* game )
 void readFromFile( const char* filename , Game* game )
 {
     FILE* file = fopen( filename , "r" );
+
+    fscanf( file , "%f\n" , &game->seed );
 
     fscanf( file , "%d %d %d %d %d" , &game->Player.Rect.x , &game->Player.Rect.y , &game->Player.Rect.w , &game->Player.Rect.h , &game->Player.Type );
 

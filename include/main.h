@@ -2,18 +2,16 @@ void setup ( Game& Game )
 {
     srand(Game.seed);
 
-    Game.movePlayerBy.x = 0;
-    Game.movePlayerBy.y = 0;
-
-    Game.Forest.resize( Resolution::LevelWidth / constant::PIXEL_SIZE , std::vector<Tile>( Resolution::LevelHeight / constant::PIXEL_SIZE , Tile::Green ) );
-    placeCamps( Game.Forest , 5 , Game.CampCoordinates ); // Number of camps
+    Game.Forest.resize( Resolution::LevelWidth / constant::PIXEL_SIZE, std::vector<Tile>( Resolution::LevelHeight / constant::PIXEL_SIZE , Tile::Green ) );
+    placeCamps( Game.Forest , 4 , Game.CampCoordinates ); // Number of camps
     river( Game.Forest );
 
-    pushRandom( Game.Entities.Enemy , 7 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Enemy );
-    pushRandom( Game.Entities.Enemy , 3 , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::FireEnemy );
-    pushRandomTree( Game.Entities.Tree , 512 , Resolution::LevelWidth , Resolution::LevelHeight , Game.Forest );
+    pushRandom( Game.Entities.Enemy , 5 * Game.Level , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::Enemy );
+    if ( Game.Level >= 2 )
+        pushRandom( Game.Entities.Enemy , 3 * ( Game.Level - 1 ) , Resolution::LevelWidth , Resolution::LevelHeight , EntityType::FireEnemy );
+    pushRandomTree( Game.Entities.Tree , 2 * 512 , Resolution::LevelWidth , Resolution::LevelHeight , Game.Forest );
 
-    pushToPairCoords( Game.Entities.Allies , 5 , 1 , Game.CampCoordinates , EntityType::Ally ); // Number of allies ; Allies per CampCoordinates
+    pushToPairCoords( Game.Entities.Allies , 4 , 1 , Game.CampCoordinates , EntityType::Ally ); // Number of allies ; Allies per CampCoordinates
 
     initBackground( Game.Background , Game.Entities.Allies[Game.controllable].Rect );
     Game.Background.Texture = fillBackground( Game.Forest , Game.Window.Renderer );
@@ -58,10 +56,24 @@ void gameLoop ( Game& Game )
         }
 
             // Calculate displayed text
-        Game.Text.treeCount = loadTextureFromText( Game.Window.Renderer , std::to_string(calculatePercentage( Game.Forest , Tile::Green )).c_str() , Game.Text.Font );
+        Game.Text.treeCount = loadTextureFromText( Game.Window.Renderer , std::to_string(calculatePercentage( Game.Forest , Tile::Brown )).c_str() , Game.Text.Font );
 
         // Rendering
         renderGame( Game );
+
+        // remake the game with new level
+        if ( Game.Entities.Enemy.size() == 0 )
+        {
+            Game.State = gameState::gameCompleted;
+            resetSDLPoint( Game.movePlayerBy );
+            Game.Level++;
+        }
+        else if ( calculatePercentage( Game.Forest , Tile::Brown ) >= 70 || Game.Entities.Tree.size() <= 5 )
+        {
+            Game.State = gameState::gameFailed;
+            resetSDLPoint( Game.movePlayerBy );
+            Game.Level = 1;
+        }
 
         // Framing
             // Frame delay / limit
@@ -120,6 +132,16 @@ void pauseGame( Game& Game )
     renderGame( Game );
 }
 
+void completedGame( Game& Game )
+{
+    renderGame( Game );
+}
+
+void failedGame( Game& Game )
+{
+    renderGame( Game );
+}
+
 void GameControl( Game& Game )
 {
     Game.seed = time(NULL);
@@ -136,10 +158,16 @@ void GameControl( Game& Game )
 
         switch( Game.State )
         {
-            case gameState::reSetup:
+            case gameState::reSetupBeforeReplay:
                 cleanUpGame( Game );
                 setup( Game );
                 Game.State = gameState::gameReplaying;
+                break;
+            case gameState::reSetupRandom:
+                cleanUpGame( Game );
+                Game.seed = time(NULL);
+                setup( Game );
+                Game.State = gameState::gameRunning;
                 break;
 
             case gameState::gameRunning:
@@ -147,6 +175,13 @@ void GameControl( Game& Game )
                 break;
             case gameState::gameReplaying:
                 gameLoop( Game );
+                break;
+
+            case gameState::gameCompleted:
+                completedGame( Game );
+                break;
+            case gameState::gameFailed:
+                failedGame( Game );
                 break;
 
             case gameState::mainMenuRunning:

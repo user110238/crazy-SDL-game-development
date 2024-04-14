@@ -67,3 +67,9 @@ void playerGameLogic ( Entity& player , SDL_Point moveBy , std::vector<std::vect
     }
 }
 
+void resetSDLPoint( SDL_Point& movePlayerBy )
+{
+    movePlayerBy.y = 0;
+    movePlayerBy.x = 0;
+}
+

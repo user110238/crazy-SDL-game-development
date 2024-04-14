@@ -128,7 +128,7 @@ void updateBackgroundTexture( const std::vector<std::vector<Tile>>& vector , SDL
 }
 
 
-void updateForest( std::vector<std::vector<Tile>>& vector , SDL_Rect Rect , Tile tile , int clearRadius )
+void updateForest( std::vector<std::vector<Tile>>& vector , const SDL_Rect& Rect , Tile tile , int clearRadius )
 {
     int centerX = Rect.x + Rect.w / 2;
     int centerY = Rect.y + Rect.h / 2;
@@ -219,7 +219,8 @@ int calculatePercentage( const std::vector<std::vector<Tile>>& vector , Tile til
     {
         for (int j = 0 ; j < vector[i].size() ; ++j)
         {
-            ++totalTiles;
+            if ( vector[i][j] != Tile::Blue || vector[i][j] != Tile::Sand )
+                ++totalTiles;
             if ( vector[i][j] == tile )
                 ++brownTiles;
         }

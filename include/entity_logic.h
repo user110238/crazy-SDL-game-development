@@ -33,8 +33,8 @@
                 }
             }
 
-            if ( Game.Entities.Enemy[i].Type == EntityType::Enemy )
-                updateForest( Game.Forest , Game.Entities.Enemy[i].Rect , Tile::Brown , 0 );
+            //if ( Game.Entities.Enemy[i].Type == EntityType::Enemy )
+                //updateForest( Game.Forest , Game.Entities.Enemy[i].Rect , Tile::Brown , 0 );
 
         }
         for ( int i = 0 ; i < Game.Entities.Allies.size() ; ++i )

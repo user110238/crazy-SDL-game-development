@@ -1,11 +1,15 @@
 enum gameState
 {
     startUp,
-    reSetup,
+    reSetupRandom,
+    reSetupBeforeReplay,
 
     gameRunning,
     gameReplaying,
     gamePause,
+
+    gameCompleted,
+    gameFailed,
 
     mainMenuRunning,
 
@@ -56,5 +60,6 @@ struct Game
     FrameLimit Frames;
 
     double seed;
+    int Level = 1;
 
 };
